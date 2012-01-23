@@ -116,91 +116,96 @@ void Edif::Init(mv * _far mV, LPEDATA edPtr)
 
 void Edif::Free(mv * _far mV)
 {   
-//    delete ::SDK;
+	delete ::SDK;
+	::SDK = NULL;
 }
 
 void Edif::Free(LPEDATA edPtr)
-{   
+{
 }
 
-void Edif::Init(mv _far * mV)
-{   
-
+int Edif::Init(mv _far * mV)
+{
     strcpy(LanguageCode, "EN");
 
-    do
-    {   
-        if((!mV) || (!mV->mvGetVersion))
-            break;
-        
-        char KeyName[256];
+	// Get pathname of MMF2
+	LPTSTR mmfname = (LPTSTR)calloc(_MAX_PATH, sizeof(TCHAR));
+	if ( mmfname != NULL )
+	{
+		// Load resources
+		GetModuleFileName (NULL, mmfname, _MAX_PATH);
+		HINSTANCE hRes = LoadLibraryEx(mmfname, NULL, DONT_RESOLVE_DLL_REFERENCES | LOAD_LIBRARY_AS_DATAFILE);
+		if ( hRes != NULL )
+		{
+			// Load string 720, contains the language code
+			TCHAR langCode[20];
+			LoadString(hRes, 720, langCode, 20);
 
-        if((mV->mvGetVersion() & MMFVERFLAG_MASK) & MMFVERFLAG_HOME)
-            strcpy(KeyName, "Software\\Clickteam\\The Games Factory 2\\General");
-        
-        else if((mV->mvGetVersion() & MMFVERFLAG_MASK) & MMFVERFLAG_PRO)
-            strcpy(KeyName, "Software\\Clickteam\\Multimedia Fusion Developer 2\\General");
-        
-        else
-            strcpy(KeyName, "Software\\Clickteam\\Multimedia Fusion 2\\General");
+			int nCode = _ttoi(langCode);
+			switch (nCode) {
+			case 0x40C:
+				strcpy(LanguageCode, "FR");
+				break;
+			case 0x411:
+				strcpy(LanguageCode, "JP");
+				break;
+			}
 
-        HKEY Key;
-        
-        if(RegOpenKeyEx(HKEY_CURRENT_USER, KeyName, 0, KEY_QUERY_VALUE, &Key) != ERROR_SUCCESS)
-            break;
+			// Free resources
+			FreeLibrary(hRes);
+		}
+		free(mmfname);
+	}
 
-        int Version;
-
-        {   long Size = sizeof(int);
-            DWORD Type = REG_DWORD;
-
-            RegQueryValueEx(Key, "tbver", 0, &Type, (BYTE *) &Version, (LPDWORD) &Size);
-        }
-
-        RegCloseKey(Key);
-
-        if(HIWORD(Version) == 0x40C)
-            strcpy(LanguageCode, "FR");
-
-    } while(0);
-
+	// Get JSON file
     char * JSON;
     size_t JSON_Size;
 
-    int result = Edif::GetDependency (JSON, JSON_Size, "json", IDR_EDIF_JSON);
+    int result = Edif::GetDependency (JSON, JSON_Size, _T("json"), IDR_EDIF_JSON);
     
     if (result == Edif::DependencyNotFound)
     {
-        MessageBox(0, "JSON file not found on disk or in MFX resources", "EDIF SDK - Error", 0);
-        exit(0);
+		TCHAR temp [MAX_PATH];
+		GetModuleFileName (hInstLib, temp, sizeof(temp)/sizeof(TCHAR));
+		LPTSTR filetitle = _tcsrchr(temp, _T('\\'));
+		if ( filetitle != NULL )
+			_tcscpy(temp, filetitle);
+		else
+			temp[0] = 0;
+		_tcscat(temp, _T(" - Error"));
+
+		MessageBox(0, _T("JSON file not found on disk or in MFX resources"), temp, 0);
+        return -1;	// error, init failed
     }
 
     Edif::ExternalJSON = (result == Edif::DependencyWasFile);
 
     char * copy = (char *) malloc (JSON_Size + 1);
-    
     memcpy (copy, JSON, JSON_Size);
     copy [JSON_Size] = 0;
+	if ( result != Edif::DependencyWasResource )
+		free(JSON);
 
     ::SDK = new Edif::SDK(mV, copy);
+    return 0;	// no error
 }
 
 Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::ObjectString, JSON)
 {
-    Icon = new cSurface;
 	this->mV = mV;
 
-    if(Icon->GetWidth() < 1 && mV->mvImgFilterMgr)
+#ifndef RUN_ONLY
+    Icon = new cSurface;
+    if(mV->mvImgFilterMgr)
     {
         char * IconData;
         size_t IconSize;
 
-        if (Edif::GetDependency (IconData, IconSize, "png", IDR_EDIF_ICON) != Edif::DependencyNotFound)
+        int result = Edif::GetDependency (IconData, IconSize, _T("png"), IDR_EDIF_ICON);
+		if (result != Edif::DependencyNotFound)
         {
             CInputMemFile * File = CInputMemFile::NewInstance ();
-            File->Create (IconSize);
-
-            memcpy (File->GetMemBuffer (), IconData, IconSize);
+            File->Create ((LPBYTE)IconData, IconSize);
 
             DWORD PNG = FILTERID_PNG;
             ImportImageFromInputFile(mV->mvImgFilterMgr, File, Icon, &PNG, 0);
@@ -209,8 +214,11 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
 
             if(!Icon->HasAlpha())
                 Icon->SetTransparentColor(RGB(255, 0, 255));
+			if ( result != Edif::DependencyWasResource )
+				free(IconData);
         }
     }
+#endif // RUN_ONLY
 
     JSON::Object &Actions = Information["Actions"];
     JSON::Object &Conditions = Information["Conditions"];
@@ -387,7 +395,10 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
 
 Edif::SDK::~SDK()
 {
-
+    delete [] ActionJumps;
+    delete [] ConditionJumps;
+    delete [] ExpressionJumps;
+	delete Icon;
 }
 
 int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Function, int ID, LPRDATA rdPtr, long param1, long param2)
@@ -498,7 +509,9 @@ HMENU Edif::LoadMenuJSON(int BaseID, JSON::Object &Source, HMENU Parent)
             HMENU SubMenu = CreatePopupMenu();
             LoadMenuJSON(BaseID, MenuItem, SubMenu);
 
-            AppendMenu(Parent, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT) SubMenu, Edif::Language(MenuItem[0]));
+			TCHAR* str = ConvertString(Edif::Language(MenuItem[0]));
+            AppendMenu(Parent, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT) SubMenu, str);
+			FreeString(str);
 
             continue;
         }
@@ -506,12 +519,13 @@ HMENU Edif::LoadMenuJSON(int BaseID, JSON::Object &Source, HMENU Parent)
         int ItemOffset = 0;
 
         int ID = BaseID + (int) MenuItem[ItemOffset].Number;
-        const char * Text = Edif::Language(MenuItem[ItemOffset + 1]);
+        TCHAR * Text = ConvertString(Edif::Language(MenuItem[ItemOffset + 1]));
         bool Disabled = MenuItem.Length > (ItemOffset + 2) ? MenuItem[ItemOffset + 2].Boolean != 0 : false;
 
         AppendMenu(Parent, Disabled ? MF_GRAYED | MF_UNCHECKED | MF_BYPOSITION | MF_STRING
                                 : MF_BYPOSITION | MF_STRING, ID, Text);
 
+		FreeString(Text);
     }
 
     return Parent;
@@ -681,14 +695,16 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
     return Result;
 }
 
-int Edif::GetDependency (char *& Buffer, size_t &Size, const char * FileExtension, int Resource)
+int Edif::GetDependency (char *& Buffer, size_t &Size, const TCHAR * FileExtension, int Resource)
 {
-    char Filename [MAX_PATH];
+    TCHAR Filename [MAX_PATH];
     GetSiblingPath (Filename, FileExtension);
 
+	Buffer = NULL;
     if (*Filename)
     {
-        FILE * File = fopen (Filename, "rb");
+        FILE * File = NULL;
+		int error = _tfopen_s(&File, Filename, _T("rb"));
 
         if (!File)
             return DependencyNotFound;
@@ -710,7 +726,7 @@ int Edif::GetDependency (char *& Buffer, size_t &Size, const char * FileExtensio
     if (!Resource)
         return DependencyNotFound;
 
-    HRSRC res = FindResource (hInstLib, MAKEINTRESOURCE (Resource), "EDIF");
+    HRSRC res = FindResource (hInstLib, MAKEINTRESOURCE (Resource), _T("EDIF"));
 
     if (!res)
         return DependencyNotFound;
@@ -721,66 +737,107 @@ int Edif::GetDependency (char *& Buffer, size_t &Size, const char * FileExtensio
     return DependencyWasResource;
 }
 
-void Edif::GetSiblingPath(char * Buffer, const char * FileExtension)
+void Edif::GetSiblingPath(TCHAR * Buffer, const TCHAR * FileExtension)
 {
-    char temp [MAX_PATH];
+    TCHAR temp [MAX_PATH];
 
-    GetModuleFileName (hInstLib, temp, sizeof(temp));
+    GetModuleFileName (hInstLib, temp, sizeof(temp)/sizeof(TCHAR));
 
-    char * Filename = temp + strlen(temp) - 1;
+    TCHAR * Filename = temp + _tcslen(temp) - 1;
 
     while(*Filename != '.')
         -- Filename;
 
-    strcpy(++ Filename, FileExtension);
+    _tcscpy(++ Filename, FileExtension);
 
-    Filename = Filename + strlen(Filename) - 1;
+    Filename = Filename + _tcslen(Filename) - 1;
 
     while(*Filename != '\\' && *Filename != '/')
         -- Filename;
 
     ++ Filename;
 
-
-
-    char ExecutablePath [MAX_PATH];
-    GetModuleFileName (GetModuleHandle (0), ExecutablePath, sizeof(ExecutablePath));
-
-    {   char * Iterator = ExecutablePath + strlen(ExecutablePath) - 1;
-
-        while(*Iterator != '\\' && *Iterator != '/')
-            -- Iterator;
-
-        *Iterator = 0;
-    }
-
-
-    /* Same folder as the EXE - standard edrt */
-
-    char FullFilename [MAX_PATH];
-    sprintf(FullFilename, "%s/%s", ExecutablePath, Filename);
-
+	// Is the file in the directory of the MFX? (if so, use this pathname)
+	TCHAR FullFilename [MAX_PATH];
+	_tcscpy(FullFilename, temp);
     if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
     {
-        /* Data/Runtime - editor */
+		// No => editor
+		TCHAR ExecutablePath [MAX_PATH];
+		GetModuleFileName (GetModuleHandle (0), ExecutablePath, sizeof(ExecutablePath)/sizeof(TCHAR));
 
-        sprintf(FullFilename, "%s/Data/Runtime/%s", ExecutablePath, Filename);
+		{   TCHAR * Iterator = ExecutablePath + _tcslen(ExecutablePath) - 1;
 
-        if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
-        {
-            /* Parent folder - HWA edrt */
+			while(*Iterator != '\\' && *Iterator != '/')
+				-- Iterator;
 
-            sprintf(FullFilename, "%s/../%s", ExecutablePath, Filename);
+			*Iterator = 0;
+		}
 
-            if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
-            {
-                /* TODO : Check MFX dir too, for when "compress the runtime" isn't checked */
+		// Data/Runtime - editor
+		_stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/Data/Runtime/%s"), ExecutablePath, Filename);
+		if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
+		{
+			*Buffer = 0;
+			return;
+		}
+	}
 
-                *Buffer = 0;
-                return;
-            }
-        }
-    }
-
-    strcpy(Buffer, FullFilename);
+    _tcscpy(Buffer, FullFilename);
 }
+
+#ifdef _UNICODE
+WCHAR* Edif::ConvertString(const char* utf8String)
+{
+	size_t Length = MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, 0, 0);
+	if ( Length == 0 )
+		Length = 1;
+	WCHAR* tstr = (WCHAR*)calloc(Length, sizeof(WCHAR));
+	MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, tstr, Length);
+	return tstr;
+}
+
+WCHAR* Edif::ConvertAndCopyString(WCHAR* tstr, const char* utf8String, int maxLength)
+{
+	MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, tstr, maxLength);
+	return tstr;
+}
+#else
+char* Edif::ConvertString(const char* utf8String)
+{
+	// Convert string to Unicode
+	size_t Length = MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, 0, 0);
+	if ( Length == 0 )
+		Length = 1;
+	WCHAR* wstr = (WCHAR*)calloc(Length, sizeof(WCHAR));
+	MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, wstr, Length);
+
+	// Convert Unicode string using current user code page
+	int len2 = WideCharToMultiByte(CP_ACP, 0, wstr, -1, 0, 0, NULL, NULL);
+	if ( len2 == 0 )
+		len2 = 1;
+	char* str = (char*)calloc(len2, sizeof(char));
+	WideCharToMultiByte(CP_ACP, 0, wstr, -1, str, len2, NULL, NULL);
+	free(wstr);
+
+	return str;
+}
+
+char* Edif::ConvertAndCopyString(char* str, const char* utf8String, int maxLength)
+{
+	// MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, tstr, maxLength);
+
+	// Convert string to Unicode
+	size_t Length = MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, 0, 0);
+	if ( Length == 0 )
+		Length = 1;
+	WCHAR* wstr = (WCHAR*)calloc(Length, sizeof(WCHAR));
+	MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, wstr, Length);
+
+	// Convert Unicode string using current user code page
+	WideCharToMultiByte(CP_ACP, 0, wstr, -1, str, maxLength, NULL, NULL);
+	free(wstr);
+
+	return str;
+}
+#endif // _UNICODE

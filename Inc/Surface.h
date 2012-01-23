@@ -27,6 +27,11 @@ typedef	struct DisplayMode {
 
 typedef	BOOL (CALLBACK * LPENUMSCREENMODESPROC)(DisplayMode*, LPVOID);
 
+#ifdef HWABETA
+// Lost device callback function
+typedef	void (CALLBACK * LOSTDEVICECALLBACKPROC)(cSurface*, LPARAM);
+#endif
+
 // System colors
 #ifndef COLOR_GRADIENTINACTIVECAPTION
 #define COLOR_GRADIENTINACTIVECAPTION	28
@@ -63,8 +68,17 @@ typedef enum {
 	BOP_MONO,
 	BOP_SUB,
 	BOP_BLEND_DONTREPLACECOLOR,
-	BOP_MAX
+	BOP_EFFECTEX,
+	BOP_MAX,
+	BOP_MASK = 0xFFF,
+	BOP_RGBAFILTER = 0x1000,
 } BlitOp;
+
+#define ALPHATOSEMITRANSP(a) ((a==0) ? 128:(255-a)/2)
+#define SEMITRANSPTOALPHA(s) ((s==128) ? 0:(255-s*2))
+
+typedef DWORD RGBAREF;
+#define COLORREFATORGBA(c,a) ((c & 0x00FFFFFF) | (a << 24))
 
 // Surface capabilities
 typedef enum 
@@ -94,6 +108,10 @@ enum
 	ST_MEMORYWITHDC,			// Buffer + DC (i.e. DIBSection, DDRAW surface, etc...
 	ST_MEMORYWITHPERMANENTDC,	// Buffer + permanent DC (i.e. DIBDC)
 	ST_DDRAW_SYSTEMMEMORY,		// Surface Direct Draw en mémoire systeme
+	ST_HWA_SCREEN,				// Screen surface in HWA mode
+	ST_HWA_RTTEXTURE,			// Render target texture in HWA mode
+	ST_HWA_ROUTEXTURE,			// HWA texture created in video memory, unmanaged (lost when device is lost)
+	ST_HWA_ROMTEXTURE,			// HWA texture created in video memory, managed (automatically reloaded when the device is lost)
 	ST_MAX
 };
 
@@ -105,6 +123,8 @@ enum
 	SD_DDRAW,					// Direct Draw
 	SD_BITMAP,					// Win 3.1 bitmap
 	SD_3DFX,					// 3DFX
+	SD_D3D9,					// Direct3D9
+	SD_D3D8,					// Direct3D8
 	SD_MAX
 };
 
@@ -119,7 +139,8 @@ typedef enum 			// Warning, bit mask, not enumeration!
 typedef enum 
 {
 	SI_NONE=0x0000,
-	SI_ONLYHEADER=0x0001
+	SI_ONLYHEADER=0x0001,
+	SI_SAVEALPHA=0x0002
 } SIFlags;
 
 enum {
@@ -130,14 +151,23 @@ enum {
 enum {
 	BLTF_ANTIA				= 0x0001,		// Anti-aliasing
 	BLTF_COPYALPHA			= 0x0002,		// Copy alpha channel to destination alpha channel instead of applying it
+#ifdef HWABETA
+	BLTF_SAFESRC			= 0x0010,
+	BLTF_TILE				= 0x0020
+#endif
 };
 
-// Stretch options
+// Stretch & BlitEx options
 enum {
 	STRF_RESAMPLE			= 0x0001,		// Resample bitmap
 	STRF_RESAMPLE_TRANSP	= 0x0002,		// Resample bitmap, but doesn't resample the transparent color
 	STRF_COPYALPHA			= 0x0004,		// Copy (stretch) alpha channel to destination alpha channel instead of applying it
+#ifdef HWABETA
+	STRF_SAFESRC			= 0x0010,
+	STRF_TILE				= 0x0020
+#endif
 };
+
 
 // Transparent monochrome mask for collisions
 typedef struct sMask
@@ -186,6 +216,9 @@ class SURFACES_API cSurface
 		// Init
 		static void InitializeSurfaces();
 		static void FreeSurfaces();
+#ifdef HWABETA
+		static void FreeExternalModules();
+#endif
 
 		// Operators
 		cSurface FAR & operator= (const cSurface FAR & source);
@@ -253,10 +286,16 @@ class SURFACES_API cSurface
 		// ======================
 		// Double-buffer handling
 		// ======================
-		void	Flip();
-		void	BeginBackgroundMode();
-		void	EndBackgroundMode();
-		void	UpdateBackground();
+		void	SetCurrentDevice();
+		int		BeginRendering(BOOL bClear, RGBAREF dwRgba);
+		int		EndRendering();
+		BOOL	UpdateScreen();
+#ifdef HWABETA
+		cSurface* GetRenderTargetSurface();
+		void	ReleaseRenderTargetSurface(cSurface* psf);
+		void	Flush(BOOL bMax);
+		void	SetZBuffer(float z2D);
+#endif
 
 		// ======================
 	    // Device context for graphic operations
@@ -275,15 +314,31 @@ class SURFACES_API cSurface
 		// ======================
 		// LoadImage (DIB format) / SaveImage (DIB format)
 		// ======================
-		BOOL	LoadImage (HFILE hf, DWORD lsize, LIFlags loadFlags = LI_NONE);
-		BOOL	LoadImage (LPCSTR fileName, LIFlags loadFlags = LI_NONE);
+		#undef LoadImage
+
+		BOOL	LoadImageA (HFILE hf, DWORD lsize, LIFlags loadFlags = LI_NONE);
+		BOOL	LoadImageA (LPCSTR fileName, LIFlags loadFlags = LI_NONE);
 #ifdef _WINDOWS
-		BOOL	LoadImage (HINSTANCE hInst, int bmpID, LIFlags loadFlags = LI_NONE);
+		BOOL	LoadImageA (HINSTANCE hInst, int bmpID, LIFlags loadFlags = LI_NONE);
 #endif // _WINDOWS
-		BOOL	LoadImage (LPBITMAPINFO pBmi, LPBYTE pBits = NULL, LIFlags loadFlags = LI_NONE);
+		BOOL	LoadImageA (LPBITMAPINFO pBmi, LPBYTE pBits = NULL, LIFlags loadFlags = LI_NONE);
+
+		BOOL	LoadImageW (HFILE hf, DWORD lsize, LIFlags loadFlags = LI_NONE);
+		BOOL	LoadImageW (LPCWSTR fileName, LIFlags loadFlags = LI_NONE);
+#ifdef _WINDOWS
+		BOOL	LoadImageW (HINSTANCE hInst, int bmpID, LIFlags loadFlags = LI_NONE);
+#endif // _WINDOWS
+		BOOL	LoadImageW (LPBITMAPINFO pBmi, LPBYTE pBits = NULL, LIFlags loadFlags = LI_NONE);
+
+		#ifdef _UNICODE
+		#define LoadImage LoadImageW
+		#else
+		#define LoadImage LoadImageA
+		#endif
 
 		BOOL	SaveImage (HFILE hf, SIFlags saveFlags = SI_NONE);
 		BOOL	SaveImage (LPCSTR fileName, SIFlags saveFlags = SI_NONE);
+		BOOL	SaveImage (LPCWSTR fileName, SIFlags saveFlags = SI_NONE);
 		BOOL	SaveImage (LPBITMAPINFO pBmi, LPBYTE pBits, SIFlags saveFlags = SI_NONE);
 
 		DWORD	GetDIBSize ();
@@ -325,6 +380,13 @@ class SURFACES_API cSurface
 					  BlitMode bm /*= BMODE_OPAQUE*/, BlitOp bo = BOP_COPY, LPARAM param = 0,
 					  DWORD dwBlitFlags = 0) const;
 
+		// Extended blit : can do stretch & rotate at the same time
+		// Only implemented in 3D mode
+#ifdef HWABETA
+		BOOL	BlitEx(cSurface FAR & dest, float dX, float dY, float fScaleX, float fScaleY,
+						int sX, int sY, int sW, int sH, LPPOINT pCenter, float fAngle, 
+						BlitMode bm = BMODE_OPAQUE, BlitOp bo = BOP_COPY, LPARAM param = 0, DWORD dwFlags = 0) const;
+#endif
 		// Scrolling
 		BOOL	Scroll (int xDest, int yDest, int xSrc, int ySrc, int width, int height);
 
@@ -392,6 +454,9 @@ class SURFACES_API cSurface
 		BOOL	Fill(int x, int y, int w, int h, CFillData FAR * fd);
 		BOOL	Fill(int x, int y, int w, int h, int index);
 		BOOL	Fill(int x, int y, int w, int h, int R, int G, int B);
+#ifdef HWABETA
+		BOOL	Fill(int x, int y, int w, int h, COLORREF* pColors, DWORD dwFlags);
+#endif
 
 		// ======================
 		// Geometric Primitives
@@ -408,12 +473,12 @@ class SURFACES_API cSurface
 		BOOL	Rectangle(int left, int top, int right, int bottom, int thickness = 1, COLORREF crOutl = BLACK);
 
 		BOOL	Rectangle(int left, int top, int right, int bottom, COLORREF crFill, int thickness /*= 0*/, 
-			COLORREF crOutl /*= BLACK*/, BOOL Fill = TRUE);
+			COLORREF crOutl /*= BLACK*/, BOOL bFill = TRUE);
 
 		BOOL	Polygon(LPPOINT pts, int nPts, int thickness = 1, COLORREF crOutl = BLACK);
 
 		BOOL	Polygon(LPPOINT pts, int nPts, COLORREF crFill, int thickness = 0, 
-			COLORREF crOutl = BLACK, BOOL Fill = TRUE);
+			COLORREF crOutl = BLACK, BOOL bFill = TRUE);
 
 		BOOL  Line(int x1, int y1, int x2, int y2, int thickness = 1, COLORREF crOutl = BLACK); 
 
@@ -470,15 +535,39 @@ class SURFACES_API cSurface
 		BOOL	CreateRotatedSurface (cSurface FAR& ps, double a, BOOL bAA, COLORREF clrFill = 0L, BOOL bTransp=TRUE);
 		BOOL	CreateRotatedSurface (cSurface FAR& ps, int a, BOOL bAA, COLORREF clrFill = 0L, BOOL bTransp=TRUE);
 
+#ifdef HWABETA
+		static void GetSizeOfRotatedRect (int FAR *pWidth, int FAR *pHeight, float angle);
+#else
 		static void GetSizeOfRotatedRect (int FAR *pWidth, int FAR *pHeight, int angle);
+#endif
 
 		// ======================
 		// Text
 		// ======================
-		// TextOut
-		int		TextOut(LPCSTR text, DWORD dwCharCount,int x,int y,DWORD alignMode,LPRECT pClipRc, COLORREF color=0, HFONT hFnt=(HFONT)NULL, BlitMode bm=BMODE_TRANSP, BlitOp=BOP_COPY, LPARAM param=0, int AntiA=0);
-		int		DrawText(LPCSTR text, DWORD dwCharCount,LPRECT pRc, DWORD dtflags, COLORREF color=0, HFONT hFnt=(HFONT)NULL,
+
+#undef TextOut
+
+		int		TextOutA(LPCSTR text, DWORD dwCharCount,int x,int y,DWORD alignMode,LPRECT pClipRc, COLORREF color=0, HFONT hFnt=(HFONT)NULL, BlitMode bm=BMODE_TRANSP, BlitOp=BOP_COPY, LPARAM param=0, int AntiA=0);
+		int		TextOutW(LPCWSTR text, DWORD dwCharCount,int x,int y,DWORD alignMode,LPRECT pClipRc, COLORREF color=0, HFONT hFnt=(HFONT)NULL, BlitMode bm=BMODE_TRANSP, BlitOp=BOP_COPY, LPARAM param=0, int AntiA=0);
+
+#ifdef _UNICODE
+#define TextOut TextOutW
+#else
+#define TextOut TextOutA
+#endif
+
+#undef DrawText
+
+		int		DrawTextA(LPCSTR text, DWORD dwCharCount,LPRECT pRc, DWORD dtflags, COLORREF color=0, HFONT hFnt=(HFONT)NULL,
 						  BlitMode bm=BMODE_TRANSP, BlitOp bo=BOP_COPY, LPARAM param=0, int AntiA=0,DWORD dwLeftMargin=0,DWORD dwRightMargin=0,DWORD dwTabSize=8);
+		int		DrawTextW(LPCWSTR text, DWORD dwCharCount,LPRECT pRc, DWORD dtflags, COLORREF color=0, HFONT hFnt=(HFONT)NULL,
+						  BlitMode bm=BMODE_TRANSP, BlitOp bo=BOP_COPY, LPARAM param=0, int AntiA=0,DWORD dwLeftMargin=0,DWORD dwRightMargin=0,DWORD dwTabSize=8);
+
+#ifdef _UNICODE
+#define DrawText DrawTextW
+#else
+#define DrawText DrawTextA
+#endif
 
 		// ======================
 		// Color / Palette functions
@@ -521,6 +610,9 @@ class SURFACES_API cSurface
 		void	RestoreWindowedMode(HWND hWnd);
 		void	CopyScreenModeInfo(cSurface* pSrc);
 
+#ifdef HWABETA
+		BOOL	SetAutoVSync(int nAutoVSync);
+#endif
 		BOOL	WaitForVBlank();
 
 		// System colors
@@ -546,6 +638,13 @@ class SURFACES_API cSurface
 
 		// Transparent monochrome mask
 		DWORD	CreateMask(LPSMASK pMask, UINT dwFlags);
+
+		// Lost device callback
+#ifdef HWABETA
+		void		OnLostDevice();
+		void		AddLostDeviceCallBack(LOSTDEVICECALLBACKPROC pCallback, LPARAM lUserParam);
+		void		RemoveLostDeviceCallBack(LOSTDEVICECALLBACKPROC pCallback, LPARAM lUserParam);
+#endif
 
 	// Friend functions
 	// ----------------

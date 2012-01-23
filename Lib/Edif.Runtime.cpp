@@ -28,13 +28,13 @@ void Edif::Runtime::PushEvent(int EventID)
 
 void * Edif::Runtime::Allocate(size_t Size)
 {
-    return (void *) callRunTimeFunction(rdPtr, RFUNCTION_GETSTRINGSPACE_EX, 0, Size);
+    return (void *) callRunTimeFunction(rdPtr, RFUNCTION_GETSTRINGSPACE_EX, 0, Size * sizeof(TCHAR));
 }
 
-char * Edif::Runtime::CopyString(const char * String)
+TCHAR * Edif::Runtime::CopyString(const TCHAR * String)
 {
-    char * New = (char *) Allocate(strlen(String) + 1);
-    strcpy(New, String);
+    TCHAR * New = (TCHAR *) Allocate(_tcslen(String) + 1);
+    _tcscpy(New, String);
     
     return New;
 }
@@ -54,27 +54,27 @@ void Edif::Runtime::Redisplay()
     callRunTimeFunction(rdPtr, RFUNCTION_REDISPLAY, 0, 0);
 }
 
-void Edif::Runtime::GetApplicationDrive(char * Buffer)
+void Edif::Runtime::GetApplicationDrive(TCHAR * Buffer)
 {
     callRunTimeFunction(rdPtr, RFUNCTION_GETFILEINFOS, FILEINFO_DRIVE, (long) Buffer);
 }
 
-void Edif::Runtime::GetApplicationDirectory(char * Buffer)
+void Edif::Runtime::GetApplicationDirectory(TCHAR * Buffer)
 {
     callRunTimeFunction(rdPtr, RFUNCTION_GETFILEINFOS, FILEINFO_DIR, (long) Buffer);
 }
 
-void Edif::Runtime::GetApplicationPath(char * Buffer)
+void Edif::Runtime::GetApplicationPath(TCHAR * Buffer)
 {
     callRunTimeFunction(rdPtr, RFUNCTION_GETFILEINFOS, FILEINFO_PATH, (long) Buffer);
 }
 
-void Edif::Runtime::GetApplicationName(char * Buffer)
+void Edif::Runtime::GetApplicationName(TCHAR * Buffer)
 {
     callRunTimeFunction(rdPtr, RFUNCTION_GETFILEINFOS, FILEINFO_APPNAME, (long) Buffer);
 }
 
-void Edif::Runtime::GetApplicationTempPath(char * Buffer)
+void Edif::Runtime::GetApplicationTempPath(TCHAR * Buffer)
 {
     callRunTimeFunction(rdPtr, RFUNCTION_GETFILEINFOS, FILEINFO_TEMPPATH, (long) Buffer);
 }
@@ -163,13 +163,13 @@ const HINSTANCE EdifGlobalID = (HINSTANCE) 0xED1FFFFF;
 
 struct EdifGlobal
 {
-    char Name[256];
+    TCHAR Name[256];
     void * Value;
 
     EdifGlobal * Next;
 };
 
-void Edif::Runtime::WriteGlobal(const char * Name, void * Value)
+void Edif::Runtime::WriteGlobal(const TCHAR * Name, void * Value)
 {
     LPRH rhPtr = rdPtr->rHo.hoAdRunHeader;
 
@@ -182,7 +182,7 @@ void Edif::Runtime::WriteGlobal(const char * Name, void * Value)
     {
         Global = new EdifGlobal;
 
-        strcpy(Global->Name, Name);
+        _tcscpy(Global->Name, Name);
         Global->Value = Value;
 
         Global->Next = 0;
@@ -194,7 +194,7 @@ void Edif::Runtime::WriteGlobal(const char * Name, void * Value)
 
     while(Global)
     {
-        if(!_stricmp(Global->Name, Name))
+        if(!_tcsicmp(Global->Name, Name))
         {
             Global->Value = Value;
             return;
@@ -209,13 +209,13 @@ void Edif::Runtime::WriteGlobal(const char * Name, void * Value)
     Global->Next = new EdifGlobal;
     Global = Global->Next;
 
-    strcpy(Global->Name, Name);
+    _tcscpy(Global->Name, Name);
 
     Global->Value = Value;
     Global->Next = 0;
 }
 
-void * Edif::Runtime::ReadGlobal(const char * Name)
+void * Edif::Runtime::ReadGlobal(const TCHAR * Name)
 {
     LPRH rhPtr = rdPtr->rHo.hoAdRunHeader;
 
@@ -226,7 +226,7 @@ void * Edif::Runtime::ReadGlobal(const char * Name)
 
     while(Global)
     {
-        if(!_stricmp(Global->Name, Name))
+        if(!_tcsicmp(Global->Name, Name))
             return Global->Value;
 
         Global = Global->Next;

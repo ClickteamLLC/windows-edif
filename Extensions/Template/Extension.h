@@ -8,7 +8,7 @@ public:
 
     Edif::Runtime Runtime;
 
-    static const int MinimumBuild = 250;
+    static const int MinimumBuild = 251;
     static const int Version = 1;
 
     static const int OEFLAGS = 0;

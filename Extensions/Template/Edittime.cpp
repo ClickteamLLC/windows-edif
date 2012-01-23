@@ -83,9 +83,8 @@ int WINAPI DLLExport MakeIconEx ( mv _far *mV, cSurface* pIconSf, LPTSTR lpName,
 
     pIconSf->SetTransparentColor(RGB(255, 0, 255));
 
-   return 0;
-
 #endif // !defined(RUN_ONLY)
+   return 0;
 }
 
 

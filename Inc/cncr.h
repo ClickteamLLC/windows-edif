@@ -10,10 +10,18 @@ class cSurface;
 class CTransition;
 class CDebugger;
 class CRunApp;
+#ifdef HWABETA
+class CEffectEx;
+class CPList;
+#endif
 #else
 #define cSurface void
 #define CTransition void
 #define CDebugger void
+#ifdef HWABETA
+#define CEffectEx void
+#define CPList void
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -80,13 +88,18 @@ public:
 typedef struct OI {
 #endif
 	ObjInfoHeader	oiHdr;			// Header
-	LPSTR			oiName;			// Name
+	LPTSTR			oiName;			// Name
 	LPOC			oiOC;			// ObjectsCommon
 
 	DWORD			oiFileOffset;
 	DWORD			oiLoadFlags;
 	WORD			oiLoadCount;
 	WORD			oiCount;
+
+#ifdef HWABETA
+	LPBYTE			oiExtEffect;
+	CEffectEx*		oiExtEffectEx;	// Pour backdrops, faut trouver un système plus efficace (banque d'effets pour les backdrops)
+#endif // HWABETA
 
 #ifdef __cplusplus
 };
@@ -129,7 +142,7 @@ typedef bkd2 *LPBKD2;
 typedef struct RunFrameLayer
 {
 	// Name
-	LPSTR		pName;			// Name
+	LPTSTR		pName;			// Name
 
 	// Offset
 	int			x;				// Current offset
@@ -156,12 +169,23 @@ typedef struct RunFrameLayer
 	DWORD		nBkdLOs;		// Number of backdrop objects
 	DWORD		nFirstLOIndex;	// Index of first backdrop object in LO table
 
+	// EditFrameLayerEffect
+#ifdef HWABETA
+	DWORD		dwEffect;
+	LPARAM		dwEffectParam;	// CEffectEx si extended
+#endif // HWABETA
+
 	// Backup for restart
 	DWORD		backUp_dwOptions;
 	float		backUp_xCoef;
 	float		backUp_yCoef;
 	DWORD		backUp_nBkdLOs;
 	DWORD		backUp_nFirstLOIndex;
+
+#ifdef HWABETA
+//	DWORD		backUp_dwEffect;		// A voir
+//	LPARAM		backUp_dwEffectParam;
+#endif // HWABETA
 
 } RunFrameLayer;
 
@@ -181,6 +205,9 @@ typedef struct objTransInfo {
 	int				m_ysave;
 	int				m_cxsave;
 	int				m_cysave;
+#ifdef HWABETA
+	BOOL			m_bStepDrawBlit;		// Use StepDrawBlit instead of StepDraw
+#endif
 
 } objTransInfo;
 typedef objTransInfo * LPOBJTRANSINFO;
@@ -191,6 +218,17 @@ typedef objTransInfo * LPOBJTRANSINFO;
 //
 
 #define	MAX_TEMPSTRING	16
+#define IPHONEOPT_JOYSTICK_FIRE1 0x0001
+#define IPHONEOPT_JOYSTICK_FIRE2 0x0002
+#define IPHONEOPT_JOYSTICK_LEFTHAND 0x0004
+#define	IPHONEFOPT_MULTITOUCH			0x0008
+#define	IPHONEFOPT_SCREENLOCKING		0x0010
+#define	IPHONEFOPT_IPHONEFRAMEIAD		0x0020
+#define JOYSTICK_NONE 0x0000
+#define JOYSTICK_TOUCH 0x0001
+#define JOYSTICK_ACCELEROMETER 0x0002
+#define JOYSTICK_EXT 0x0003
+
 
 #ifdef __cplusplus
 class CRunFrame {
@@ -203,7 +241,7 @@ typedef struct CRunFrame {
 	FrameHeader		m_hdr;
 
 	// Name
-	LPSTR			m_name;
+	LPTSTR			m_name;
 
 	// Palette
 	LPLOGPALETTE	m_palette;
@@ -265,7 +303,8 @@ typedef struct CRunFrame {
 
 	short			m_nConditions[NUMBEROF_SYSTEMTYPES+OBJ_LAST];
 	DWORD			m_free2[MAX_EVENTPROGRAMS];
-	DWORD			m_free4;
+	WORD			m_wJoystick;
+	WORD			m_wIPhoneOptions;
 	LPBYTE			m_swapBuffers;
 	DWORD			m_objectList;
 	LPBYTE			m_destroyList;
@@ -286,16 +325,33 @@ typedef struct CRunFrame {
 	DWORD			m_pasteMask;
 
 	int				m_nCurTempString;
-	LPSTR			m_pTempString[MAX_TEMPSTRING];
+	LPTSTR			m_pTempString[MAX_TEMPSTRING];	// not used
 
 	// Other
 	cSurface*		m_pSaveSurface;
 	int				m_leEditWinWidth;
 	int				m_leEditWinHeight;
 	DWORD			m_dwColMaskBits;
-	LPSTR			m_demoFilePath;
+	LPTSTR			m_demoFilePath;
 	WORD			m_wRandomSeed;
 	WORD			m_wFree;
+	DWORD			m_dwMvtTimerBase;
+
+#ifdef HWABETA
+	LPBYTE			m_pLayerEffects;
+
+	// Frame effect
+	FrameEffect*	m_pEffect;						// Frame effect (chunk data, contains effect index & param used in blit)
+	CEffectEx*		m_pEffectEx;					// Current effect
+	bool			m_bFrameEffectChanged;			// Frame effect has been modified
+	bool			m_bAlwaysUseSecondarySurface;	// This frame always use a secondary surface
+
+	// Secondary surface (render target used if background or frame effects)
+	cSurface*		m_pSecondarySurface;
+
+	// List of sub-app surfaces to refresh at the end in D3D full screen mode
+	CPList*			m_pSurfacedSubApps;
+#endif
 
 #ifdef __cplusplus
 };
@@ -312,17 +368,16 @@ typedef CRunFrame *fpRunFrame;
 class CBinaryFile {
 public:
 	CBinaryFile()	{ m_path[0] = 0; m_pTempPath = NULL; m_fileSize = m_fileOffset = 0; m_tempCount = 0; }
-	~CBinaryFile()	{ if ( m_pTempPath != NULL ) { remove(m_pTempPath); free(m_pTempPath); m_pTempPath = NULL; m_tempCount = 0; } }
+	~CBinaryFile()	{ if ( m_pTempPath != NULL ) { _tremove(m_pTempPath); free(m_pTempPath); m_pTempPath = NULL; m_tempCount = 0; } }
 
 public:
-	char	m_path[_MAX_PATH];		// path stored in ccn file
-	LPSTR	m_pTempPath;			// path in temporary folder, if any
+	TCHAR	m_path[_MAX_PATH];		// path stored in ccn file
+	LPTSTR	m_pTempPath;			// path in temporary folder, if any
 	DWORD	m_fileSize;				// file size
 	DWORD	m_fileOffset;			// file offset in EXE/CCN file
 	long	m_tempCount;			// usage count
 };
 #endif // __cplusplus
-
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -334,17 +389,6 @@ public:
 #define	ARF_INGAMELOOP				0x0004
 #define ARF_PAUSEDBEFOREMODALLOOP	0x0008
 
-#define	AH2OPT_KEEPSCREENRATIO			0x0001
-
-struct AppHeader2
-{
-    DWORD	dwOptions;
-    DWORD	dwBuildType;
-    DWORD	dwBuildFlags;
-    WORD	wScreenRatioTolerance;
-    WORD	wScreenAngle;
-};
-
 #ifdef __cplusplus
 class CRunApp {
 public:
@@ -355,20 +399,20 @@ typedef struct CRunApp {
 	// Application info
 	AppMiniHeader	m_miniHdr;			// Version
 	AppHeader		m_hdr;				// General info
-	LPSTR			m_name;				// Name of the application
-	LPSTR			m_appFileName;		// filename (temporary file in editor mode)
-	LPSTR			m_editorFileName;	// filename of original .mfa file
-	LPSTR			m_copyright;		// copyright
-	LPSTR			m_aboutText;		// text to display in the About box
+	LPTSTR			m_name;				// Name of the application
+	LPTSTR			m_appFileName;		// filename (temporary file in editor mode)
+	LPTSTR			m_editorFileName;	// filename of original .mfa file
+	LPTSTR			m_copyright;		// copyright
+	LPTSTR			m_aboutText;		// text to display in the About box
 
 	// File infos
-	LPSTR			m_targetFileName;	// filename of original CCN/EXE file
-	LPSTR			m_tempPath;			// Temporary directory for external files
+	LPTSTR			m_targetFileName;	// filename of original CCN/EXE file
+	LPTSTR			m_tempPath;			// Temporary directory for external files
 	HFILE			m_file;				// File handle
 	DWORD			m_startOffset;
 
 	// Help file
-	LPSTR			m_doc;				// Help file pathname
+	LPTSTR			m_doc;				// Help file pathname
 
 	// Icon
 	LPBYTE			m_icon16x16x8;		// = LPBITMAPINFOHEADER
@@ -377,7 +421,7 @@ typedef struct CRunApp {
 	// Menu
 	HMENU			m_hRunMenu;			// Menu
 	LPBYTE			m_accels;			// Accelerators
-	LPSTR			m_pMenuTexts;		// Menu texts (for ownerdraw menu)
+	LPTSTR			m_pMenuTexts;		// Menu texts (for ownerdraw menu)
 	LPBYTE			m_pMenuImages;		// Images index used in the menu
 	MenuHdr*		m_pMenu;
 
@@ -388,7 +432,7 @@ typedef struct CRunApp {
 	LPDWORD			m_frameOffset;				// Frame offsets in the file
 
 	// Frame passwords
-	LPSTR *			m_framePasswords;			// Table of frame passwords
+	LPTSTR *			m_framePasswords;			// Table of frame passwords
 
 	// Extensions
 	int				m_nbKpx;					// Number of extensions
@@ -400,7 +444,7 @@ typedef struct CRunApp {
 	MvxFnc*			m_mvxTable;					// DLL info
 
 	// Elements
-	LPSTR			m_eltFileName[MAX_TABREF];	// Element banks
+	LPTSTR			m_eltFileName[MAX_TABREF];	// Element banks
 	HFILE			m_hfElt[MAX_TABREF];
 
 	DWORD			m_eltBaseOff;
@@ -504,7 +548,7 @@ typedef struct CRunApp {
 	// Global strings (warning: not valid if sub-app and global values are shared)
 	LPBYTE			m_pGlobalStringInit;	// Default global string values
 	int				m_nGlobalStrings;		// Number of global strings
-	LPSTR*			m_pGlobalString;		// Pointers to global strings
+	LPTSTR*			m_pGlobalString;		// Pointers to global strings
 	LPBYTE			m_pGlobalStringNames;
 
 	// Global objects
@@ -514,25 +558,43 @@ typedef struct CRunApp {
 	short			m_NConditions[NUMBEROF_SYSTEMTYPES+KPX_BASE-1];
 
 	// External sound files
-	LPSTR			m_pExtMusicFile;
-	LPSTR			m_pExtSampleFile[32];		// External sample file per channel
+	LPTSTR			m_pExtMusicFile;
+	LPTSTR			m_pExtSampleFile[32];		// External sample file per channel
 
 	// New Build 243
 	int				m_nInModalLoopCount;
-	LPSTR			m_pPlayerNames;
+	LPTSTR			m_pPlayerNames;
 	DWORD			m_dwColorCache;
 
 	// New Build 245
-	LPBYTE			m_pVtz4Opt;
-	DWORD			m_dwVtz4Chk;
+	LPBYTE			m_pVtz4Opt;			// not used
+	DWORD			m_dwFree;			// not used
 
 	// Application load
-	LPSTR			m_pLoadFilename;
+	LPTSTR			m_pLoadFilename;
 	DWORD			m_saveVersion;
 	BOOL			m_bLoading;
 
-    LPVOID          m_reserved;
-    AppHeader2*     m_pHdr2;
+	// Bluray
+	LPVOID			m_pBROpt;
+
+	// Build info
+	AppHeader2*		m_pHdr2;
+
+	// Code page
+#ifdef _UNICODE
+	DWORD			m_dwCodePage;
+	bool			m_bUnicodeAppFile;
+#endif
+
+	// Effects
+#ifdef HWABETA
+	LPBYTE			m_pEffects;							// effects used in the application
+	cSurface*		m_pOldSecondarySurface;				// secondary surface of the last frame, used in transitions
+	bool			m_bAlwaysUseSecondarySurface;		// at least one frame has a transition => always use a secondary surface in all the frames
+	bool			m_bShowWindowedMenu;				// to show menu after switch from full screen to windowed mode
+	int				m_nSubAppShowCount;					// to show the child window otherwise it's not displayed...
+#endif // HWABETA
 
 #ifdef __cplusplus
 };

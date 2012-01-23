@@ -58,7 +58,7 @@ BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID lpReserved)
 //
 extern "C" int WINAPI DLLExport Initialize(mv _far *mV, int quiet)
 {
-    Edif::Init(mV);
+    return Edif::Init(mV);
 
 
 	// No error
@@ -73,6 +73,8 @@ extern "C" int WINAPI DLLExport Initialize(mv _far *mV, int quiet)
 // 
 extern "C" int WINAPI DLLExport Free(mv _far *mV)
 {
+    Edif::Free(mV);
+
 	// No error
 	return 0;
 }

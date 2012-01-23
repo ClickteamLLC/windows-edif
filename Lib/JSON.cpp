@@ -400,6 +400,9 @@ JSON::Object::Object(JSON::LoadSource::Type Source, const char * Data)
 
 const JSON::Object &JSON::Object::operator [] (const char * Name) const
 {
+	if ( MapNames == NULL )
+	    return JSON::Empty;
+
     for(int i = 0; i < Length; ++ i)
     {
         if(!strcasecmp(MapNames[i], Name))

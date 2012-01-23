@@ -102,7 +102,7 @@ namespace Edif
         void PushEvent(int EventID);
 
         void * Allocate(size_t);
-        char * CopyString(const char *);
+        TCHAR * CopyString(const TCHAR *);
 
         void Pause();
         void Resume();
@@ -118,11 +118,11 @@ namespace Edif
 
         void Destroy();
 
-        void GetApplicationDrive(char * Buffer);
-        void GetApplicationDirectory(char * Buffer);
-        void GetApplicationPath(char * Buffer);
-        void GetApplicationName(char * Buffer);
-        void GetApplicationTempPath(char * Buffer);
+        void GetApplicationDrive(TCHAR * Buffer);
+        void GetApplicationDirectory(TCHAR * Buffer);
+        void GetApplicationPath(TCHAR * Buffer);
+        void GetApplicationName(TCHAR * Buffer);
+        void GetApplicationTempPath(TCHAR * Buffer);
 
         void ExecuteProgram(prgParam * Program);
 
@@ -136,8 +136,8 @@ namespace Edif
 
         Riggs::ObjectSelection ObjectSelection;
 
-        void WriteGlobal(const char * Name, void * Value);
-        void * ReadGlobal(const char * Name);
+        void WriteGlobal(const TCHAR * Name, void * Value);
+        void * ReadGlobal(const TCHAR * Name);
 
         #ifdef EdifUseJS
         
@@ -149,13 +149,20 @@ namespace Edif
 
     extern bool ExternalJSON;
 
-    void GetSiblingPath (char * Buffer, const char * Extension);
+    void GetSiblingPath (TCHAR * Buffer, const TCHAR * Extension);
     
     const int DependencyNotFound     = 0;
     const int DependencyWasFile      = 1;
     const int DependencyWasResource  = 2;
 
-    int GetDependency (char *& Buffer, size_t &Size, const char * FileExtension, int Resource);
+    int GetDependency (char *& Buffer, size_t &Size, const TCHAR * FileExtension, int Resource);
+
+	TCHAR* ConvertString(const char* urf8String);
+	TCHAR* ConvertAndCopyString(TCHAR* tstr, const char* urf8String, int maxLength);
+	inline void FreeString(TCHAR* s)
+	{
+		free(s);
+	}
 
     extern char LanguageCode[3];
     extern bool IsEdittime;
@@ -164,7 +171,7 @@ namespace Edif
 
     HMENU LoadMenuJSON (int BaseID, JSON::Object &Source, HMENU Parent = 0);
 
-    void Init(mv _far * mV);
+    int Init(mv _far * mV);
     void Init(mv _far * mV, LPEDATA edPtr);
 
     void Free(mv _far * mV);

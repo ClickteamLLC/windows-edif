@@ -28,7 +28,13 @@ class CPropValue;
 //////////////
 // Base class
 //////////////
-//
+
+/**
+ *  Property Value.
+ *  This class is the base class of the classes that contain the values of editable properties.
+ *  CPropValue objects allow to communicate values between the property window and the object data.
+ *  This is a pure virtual class.
+ */
 class CPropValue
 {
 protected:
@@ -45,7 +51,10 @@ public:
 //////////////
 // Int
 //////////////
-//
+
+/**
+ *  Integer Property Value.
+ */
 class CPropIntValue : public CPropValue
 {
 protected:
@@ -67,6 +76,9 @@ public:
 // DWORD
 //////////////
 //
+/**
+ *  DWORD Property Value.
+ */
 class CPropDWordValue : public CPropValue
 {
 protected:
@@ -88,6 +100,9 @@ public:
 // Float
 //////////////
 //
+/**
+ *  Float Property Value.
+ */
 class CPropFloatValue : public CPropValue
 {
 protected:
@@ -109,6 +124,9 @@ public:
 // Double
 //////////////
 //
+/**
+ *  Double Property Value.
+ */
 class CPropDoubleValue : public CPropValue
 {
 protected:
@@ -130,6 +148,10 @@ public:
 // Size
 //////////////
 //
+/**
+ *  Size Property Value.
+ *  Width and height, integer values.
+ */
 class CPropSizeValue : public CPropValue
 {
 protected:
@@ -152,6 +174,9 @@ public:
 // Int64
 //////////////
 //
+/**
+ *  Large Integer Property Value.
+ */
 class CPropInt64Value : public CPropValue
 {
 protected:
@@ -173,6 +198,9 @@ public:
 // Pointer
 //////////////
 //
+/**
+ *  Pointer Property Value.
+ */
 class CPropPtrValue : public CPropValue
 {
 protected:
@@ -194,6 +222,9 @@ public:
 // Buffer
 //////////////
 //
+/**
+ *  Buffer Property Value.
+ */
 class CPropDataValue : public CPropValue
 {
 protected:
@@ -220,7 +251,7 @@ public:
 		m_pData = NULL;
 		if ( pStr == NULL )
 			return;
-		m_pData = (LPBYTE) _strdup(pStr);
+		m_pData = (LPBYTE)_strdup(pStr);
 		m_dwDataSize = strlen((LPCSTR)m_pData)+1;
 	};
 
@@ -242,9 +273,137 @@ public:
 	LPBYTE	m_pData;
 };
 
+/////////////////
+// String (ANSI)
+/////////////////
+//
+/**
+ *  ANSI string Property Value.
+ */
+class CPropAStringValue : public CPropValue
+{
+protected:
+	virtual ~CPropAStringValue() {}
+public:
+	CPropAStringValue() { m_pStr = _strdup(""); m_unused = 0; }
+	CPropAStringValue(LPCSTR pStr) {
+		if ( pStr == NULL )
+			m_pStr = _strdup("");
+		else
+			m_pStr = _strdup(pStr);
+		m_unused = 0;
+	}
+	CPropAStringValue(LPCWSTR pWStr) {
+		if ( pWStr == NULL )
+			m_pStr = _strdup("");
+		else
+		{
+			// m_pStr = _strdup(pStr);
+			int lg = wcslen(pWStr);
+			m_pStr = (LPSTR)calloc(lg+1, 1);		// TODO : change that if we use something else than CP_ACP
+			WideCharToMultiByte(CP_ACP, 0, pWStr, lg, m_pStr, lg, NULL, NULL);
+			m_pStr[lg] = 0;
+		}
+		m_unused = 0;
+	}
+	CPropAStringValue(int nStringSize) {
+		if ( nStringSize > 0 )
+			m_pStr = (LPSTR)calloc(nStringSize+1, 1);
+		else
+			m_pStr = _strdup("");
+	}
+	LPCSTR GetString() {
+		return m_pStr;
+	}
+	virtual void Delete() { free(m_pStr); m_pStr = NULL; delete this; }
+	virtual CPropValue* CreateCopy() { return new CPropAStringValue(m_pStr); }
+	virtual BOOL IsEqual(CPropValue* value) {
+		if ( m_pStr == NULL || ((CPropAStringValue*)value)->m_pStr == NULL )
+			return (m_pStr == ((CPropAStringValue*)value)->m_pStr);
+		return (strcmp(m_pStr, ((CPropAStringValue*)value)->m_pStr) == 0);
+	}
+	virtual DWORD GetClassID() { return 'STRA'; }
+
+public:
+	DWORD	m_unused;		// for compatibility with Data property
+	LPSTR	m_pStr;
+};
+
+///////////////////
+// String (UNICODE)
+///////////////////
+//
+/**
+ *  Unicode string Property Value.
+ */
+class CPropWStringValue : public CPropValue
+{
+protected:
+	virtual ~CPropWStringValue() {}
+public:
+	CPropWStringValue() { m_pWStr = _wcsdup(L""); m_unused = 0; }
+	CPropWStringValue(LPCWSTR pWStr) {
+		if ( pWStr == NULL )
+			m_pWStr = _wcsdup(L"");
+		else
+			m_pWStr = _wcsdup(pWStr);
+		m_unused = 0;
+	}
+	CPropWStringValue(LPCSTR pStr) {
+		if ( pStr == NULL )
+			m_pWStr = _wcsdup(L"");
+		else
+		{
+			// m_pStr = _strdup(pStr);
+			int lg = strlen(pStr);
+			m_pWStr = (LPWSTR)calloc(lg+1, sizeof(wchar_t));
+			MultiByteToWideChar(CP_ACP, 0, pStr, lg, m_pWStr, lg);
+			m_pWStr[lg] = 0;
+		}
+		m_unused = 0;
+	}
+	CPropWStringValue(int nStringSize) {
+		if ( nStringSize > 0 )
+			m_pWStr = (LPWSTR)calloc(nStringSize+1, sizeof(wchar_t));
+		else
+			m_pWStr = _wcsdup(L"");
+	}
+	LPCWSTR GetString() {
+		return m_pWStr;
+	}
+	virtual void Delete() { free(m_pWStr); m_pWStr = NULL; delete this; }
+	virtual CPropValue* CreateCopy() { return new CPropWStringValue(m_pWStr); }
+	virtual BOOL IsEqual(CPropValue* value) {
+		if ( m_pWStr == NULL || ((CPropWStringValue*)value)->m_pWStr == NULL )
+			return (m_pWStr == ((CPropWStringValue*)value)->m_pWStr);
+		return (wcscmp(m_pWStr, ((CPropWStringValue*)value)->m_pWStr) == 0);
+	}
+	virtual DWORD GetClassID() { return 'STRW'; }
+
+public:
+	DWORD	m_unused;		// for compatibility with Data property
+	LPWSTR	m_pWStr;
+};
+
+//////////////////////////////////////////////////////////////////
+// String (ANSI or UNICODE, depending on preprocessor definitions)
+//////////////////////////////////////////////////////////////////
+#ifdef _UNICODE
+#define CPropStringValue	CPropWStringValue
+#else
+#define CPropStringValue	CPropAStringValue
+#endif
+
+
 //////////////////
 // Custom property
 //////////////////
+/**
+ *  Custom property.
+ *  This class allows to define a new type of property control.
+ *  Derived classes must implement the methods to draw, activate, deactivate the control,
+ *  as well as the methods to get and set values.
+ */
 class CCustomProp
 {
 public:
@@ -316,32 +475,38 @@ typedef struct _NMPROPWND
 //
 // Property types
 //
+
+/**
+ *  List of property types.
+ */
 enum {
-	PROPTYPE_STATIC = 1,		// Simple static text
-	PROPTYPE_FOLDER,			// Folder
-	PROPTYPE_FOLDER_END,		// Folder End
-	PROPTYPE_EDITBUTTON,		// Edit button, param1 = button text, or NULL if Edit
-	PROPTYPE_EDIT_STRING,		// Edit box for strings, parameter = max length
-	PROPTYPE_EDIT_NUMBER,		// Edit box for numbers, parameters = min value, max value, options (signed, float, spin)
-	PROPTYPE_COMBOBOX,			// Combo box, parameters = list of strings, options (sorted, etc)
-	PROPTYPE_SIZE,				// Size
-	PROPTYPE_COLOR,				// Color
-	PROPTYPE_LEFTCHECKBOX,		// Checkbox
-	PROPTYPE_SLIDEREDIT,		// Edit + Slider
-	PROPTYPE_SPINEDIT,			// Edit + Spin
-	PROPTYPE_DIRCTRL,			// Direction Selector
-	PROPTYPE_GROUP,				// Group
-	PROPTYPE_LISTBTN,			// Internal, do not use
-	PROPTYPE_FILENAME,			// Edit box + browse file button, parameter = FilenameCreateParam
-	PROPTYPE_FONT,				// Font dialog box
-	PROPTYPE_CUSTOM,			// Custom property
-	PROPTYPE_PICTUREFILENAME,	// Edit box + browse image file button
-	PROPTYPE_COMBOBOXBTN,		// Combo box, parameters = list of strings, options (sorted, etc)
-	PROPTYPE_EDIT_FLOAT,		// Edit box for floating point numbers, parameters = min value, max value, options (signed, float, spin)
-	PROPTYPE_EDIT_MULTILINE,	// Edit box for multiline texts, no parameter
-	PROPTYPE_IMAGELIST,			// Image list
-	PROPTYPE_ICONCOMBOBOX,		// Combo box with icons
-	PROPTYPE_URLBUTTON,			// URL button
+	PROPTYPE_STATIC = 1,		//! Simple static text
+	PROPTYPE_FOLDER,			//! Folder
+	PROPTYPE_FOLDER_END,		//! Folder End
+	PROPTYPE_EDITBUTTON,		//! Edit button, param1 = button text, or NULL if Edit
+	PROPTYPE_EDIT_STRING,		//! Edit box for strings, parameter = max length
+	PROPTYPE_EDIT_NUMBER,		//! Edit box for numbers, parameters = min value, max value
+	PROPTYPE_COMBOBOX,			//! Combo box, parameters = list of strings, options (sorted, etc)
+	PROPTYPE_SIZE,				//! Size
+	PROPTYPE_COLOR,				//! Color
+	PROPTYPE_LEFTCHECKBOX,		//! Checkbox
+	PROPTYPE_SLIDEREDIT,		//! Edit + Slider
+	PROPTYPE_SPINEDIT,			//! Edit + Spin
+	PROPTYPE_DIRCTRL,			//! Direction Selector
+	PROPTYPE_GROUP,				//! Group
+	PROPTYPE_LISTBTN,			//! Internal, do not use
+	PROPTYPE_FILENAME,			//! Edit box + browse file button, parameter = FilenameCreateParam
+	PROPTYPE_FONT,				//! Font dialog box
+	PROPTYPE_CUSTOM,			//! Custom property
+	PROPTYPE_PICTUREFILENAME,	//! Edit box + browse image file button
+	PROPTYPE_COMBOBOXBTN,		//! Combo box, parameters = list of strings, options (sorted, etc)
+	PROPTYPE_EDIT_FLOAT,		//! Edit box for floating point numbers, parameters = min value, max value, options (signed, float, spin)
+	PROPTYPE_EDIT_MULTILINE,	//! Edit box for multiline texts, no parameter
+	PROPTYPE_IMAGELIST,			//! Image list
+	PROPTYPE_ICONCOMBOBOX,		//! Combo box with icons
+	PROPTYPE_URLBUTTON,			//! URL button
+	PROPTYPE_DIRECTORYNAME,		//! Directory pathname
+	PROPTYPE_SPINEDITFLOAT,		//! Edit + Spin, value = floating point number
 };
 
 ///////////////////
@@ -357,6 +522,11 @@ enum {
 #define PROPOPT_MOVABLE			0x00000020		// The property can be moved by the user (list only)
 #define	PROPOPT_LIST			0x00000040		// The property is a list
 #define	PROPOPT_SINGLESEL		0x00000080		// This property is not displayed in multi-selection mode
+
+// Property-specific options
+#define PROPOPT_EDIT_PASSWORD	0x00010000		// For Edit String property
+#define PROPOPT_EDIT_LOWERCASE	0x00020000		// For Edit String property
+#define PROPOPT_EDIT_UPPERCASE	0x00040000		// For Edit String property
 
 // Internal, not used by extensions
 #define PROPID_ROOT				0
@@ -433,6 +603,12 @@ enum {
 #define PropData_URLButton(id,name,info,url) {id,name,info,PROPTYPE_URLBUTTON,PROPOPT_PARAMREQUIRED, (LPARAM)url}
 #define PropData_URLButton_Check(id,name,info,url) {id,name,info,PROPTYPE_URLBUTTON,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)url}
 #define PropData_URLButton_Opt(id,name,info,opt,url) {id,name,info,PROPTYPE_URLBUTTON,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)url}
+#define PropData_DirectoryName(id,name,info,param) {id,name,info,PROPTYPE_DIRECTORYNAME,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_DirectoryName_Check(id,name,info,param) {id,name,info,PROPTYPE_DIRECTORYNAME,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_DirectoryName_Opt(id,name,info,opt,param) {id,name,info,PROPTYPE_DIRECTORYNAME,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_SpinEditFloat(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT,PROPOPT_PARAMREQUIRED,(LPARAM)minmaxdelta}
+#define PropData_SpinEditFloat_Check(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmaxdelta}
+#define PropData_SpinEditFloat_Opt(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmaxdelta}
 #define PropData_End() {0}
 
 /////////////////////////////////
@@ -445,6 +621,14 @@ typedef struct {
 	int nMaxValue;		// Maximum value (note: cannot be greater than 32767 for SpinEdit property)
 } MinMaxParam;
 typedef MinMaxParam* LPMINMAXPARAM;
+
+// Parameter for floating point slider & spin property items
+typedef struct {
+	float fMinValue;		// Minimum value (e.g. 0.0f)
+	float fMaxValue;		// Maximum value (e.g. 1.0f)
+	float fDelta;			// Delta value (e.g. 0.01f)
+} MinMaxFloatParam;
+typedef MinMaxFloatParam* LPMINMAXFLOATPARAM;
 
 // Direction Control Styles
 enum 
@@ -498,11 +682,13 @@ enum {
 	PROPID_TAB_VALUES,
 	PROPID_TAB_EVENTS,
 	PROPID_TAB_ABOUT,
-	PROPID_TAB_CUSTOM1 = 15,
+	PROPID_TAB_BLURAY,
+	PROPID_TAB_IPHONE,
+	PROPID_TAB_ANDROID,
+	PROPID_TAB_XNA,
+	PROPID_TAB_MAC,
+	PROPID_TAB_CUSTOM1 = 18,
 	PROPID_TAB_CUSTOM2,
-	PROPID_TAB_CUSTOM3,
-	PROPID_TAB_CUSTOM4,
-	PROPID_TAB_CUSTOM5,
 	PROPTAB_MAX				// 20
 };
 
@@ -544,6 +730,10 @@ enum {
 	PROPID_FITEM_GLOBAL,
 	PROPID_FITEM_LOADONCALL,
 	PROPID_FITEM_OPTIONS,
+	PROPID_FITEM_RGBCOEF,
+	PROPID_FITEM_BLENDCOEF,
+	PROPID_FITEM_IMAGECOMPRESSION,
+	PROPID_FITEM_GLOBAL_EDITORSYNCHRO,
 	PROPID_FITEM_LAST=249,
 
 	PROPID_DYNITEM_FIRST=250,
@@ -581,6 +771,8 @@ enum {
 	PROPID_DYNITEM_GRAVITY,
 	PROPID_DYNITEM_JUMPSTRENGTH,
 	PROPID_DYNITEM_JUMPCONTROL,
+	PROPID_DYNITEM_MVTHELP,
+	PROPID_DYNITEM_8DIR_STICKOBST,
 	PROPID_MVT_LAST,
 
 	PROPID_DYNITEM_ALTVALUES_GROUP=350,
@@ -603,6 +795,7 @@ enum {
 	PROPID_DYNITEM_BEHAVIOR_END,
 	PROPID_DYNITEM_CREATE,
 	PROPID_DYNITEM_CREATEATSTART,
+	PROPID_DYNITEM_BACKCOLOROPACITY,
 
 	PROPID_TEXT_FIRST=380,
 	PROPID_TEXT_FONT,
@@ -616,6 +809,7 @@ enum {
 	PROPID_TEXT_ALIGNGROUP,
 	PROPID_TEXT_HALIGN,
 	PROPID_TEXT_VALIGN,
+	PROPID_TEXT_RTL,
 	PROPID_TEXT_LAST,
 
 	PROPID_DYNITEM_LAST,
@@ -645,6 +839,9 @@ enum {
 
 	PROPID_FADE_PARAM_FIRST=0x53000,
 	PROPID_FADE_PARAM_LAST =0x53FFF,
+
+	PROPID_FITEM_FXPARAM_FIRST=0x54000,
+	PROPID_FITEM_FXPARAM_LAST=0x54FFF,
 
 	// Extensions must use property identifiers between PROPID_EXTITEM_CUSTOM_FIRST and PROPID_EXTITEM_CUSTOM_LAST
 	PROPID_EXTITEM_CUSTOM_FIRST=0x80000,
@@ -726,17 +923,127 @@ enum {
 	PROPID_APP_SHOWDEBUGGER,
 	PROPID_APP_COMPRUNTIME,
 	PROPID_APP_DONOTSHAREDATA,
-	PROPID_APP_VTZU,
-	PROPID_APP_VTZS,
+	PROPID_APP_VTZONLYFROMURL,
+	PROPID_APP_VTZENABLESCRIPT,
 	PROPID_APP_VISTAOPT,
 	PROPID_APP_EXECLEVEL,
+	PROPID_APP_VTZONLY,
+	PROPID_APP_BUILDJARURL,
+	PROPID_APP_WNDTRANSP,
+	PROPID_APP_BRBUILDDIR,
+	PROPID_APP_LOADANIM_GROUP,
+	PROPID_APP_LOADANIM_IMAGE,
+	PROPID_APP_LOADANIM_NIMAGES,
+	PROPID_APP_BRBUILDFILE,
+	PROPID_APP_BRUSEMOSAIC,
+	PROPID_APP_BRGRAPHICSINJAR,
+	PROPID_APP_BRSIGNED,
+	PROPID_APP_BRORGID,
+	PROPID_APP_BRAPPID,
+	PROPID_APP_BRSGACT,
+	PROPID_APP_BRSGKEYSTORE,
+	PROPID_APP_BRSGKEYSTOREPW,
+	PROPID_APP_BRSGKEY,
+	PROPID_APP_BRSGKEYPW,
+	PROPID_APP_BRBACKSURFACE,
+	PROPID_APP_BRGRAPHICS_GROUP,
+	PROPID_APP_BRSIGNING_GROUP,
+	PROPID_APP_BRLOADOPTIONS_GROUP,
+	PROPID_APP_BRLOADALLIMAGESATSTART,
+	PROPID_APP_BRLOADALLSOUNDSATSTART,
+	PROPID_APP_BRSOUNDS_GROUP,
+	PROPID_APP_BREXTERNALSOUNDS,
+	PROPID_APP_BUILDDIR,
+	PROPID_APP_FULLSCREENGROUP,
+	PROPID_APP_KEEPSCREENRATIO,
+	PROPID_APP_SCREENRATIOTOLERANCE,
+	PROPID_APP_BRBUILDDIR2,
+	PROPID_APP_RESAMPLESTRETCH,
+	PROPID_APP_GLOBALREFRESH,
+	PROPID_APP_FLASH_MOCHIADS_GROUP,
+	PROPID_APP_FLASH_MOCHIADS,
+	PROPID_APP_FLASH_MOCHIADS_GAMEID,
+	PROPID_APP_FLASH_MOCHIADS_START,
+	PROPID_APP_FLASH_MOCHIADS_END,
+	PROPID_APP_LANGUAGE,
+	PROPID_APP_SCREENROTATION,
+	PROPID_APP_FLASH_PRELOADER_GROUP,
+	PROPID_APP_FLASH_PRELOADER,
+	PROPID_APP_FLASH_PRELOADER_FILENAME,
+	PROPID_APP_FLASH_PRELOADER_PGB_X,
+	PROPID_APP_FLASH_PRELOADER_PGB_Y,
+	PROPID_APP_FLASH_PRELOADER_PGB_RADIUS,
+	PROPID_APP_FLASH_PRELOADER_PGB_THICKNESS,
+	PROPID_APP_FLASH_PRELOADER_PGB_COLOR,
+	PROPID_APP_FLASH_PRELOADER_BACK_COLOR,
+	PROPID_APP_MP3_GROUP,
+	PROPID_APP_MP3_FORCEFREQ,
+	PROPID_APP_MP3_BITRATE,
+	PROPID_APP_MP3_ENCODER,
+	PROPID_APP_FLASH_MOCHIADS_SIGNUP,
+	PROPID_APP_FLASH_PRELOADERTYPE,
+	PROPID_APP_FLASH_EMBEDDEDFONTS_GROUP,
+	PROPID_APP_FLASH_EMBEDDEDFONTS,
+	PROPID_APP_IPHONE_GROUP,
+	PROPID_APP_IPHONE_ORIENTATION,
+	PROPID_APP_RTL,
+	PROPID_APP_IPHONEBUNDLEID,
+	PROPID_APP_IPHONETEXTURECOMPRESSION,
+	PROPID_APP_IPHONEMULTITASK,
+	PROPID_APP_IPHONEIMAGES_GROUP,
+	PROPID_APP_IPHONEAPPICON_IPHONE,
+	PROPID_APP_IPHONELAUNCHIMAGE_IPHONE,
+	PROPID_APP_IPHONEITUNEARTWORK,
+	PROPID_APP_ANDROIDKEYSTORE,
+	PROPID_APP_ANDROIDKEYNAME,
+	PROPID_APP_ANDROIDRELEASE,
+	PROPID_APP_ANDROIDPACKAGENAME,
+	PROPID_APP_ANDROIDIMAGES_GROUP,
+	PROPID_APP_ANDROIDLAUNCHERICON,
+	PROPID_APP_ANDROIDMENUICON,
+	PROPID_APP_ANDROIDTESTMODE,
+	PROPID_APP_ANDROIDEMULATORS,
+	PROPID_APP_IPHONESTATUSLINE,
+	PROPID_APP_RTLLAYOUT,
+	PROPID_APP_IPHONEIAD_GROUP,
+	PROPID_APP_IPHONEENABLEIAD,
+	PROPID_APP_IPHONEIADBOTTOM,
+	PROPID_APP_OPTIONAL_MODULES,
+	PROPID_APP_ANDROIDVERSION,
+	PROPID_APP_IPHONEBUNDLEVERSION,
+	PROPID_APP_IPHONETARGETDEVICE,
+	PROPID_APP_IPHONEARCHITECTURE,
+	PROPID_APP_IPHONEAPPICON_IPAD,
+	PROPID_APP_IPHONELAUNCHIMAGE_IPAD,
+	PROPID_APP_XNAPROJECTPATH,
+	PROPID_APP_XNAPROJECTNAME,
+	PROPID_APP_XNASTATUSLINE,
+	PROPID_APP_XNAFONT_GROUP,
+	PROPID_APP_XNAFONT_FIRSTCHAR,
+	PROPID_APP_XNAFONT_LASTCHAR,
+	PROPID_APP_JOYSTICKIMAGES,
+	PROPID_APP_ANDROIDSTATUSLINE,
+	PROPID_APP_BUILDTYPE_REAL,
+	PROPID_APP_ANDROID_PERMS,
+	PROPID_APP_ANDROIDDISABLEBACKBUTTON,
+	PROPID_APP_IPHONEANTIALIAS,
+	PROPID_APP_ANDROID_AUTOEND,
+	PROPID_APP_ANDROIDCRASHREPORTING,
+	PROPID_APP_FLASH_TARGETPLAYER,
+	PROPID_APP_BUILDWARNINGS,
+	PROPID_APP_XNAADS,
+	PROPID_APP_XNAPUBCENTERID,
 	PROPID_APP_LAST,
+
+	PROPID_APP_ANDROID_PERM_FIRST = 90001,
+	PROPID_APP_ANDROID_PERM_LAST = 90105,
 
 	PROPID_APP_GLOBALVALUE_FIRST = 100000,
 	PROPID_APP_GLOBALVALUE_LAST =  199998,
 
 	PROPID_APP_GLOBALSTRING_FIRST = 200000,
 	PROPID_APP_GLOBALSTRING_LAST =  299998,
+
 };
 
 // Frame
@@ -766,6 +1073,22 @@ enum {
 	PROPID_FRAME_DEMOFILENAME,
 	PROPID_FRAME_RECORD,
 	PROPID_FRAME_RANDOMSEED,
+	PROPID_FRAME_WNDTRANSP,
+	PROPID_FRAME_KEYRELEASETIME,
+	PROPID_FRAME_TIMEDMVTS,
+	PROPID_FRAME_TIMEDMVTSBASE,
+	PROPID_FRAME_FLASH_MOCHIADS_INTER,
+	PROPID_FRAME_GLOBALEVENTS,
+	PROPID_FRAME_IPHONE_JOYSTICK_GROUP,
+	PROPID_FRAME_IPHONE_JOYSTICK_TYPE,
+	PROPID_FRAME_IPHONE_JOYSTICK_FIRE1,
+	PROPID_FRAME_IPHONE_JOYSTICK_FIRE2,
+	PROPID_FRAME_IPHONE_JOYSTICK_LEFTHAND,
+	PROPID_FRAME_IPHONE_GROUP,
+	PROPID_FRAME_IPHONE_TOUCHMODE,
+	PROPID_FRAME_DISABLEIDLETIMER,
+	PROPID_FRAME_IPHONEIAD_GROUP,
+	PROPID_FRAME_IPHONEIAD,
 	PROPID_FRAME_LAST,
 };
 

@@ -1,32 +1,32 @@
 
 #include "Common.h"
 
-LPCSTR * Dependencies = 0;
+LPCTSTR * Dependencies = 0;
 
-LPCSTR * WINAPI DLLExport GetDependencies()
+LPCTSTR * WINAPI DLLExport GetDependencies()
 {
 	if(!Dependencies)
     {
         JSON::Object &DependenciesJSON = SDK->Information["About"]["Dependencies"];
 
-        Dependencies = new LPCSTR [DependenciesJSON.Length + 2];
+        Dependencies = new LPCTSTR [DependenciesJSON.Length + 2];
 
         int Offset = 0;
 
         if (Edif::ExternalJSON)
         {
-            char JSONFilename [MAX_PATH];
+            TCHAR JSONFilename [MAX_PATH];
 
-            GetModuleFileName (hInstLib, JSONFilename, sizeof (JSONFilename));
+            GetModuleFileName (hInstLib, JSONFilename, sizeof (JSONFilename)/sizeof(TCHAR));
 
-            char * Iterator = JSONFilename + strlen(JSONFilename) - 1;
+            TCHAR * Iterator = JSONFilename + _tcslen(JSONFilename) - 1;
 
             while(*Iterator != '.')
                 -- Iterator;
 
-            strcpy(++ Iterator, "json");
+            _tcscpy(++ Iterator, _T("json"));
 
-            Iterator = JSONFilename + strlen(JSONFilename) - 1;
+            Iterator = JSONFilename + _tcslen(JSONFilename) - 1;
 
             while(*Iterator != '\\' && *Iterator != '/')
                 -- Iterator;
@@ -37,7 +37,11 @@ LPCSTR * WINAPI DLLExport GetDependencies()
         int i = 0;
 
         for(; i < DependenciesJSON.Length; ++ i)
-            Dependencies[Offset + i] = DependenciesJSON[i];
+		{
+			TCHAR* tstr = Edif::ConvertString(DependenciesJSON[i]);
+            Dependencies[Offset + i] = tstr;
+			Edif::FreeString(tstr);
+		}
 
         Dependencies[Offset + i] = 0;
     }

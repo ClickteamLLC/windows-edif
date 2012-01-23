@@ -54,6 +54,7 @@
 #else
 #include	<assert.h>
 #endif
+#include	<tchar.h>
 
 #if !defined(ASSERT)
 	#ifdef _DEBUG

@@ -66,7 +66,10 @@ struct  sMask;
 
 
 // Current build
-#define	MMFS2_CURRENT_BUILD		246
+#define	MMFS2_CURRENT_BUILD		250
+#define MMFS2_BUILD_MASK			0x0000FFFF
+#define MMFS2_BUILD_FLAG_UNICODE	0x00010000		// Unicode support
+#define MMFS2_BUILD_FLAG_HWA		0x00020000		// HWA support
 
 // 2/4 characters -> WORD/DWORD
 #ifndef MAC
@@ -190,8 +193,10 @@ enum {
 #define	SM_32		(SM_16+1)
 #define	MAX_MODE	SM_32
 
+#define	SM_D3D		0x10
 #define	SM_DDRAW	0x20		// Flag "Direct Draw"
 #define	SM_VRAM		0x40		// Flag "Video RAM"
+#define	SM_D3D8		0x80
 #define	SM_NOTDIB	(SM_DDRAW | SM_VRAM)
 #define	SM_MASK		0x0F		// Mask mode
 
@@ -299,7 +304,7 @@ enum	{
 	BK_SNGS,				// Sound bank
 	BK_COLMASKS,			// Collision mask bank
 	BK_COLMASKS_PLATFORM,	// Platform collision mask bank
-	BK_IMGSFS,				// Image surfaces
+	BK_IMGTEXTURES,			// Image textures
 	BK_FONTS,				// Font bank
 	BK_MAX
 };
@@ -349,22 +354,46 @@ typedef Sound* fpSound;
 #define SNDF_TYPEMASK		0x000F
 #define	SNDF_LOADONCALL		0x0010
 #define	SNDF_PLAYFROMDISK	0x0020
+#define	SNDF_FILE			0x0040
+#define	SNDF_UNICODEFILE	0x0080
 #define	SNDF_LOADED			0x1000
 
 // =======================================================================
 // Fonts
 // =======================================================================
 
+#ifndef _H2INC
+
 // Structure Font
-typedef struct  Font
+typedef struct  FontW
 {
 	DWORD		fnCheckSum;     // Checksum (des images)
 	DWORD		fnCount;        // Compteur d'utilisations
 	DWORD		fnSize;         // Taille sans l'entete
-	LOGFONT		fnLf;			// Header font (pour CreateFont si Windows font)
-} Font;
-typedef Font *npFont;
-typedef Font *fpFont;
+	LOGFONTW	fnLf;			// Header font (pour CreateFont si Windows font)
+} FontW;
+typedef FontW *npFontW;
+typedef FontW *fpFontW;
+
+typedef struct  FontA
+{
+	DWORD		fnCheckSum;     // Checksum (des images)
+	DWORD		fnCount;        // Compteur d'utilisations
+	DWORD		fnSize;         // Taille sans l'entete
+	LOGFONTA	fnLf;			// Header font (pour CreateFont si Windows font)
+} FontA;
+typedef FontA *npFontA;
+typedef FontA *fpFontA;
+
+#ifdef _UNICODE
+#define Font FontW
+#define fpFont fpFontW
+#else
+#define Font FontA
+#define fpFont fpFontA
+#endif
+
+#endif // _H2INC
 
 	// Font avec LOGFONT 16 bits pour version 32 bits
 
@@ -418,7 +447,7 @@ typedef struct tagSMI {
 #define	WF_IDLE						0x0020			// Idle mode (GetMessage)
 #define	WF_IDLE50					0x0040			// Idle mode (GetMessage + IT50)
 #define	WF_IDLEFLAGS	(WF_IDLE | WF_IDLE50)		// Idle mode flags
-#define	WF_VIEWZONES				0x0080			// Flag "view zones" en mode debug
+#define	WF_UNICODE					0x0080			// Flag "view zones" en mode debug
 #define	WF_SCR						0x0100			// Flag "Screen saver window"
 #define	WF_MDIMAIN					0x0200			// MDI Frame
 #define	WF_MDICLIENT				0x0400			// MDI Client
@@ -633,11 +662,15 @@ typedef	struct	tagAppSize {
 } appSize;
 typedef	appSize *fpas;
 
+#ifdef _H2INC
+#define CREATESTRUCTA CREATESTRUCT
+#define CREATESTRUCTW CREATESTRUCT
+#endif
 
 // Structure pour WinOpenEx
-typedef	struct	tagCW {
+typedef	struct	tagCWA {
 	DWORD			cwSize;
-	CREATESTRUCT	cwCreateStruct;
+	CREATESTRUCTA	cwCreateStruct;
 	int				cwCxMax;
 	int				cwCyMax;
 	HCURSOR			cwHCursor;
@@ -647,11 +680,11 @@ typedef	struct	tagCW {
 	};
 	int				cwClsWin;
 	int				cwWinFlags;
-} CREATEWIN;
+} CREATEWINA;
 
-typedef	struct	CREATEWINEX {
+typedef	struct	CREATEWINEXA {
 	DWORD			cwSize;
-	CREATESTRUCT	cwCreateStruct;
+	CREATESTRUCTA	cwCreateStruct;
 	int				cwCxMax;
 	int				cwCyMax;
 	HCURSOR			cwHCursor;
@@ -663,7 +696,45 @@ typedef	struct	CREATEWINEX {
 	int				cwWinFlags;
 	HWND			cwHWnd;
 	LPARAM			cwNotUsed;
-} CREATEWINEX;
+} CREATEWINEXA;
+
+typedef	struct	tagCWW {
+	DWORD			cwSize;
+	CREATESTRUCTW	cwCreateStruct;
+	int				cwCxMax;
+	int				cwCyMax;
+	HCURSOR			cwHCursor;
+	union {
+		DWORD		cwBackColor;
+		HBRUSH		cwHBackBrush;
+	};
+	int				cwClsWin;
+	int				cwWinFlags;
+} CREATEWINW;
+
+typedef	struct	CREATEWINEXW {
+	DWORD			cwSize;
+	CREATESTRUCTW	cwCreateStruct;
+	int				cwCxMax;
+	int				cwCyMax;
+	HCURSOR			cwHCursor;
+	union {
+		DWORD		cwBackColor;
+		HBRUSH		cwHBackBrush;
+	};
+	int				cwClsWin;
+	int				cwWinFlags;
+	HWND			cwHWnd;
+	LPARAM			cwNotUsed;
+} CREATEWINEXW;
+
+#ifdef _UNICODE
+#define CREATEWIN	CREATEWINW
+#define CREATEWINEX	CREATEWINEXW
+#else
+#define CREATEWIN	CREATEWINA
+#define CREATEWINEX	CREATEWINEXA
+#endif
 
 // Structure for SaveRect
 typedef	struct	saveRect {
@@ -696,8 +767,10 @@ DLLExport32 void	WINAPI EndAppli			(npAppli);
 
 	// Windows, dialogues
 	// ------------------
-DLLExport32 npWin	WINAPI WinOpenEx		(npAppli, CREATEWIN   *);
-DLLExport32 npWin	WINAPI SCRWinOpen		(npAppli, HWND);
+DLLExport32 npWin	WINAPI WinOpenExA		(npAppli, CREATEWINA *);
+DLLExport32 npWin	WINAPI WinOpenExW		(npAppli, CREATEWINW *);
+DLLExport32 npWin	WINAPI SCRWinOpenA		(npAppli, HWND);
+DLLExport32 npWin	WINAPI SCRWinOpenW		(npAppli, HWND);
 DLLExport32 void	WINAPI WCDClose			(npWin);
 DLLExport32 HWND	WINAPI WinGetHandle		(npWin);
 DLLExport32 HWND	WINAPI WinGetMCHandle	(npWin);
@@ -708,7 +781,18 @@ DLLExport32 void	WINAPI WinReleaseHDCLog	(npWin, HDC);
 DLLExport32 void	WINAPI WinGetLogRect	(npWin, RECT   *);
 DLLExport32 npWin   WINAPI WinSearch		(HWND);
 
-DLLExport32 LRESULT CALLBACK DefMsgProc		(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);
+DLLExport32 LRESULT CALLBACK DefMsgProcA	(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);
+DLLExport32 LRESULT CALLBACK DefMsgProcW	(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+#ifdef _UNICODE
+#define WinOpenEx	WinOpenExW
+#define	SCRWinOpen	SCRWinOpenW
+#define DefMsgProc	DefMsgProcW
+#else
+#define WinOpenEx	WinOpenExA
+#define	SCRWinOpen	SCRWinOpenA
+#define DefMsgProc	DefMsgProcA
+#endif
 
 	// Menus
 	// -----
@@ -775,17 +859,43 @@ DLLExport32 int		WINAPI GetOpaqueBlack			(npAppli);
 
 	// Font
 	// ----
-DLLExport32 DWORD	WINAPI AddFont			(npAppli, DWORD, fpFont, LPDWORD, DWORD);
+#ifndef _H2INC
+DLLExport32 DWORD	WINAPI AddFontA			(npAppli, DWORD, fpFontA, LPDWORD, DWORD);
 DLLExport32 DWORD	WINAPI IncFontCount		(npAppli, DWORD);
 DLLExport32 long	WINAPI DelFont			(npAppli, DWORD);
-DLLExport32 int		WINAPI GetFontInfos		(npAppli, DWORD, fpFont, LPDWORD);
+DLLExport32 int		WINAPI GetFontInfosA	(npAppli, DWORD, fpFontA, LPDWORD);
 DLLExport32 HFONT	WINAPI WinCreateFont	(npAppli, DWORD);
-DLLExport32 int		WINAPI WinPasteText		(npWin, HFONT, RECT*, LPSTR, COLORREF, DWORD);
+DLLExport32 int		WINAPI WinPasteTextA	(npWin, HFONT, RECT*, LPSTR, COLORREF, DWORD);
+
+DLLExport32 DWORD	WINAPI AddFontW			(npAppli ptApp, DWORD fType, fpFontW fntHdr, LPDWORD lpw, DWORD nbw);
+DLLExport32 int		WINAPI GetFontInfosW	(npAppli ptApp, DWORD nFont, fpFontW fntHdr, LPDWORD lpw);
+DLLExport32 int		WINAPI WinPasteTextW	(npWin, HFONT, RECT*, LPWSTR, COLORREF, DWORD);
 
 	// Fonts - fonctions 32 bits utilisant des structures 16 bits
-DLLExport32	void	WINAPI LogFont16To32	( LOGFONT   * lf32, LOGFONT16   * lf16 );
-DLLExport32	void	WINAPI LogFont32To16	( LOGFONT16   * lf16, LOGFONT   * lf32 );
+DLLExport32	void	WINAPI LogFont16To32A	( LOGFONTA   * lf32, LOGFONT16   * lf16 );
+DLLExport32	void	WINAPI LogFont32To16A	( LOGFONT16   * lf16, LOGFONTA   * lf32 );
 DLLExport32	HFONT	WINAPI CreateFontIndirect16	( LOGFONT16   * lFont );
+
+DLLExport32	void	WINAPI LogFont16To32W	( LOGFONTW   * lf32, LOGFONT16   * lf16 );
+DLLExport32	void	WINAPI LogFont32To16W	( LOGFONT16   * lf16, LOGFONTW   * lf32 );
+
+#ifdef _UNICODE
+#define AddFont			AddFontW
+#define GetFontInfos	GetFontInfosW
+#define	WinPasteText	WinPasteTextW
+#define LogFont16To32	LogFont16To32W
+#define LogFont32To16	LogFont32To16W
+#else
+#define AddFont			AddFontA
+#define GetFontInfos	GetFontInfosA
+#define	WinPasteText	WinPasteTextA
+#define LogFont16To32	LogFont16To32A
+#define LogFont32To16	LogFont32To16A
+#endif
+
+#endif // _H2INC
+
+
 
 	// Images
 	// ------
@@ -921,7 +1031,8 @@ DLLExport32 HCSPALETTE	WINAPI GetAppCSPalette (npAppli ptrApp);
 
 #ifdef __cplusplus
 class CSoundManager;
-DLLExport32 int WINAPI PlaySnd (CSoundManager* pSndMgr, npAppli ptApp, UINT sNum, HWND hWin, DWORD sFlags, DWORD sLParam, UINT nChannel);
+DLLExport32 int WINAPI PlaySndA (CSoundManager* pSndMgr, npAppli ptApp, UINT sNum, HWND hWin, DWORD sFlags, DWORD sLParam, UINT nChannel);
+DLLExport32 int WINAPI PlaySndW (CSoundManager* pSndMgr, npAppli ptApp, UINT sNum, HWND hWin, DWORD sFlags, DWORD sLParam, UINT nChannel);
 #endif // __cplusplus
 
 DLLExport32 void WINAPI PauseSnd (npAppli ptApp, UINT sType, UINT sNum);
@@ -952,7 +1063,8 @@ DLLExport32 void WINAPI SetSndChannelPosition (npAppli ptApp, UINT nChannel, DWO
 DLLExport32 DWORD WINAPI GetSndDuration (npAppli ptApp, UINT sType, UINT sNum);
 DLLExport32 DWORD WINAPI GetSndPosition (npAppli ptApp, UINT sType, UINT sNum);
 DLLExport32 void WINAPI SetSndPosition (npAppli ptApp, UINT sType, UINT sNum, DWORD dwPosition);
-DLLExport32 UINT WINAPI FindSndFromName(npAppli ptApp, UINT sType, LPCSTR pName);
+DLLExport32 UINT WINAPI FindSndFromNameA(npAppli ptApp, UINT sType, LPCSTR pName);
+DLLExport32 UINT WINAPI FindSndFromNameW(npAppli ptApp, UINT sType, LPCWSTR pName);
 DLLExport32 int WINAPI GetSndChannel(npAppli ptApp, UINT sNum);
 
 DLLExport32 void WINAPI LockSndChannel (npAppli ptApp, UINT nChannel, BOOL bLock);
@@ -961,15 +1073,36 @@ DLLExport32 void WINAPI SetSndFreq (npAppli ptApp, UINT sType, UINT sNum, DWORD 
 DLLExport32 DWORD WINAPI GetSndChannelFreq (npAppli ptApp, UINT nChannel);
 DLLExport32 DWORD WINAPI GetSndFreq (npAppli ptApp, UINT sType, UINT sNum);
 
-DLLExport32 UINT    WINAPI AddSound			(npAppli, UINT, LPSTR, LPBYTE, DWORD);
-DLLExport32 UINT	WINAPI ReplaceSound		(npAppli ptApp, UINT sFlags, UINT nSound, LPSTR fpName, LPBYTE lpData, DWORD dwDataSize);
+DLLExport32 UINT    WINAPI AddSoundA		(npAppli, UINT, LPSTR, LPBYTE, DWORD);
+DLLExport32 UINT	WINAPI ReplaceSoundA	(npAppli ptApp, UINT sFlags, UINT nSound, LPSTR fpName, LPBYTE lpData, DWORD dwDataSize);
 DLLExport32 BOOL	WINAPI SetSoundFlags	(npAppli ptApp, UINT nSound, UINT sFlags);
 DLLExport32 DWORD	WINAPI IncSoundCount	(npAppli, UINT);
-DLLExport32 int     WINAPI GetSoundInfo		(npAppli, UINT, fpSound);
-DLLExport32 int		WINAPI GetSoundName		(npAppli, UINT, LPSTR, UINT);
+DLLExport32 int     WINAPI GetSoundInfoA	(npAppli, UINT, fpSound);
+DLLExport32 int		WINAPI GetSoundNameA	(npAppli, UINT, LPSTR, UINT);
 DLLExport32 long	WINAPI GetSoundData		(npAppli, UINT, LPBYTE);
 DLLExport32 LPBYTE	WINAPI GetSoundDataPtr	(npAppli, UINT);
 DLLExport32 long	WINAPI DelSound			(npAppli, UINT);
+
+DLLExport32 UINT    WINAPI AddSoundW		(npAppli, UINT, LPWSTR, LPBYTE, DWORD);
+DLLExport32 UINT	WINAPI ReplaceSoundW	(npAppli ptApp, UINT sFlags, UINT nSound, LPWSTR fpName, LPBYTE lpData, DWORD dwDataSize);
+DLLExport32 int		WINAPI GetSoundNameW	(npAppli, UINT, LPWSTR, UINT);
+DLLExport32 int     WINAPI GetSoundInfoW	(npAppli, UINT, fpSound);
+
+#ifdef _UNICODE
+#define AddSound		AddSoundW
+#define ReplaceSound	ReplaceSoundW
+#define GetSoundName	GetSoundNameW
+#define GetSoundInfo	GetSoundInfoW
+#define	FindSndFromName	FindSndFromNameW
+#define PlaySnd			PlaySndW
+#else
+#define AddSound		AddSoundA
+#define ReplaceSound	ReplaceSoundA
+#define GetSoundName	GetSoundNameA
+#define GetSoundInfo	GetSoundInfoA
+#define	FindSndFromName	FindSndFromNameA
+#define PlaySnd			PlaySndA
+#endif
 
 DLLExport32 int		WINAPI WaveSetChannels	(npAppli ptApp, int nChannels);
 
@@ -980,7 +1113,8 @@ DLLExport32 int		WINAPI WaveSetChannels	(npAppli ptApp, int nChannels);
 #ifndef _H2INC
 enum {
 	LOCKIMAGE_READBLITONLY,
-	LOCKIMAGE_ALLREADACCESS
+	LOCKIMAGE_ALLREADACCESS,
+	LOCKIMAGE_HWACOMPATIBLE
 };
 
 #ifdef __cplusplus

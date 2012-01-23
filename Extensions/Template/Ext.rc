@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -24,15 +24,14 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 #endif //_WIN32
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
 //
 
 1 VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,0,0
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x0L
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -47,18 +46,14 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "Comments", "\0"
-            VALUE "CompanyName", "Clickteam\0"
-            VALUE "FileDescription", "V2Template32 Object\0"
-            VALUE "FileVersion", "2.00\0"
-            VALUE "InternalName", "V2TEMPLATE32\0"
-            VALUE "LegalCopyright", "Copyright © 2000 Clickteam\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "V2TEMPLATE32.mfx\0"
-            VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "\0"
-            VALUE "ProductVersion", "1, 0, 0, 0\0"
-            VALUE "SpecialBuild", "00000001\0"
+            VALUE "CompanyName", "Clickteam"
+            VALUE "FileDescription", "Edif Object"
+            VALUE "FileVersion", "2.00"
+            VALUE "InternalName", "EdifExt"
+            VALUE "LegalCopyright", "Copyright © 2012 Clickteam"
+            VALUE "OriginalFilename", "EdifExt.mfx"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+            VALUE "SpecialBuild", "00000001"
         END
     END
     BLOCK "VarFileInfo"
@@ -67,15 +62,13 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Data
+// RCDATA
 //
 
-KPX_MAGICNUMBER RCDATA MOVEABLE PURE 
+KPX_MAGICNUMBER RCDATA 
 BEGIN
     0x2516, 0x5908
 END
@@ -87,12 +80,12 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""..\\..\\Inc\\ccx.h""\r\n"
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
@@ -101,7 +94,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "\r\n"
     "\0"
@@ -115,7 +108,7 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     KPX_MARK                "MF2"
 END
@@ -138,8 +131,14 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 // EDIF
 //
 
-IDR_EDIF_ICON           EDIF    DISCARDABLE     "Icon.png"
-IDR_EDIF_JSON           EDIF    DISCARDABLE     "Ext.json"
+#if defined(APSTUDIO_INVOKED) || defined(EDITOR)
+#if defined(APSTUDIO_INVOKED)
+IDR_EDIF_ICON$(EDITOR)  EDIF                    "Icon.png"
+#else
+IDR_EDIF_ICON           EDIF                    "Icon.png"
+#endif
+#endif
+IDR_EDIF_JSON           EDIF                    "Ext.json"
 #endif    // English (U.K.) resources
 /////////////////////////////////////////////////////////////////////////////
 
