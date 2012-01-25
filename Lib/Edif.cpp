@@ -789,7 +789,7 @@ static void GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
 void Edif::GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
 {
     TCHAR * Extension = (TCHAR *)
-        alloca (_tcslen (FileExtension) + _tcslen (LanguageCode) + 2);
+        alloca ((_tcslen (FileExtension) + _tcslen (LanguageCode) + 2) * sizeof(TCHAR));
 
     _tcscpy (Extension, LanguageCode);
     _tcscat (Extension, _T ("."));
@@ -800,7 +800,7 @@ void Edif::GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
     if (*Buffer)
         return;
 
-    return ::GetSiblingPath (Buffer, FileExtension);
+    ::GetSiblingPath (Buffer, FileExtension);
 }
 
 #ifdef _UNICODE
