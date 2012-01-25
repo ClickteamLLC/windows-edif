@@ -3,7 +3,7 @@
 
 Edif::SDK * SDK;
 
-char Edif::LanguageCode[3];
+TCHAR Edif::LanguageCode[3];
 
 bool Edif::IsEdittime;
 bool Edif::ExternalJSON;
@@ -126,7 +126,7 @@ void Edif::Free(LPEDATA edPtr)
 
 int Edif::Init(mv _far * mV)
 {
-    strcpy(LanguageCode, "EN");
+    _tcscpy (LanguageCode, _T ("EN"));
 
 	// Get pathname of MMF2
 	LPTSTR mmfname = (LPTSTR)calloc(_MAX_PATH, sizeof(TCHAR));
@@ -144,10 +144,10 @@ int Edif::Init(mv _far * mV)
 			int nCode = _ttoi(langCode);
 			switch (nCode) {
 			case 0x40C:
-				strcpy(LanguageCode, "FR");
+				_tcscpy (LanguageCode, _T ("FR"));
 				break;
 			case 0x411:
-				strcpy(LanguageCode, "JP");
+				_tcscpy (LanguageCode, _T ("JP"));
 				break;
 			}
 
@@ -509,7 +509,7 @@ HMENU Edif::LoadMenuJSON(int BaseID, JSON::Object &Source, HMENU Parent)
             HMENU SubMenu = CreatePopupMenu();
             LoadMenuJSON(BaseID, MenuItem, SubMenu);
 
-			TCHAR* str = ConvertString(Edif::Language(MenuItem[0]));
+			TCHAR* str = ConvertString(MenuItem[0]);
             AppendMenu(Parent, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT) SubMenu, str);
 			FreeString(str);
 
@@ -519,7 +519,7 @@ HMENU Edif::LoadMenuJSON(int BaseID, JSON::Object &Source, HMENU Parent)
         int ItemOffset = 0;
 
         int ID = BaseID + (int) MenuItem[ItemOffset].Number;
-        TCHAR * Text = ConvertString(Edif::Language(MenuItem[ItemOffset + 1]));
+        TCHAR * Text = ConvertString(MenuItem[ItemOffset + 1]);
         bool Disabled = MenuItem.Length > (ItemOffset + 2) ? MenuItem[ItemOffset + 2].Boolean != 0 : false;
 
         AppendMenu(Parent, Disabled ? MF_GRAYED | MF_UNCHECKED | MF_BYPOSITION | MF_STRING
@@ -737,7 +737,7 @@ int Edif::GetDependency (char *& Buffer, size_t &Size, const TCHAR * FileExtensi
     return DependencyWasResource;
 }
 
-void Edif::GetSiblingPath(TCHAR * Buffer, const TCHAR * FileExtension)
+static void GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
 {
     TCHAR temp [MAX_PATH];
 
@@ -784,6 +784,23 @@ void Edif::GetSiblingPath(TCHAR * Buffer, const TCHAR * FileExtension)
 	}
 
     _tcscpy(Buffer, FullFilename);
+}
+
+void Edif::GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
+{
+    TCHAR * Extension = (TCHAR *)
+        alloca (_tcslen (FileExtension) + _tcslen (LanguageCode) + 2);
+
+    _tcscpy (Extension, LanguageCode);
+    _tcscat (Extension, _T ("."));
+    _tcscat (Extension, FileExtension);
+
+    ::GetSiblingPath (Buffer, Extension);
+
+    if (*Buffer)
+        return;
+
+    return ::GetSiblingPath (Buffer, FileExtension);
 }
 
 #ifdef _UNICODE

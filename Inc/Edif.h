@@ -164,7 +164,7 @@ namespace Edif
 		free(s);
 	}
 
-    extern char LanguageCode[3];
+    extern TCHAR LanguageCode[3];
     extern bool IsEdittime;
 
     extern HMENU ActionMenu, ConditionMenu, ExpressionMenu;
@@ -181,14 +181,6 @@ namespace Edif
     short __stdcall Action (LPRDATA rdPtr, long param1, long param2);
     long __stdcall Expression (LPRDATA rdPtr, long param);
    
-    inline const char * Language(const JSON::Object &Source)
-    {
-        if(Source.Type == JSON::ObjectType::String)
-            return Source;
- 
-        return Source[LanguageCode];
-    }
-
     inline int ActionID(int ID)
     {
         return 25000 + ID;

@@ -8,11 +8,11 @@ void WINAPI	DLLExport GetObjInfos (mv _far *mV, void *, LPTSTR ObjName, LPTSTR O
 	
     JSON::Object &Properties = SDK->Information["About"];
 
-	Edif::ConvertAndCopyString(ObjAuthor,       Edif::Language(Properties["Author"]),	MAX_PATH);
-    Edif::ConvertAndCopyString(ObjCopyright,    Edif::Language(Properties["Copyright"]),MAX_PATH);
-    Edif::ConvertAndCopyString(ObjComment,      Edif::Language(Properties["Comment"]),	MAX_PATH);
-    Edif::ConvertAndCopyString(ObjHttp,         Edif::Language(Properties["URL"]),		MAX_PATH);
-    Edif::ConvertAndCopyString(ObjName,         Edif::Language(Properties["Name"]),		MAX_PATH);
+	Edif::ConvertAndCopyString(ObjAuthor,       Properties["Author"],	MAX_PATH);
+    Edif::ConvertAndCopyString(ObjCopyright,    Properties["Copyright"],MAX_PATH);
+    Edif::ConvertAndCopyString(ObjComment,      Properties["Comment"],	MAX_PATH);
+    Edif::ConvertAndCopyString(ObjHttp,         Properties["URL"],		MAX_PATH);
+    Edif::ConvertAndCopyString(ObjName,         Properties["Name"],		MAX_PATH);
 
 
 #endif // !defined(RUN_ONLY)
@@ -43,9 +43,9 @@ void WINAPI DLLExport GetConditionTitle(mv _far *mV, short code, short param, LP
     JSON::Object &Parameter = SDK->Information["Conditions"][code]["Parameters"][param];
 
     if(Parameter.Type == JSON::ObjectType::Map)
-        Edif::ConvertAndCopyString(strBuf, Edif::Language(Parameter["Title"]), maxLen);
+        Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
     else
-        Edif::ConvertAndCopyString(strBuf, Edif::Language(Parameter[1]), maxLen);
+        Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -60,9 +60,9 @@ void WINAPI DLLExport GetActionTitle(mv _far *mV, short code, short param, LPTST
     JSON::Object &Parameter = SDK->Information["Actions"][code]["Parameters"][param];
 
     if(Parameter.Type == JSON::ObjectType::Map)
-        Edif::ConvertAndCopyString(strBuf, Edif::Language(Parameter["Title"]), maxLen);
+        Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
     else
-        Edif::ConvertAndCopyString(strBuf, Edif::Language(Parameter[1]), maxLen);
+        Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -78,9 +78,9 @@ void WINAPI DLLExport GetExpressionParam(mv _far *mV, short code, short param, L
     JSON::Object &Parameter = SDK->Information["Expressions"][code]["Parameters"][param];
 
     if(Parameter.Type == JSON::ObjectType::Map)
-        Edif::ConvertAndCopyString(strBuf, Edif::Language(Parameter["Title"]), maxLen);
+        Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
     else
-        Edif::ConvertAndCopyString(strBuf, Edif::Language(Parameter[1]), maxLen);
+        Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
 
 
 #endif // !defined(RUN_ONLY)
@@ -94,7 +94,7 @@ void WINAPI DLLExport GetExpressionTitle(mv _far *mV, short code, LPTSTR strBuf,
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    Edif::ConvertAndCopyString(strBuf, Edif::Language(SDK->Information["Expressions"][code]["Title"]), maxLen);
+    Edif::ConvertAndCopyString(strBuf, SDK->Information["Expressions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -106,7 +106,7 @@ void WINAPI DLLExport GetConditionString(mv _far *mV, short code, LPTSTR strPtr,
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    Edif::ConvertAndCopyString(strPtr, Edif::Language(SDK->Information["Conditions"][code]["Title"]), maxLen);
+    Edif::ConvertAndCopyString(strPtr, SDK->Information["Conditions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -118,7 +118,7 @@ void WINAPI DLLExport GetActionString(mv _far *mV, short code, LPTSTR strPtr, sh
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    Edif::ConvertAndCopyString(strPtr, Edif::Language(SDK->Information["Actions"][code]["Title"]), maxLen);
+    Edif::ConvertAndCopyString(strPtr, SDK->Information["Actions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -130,7 +130,7 @@ void WINAPI DLLExport GetExpressionString(mv _far *mV, short code, LPTSTR strPtr
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    Edif::ConvertAndCopyString(strPtr, Edif::Language(SDK->Information["Expressions"][code]["Title"]), maxLen);
+    Edif::ConvertAndCopyString(strPtr, SDK->Information["Expressions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
