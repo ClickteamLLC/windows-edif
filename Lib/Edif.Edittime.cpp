@@ -347,9 +347,5 @@ void WINAPI PrepareFlexBuild(LPMV pMV, LPEDATA edPtr, LPCWSTR wTempFolder)
 
     AddDirectory(((_tstring) FlashFolderPath + _T("\\")), (_tstring) TempFolder);
 
-#ifndef _UNICODE
-	free(TempFolder);
-#endif
-
 #endif // !defined(RUN_ONLY)
 }
