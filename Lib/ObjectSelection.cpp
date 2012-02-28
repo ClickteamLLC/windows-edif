@@ -13,13 +13,17 @@ Riggs::ObjectSelection::ObjectSelection(LPRH rhPtr)
 	this->OiList = rhPtr->rhOiList;				//get a pointer to the mmf object info list
 	this->QualToOiList = rhPtr->rhQualToOiList;	//get a pointer to the mmf qualifier to Oi list
 
-	rhPtr->rh4.rh4Mv->mvCallFunction(NULL, EF_ISHWA, 0, 0, 0);
-
 	oiListItemSize = sizeof(objInfoList);
+
+//Only add the sizes to the runtime structures if they weren't compiled directly for those runtimes
+#ifndef UNICODE
 	if ( rhPtr->rh4.rh4Mv->mvCallFunction(NULL, EF_ISUNICODE, 0, 0, 0) )
 		oiListItemSize += 24;
+#endif
+#ifndef HWABETA
 	if ( rhPtr->rh4.rh4Mv->mvCallFunction(NULL, EF_ISHWA, 0, 0, 0) )
 		oiListItemSize += sizeof(LPVOID);
+#endif
 }
 
 //Selects *all* objects of the given object-type
