@@ -1098,14 +1098,14 @@
 					>
 				</File>
 				<Filter
-					Name="JSON"
+					Name="json"
 					>
 					<File
-						RelativePath="..\..\Lib\JSON.cpp"
+						RelativePath="..\..\Lib\json.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Inc\JSON.h"
+						RelativePath="..\..\Inc\json.h"
 						>
 					</File>
 				</Filter>
