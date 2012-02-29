@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "JSON.h"
+#include "json.h"
 
 #include "ccxhdr.h"
 #include "CfcFile.h"
@@ -54,9 +54,9 @@ namespace Edif
     {
     public:
 
-        JSON::Object Information;
+        json_value &json;
 
-        SDK (mv * mV, const char * JSON);
+        SDK (mv * mV, json_value &);
         ~SDK ();
 
         vector<short> ActionInfos;
@@ -169,7 +169,7 @@ namespace Edif
 
     extern HMENU ActionMenu, ConditionMenu, ExpressionMenu;
 
-    HMENU LoadMenuJSON (int BaseID, JSON::Object &Source, HMENU Parent = 0);
+    HMENU LoadMenuJSON (int BaseID, const json_value &Source, HMENU Parent = 0);
 
     int Init(mv _far * mV);
     void Init(mv _far * mV, LPEDATA edPtr);

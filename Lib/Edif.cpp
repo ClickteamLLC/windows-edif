@@ -186,11 +186,24 @@ int Edif::Init(mv _far * mV)
 	if ( result != Edif::DependencyWasResource )
 		free(JSON);
 
-    ::SDK = new Edif::SDK(mV, copy);
+    char json_error [256];
+    
+    json_settings settings;
+    memset (&settings, 0, sizeof (settings));
+
+    json_value * json = json_parse_ex (&settings, copy, json_error);
+
+    if (!json)
+    {
+        MessageBoxA(0, json_error, "Error parsing JSON", 0);
+        return -1;
+    }
+
+    ::SDK = new Edif::SDK(mV, *json);
     return 0;	// no error
 }
 
-Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::ObjectString, JSON)
+Edif::SDK::SDK(mv * mV, json_value &_json) : json (_json)
 {
 	this->mV = mV;
 
@@ -220,21 +233,21 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
     }
 #endif // RUN_ONLY
 
-    JSON::Object &Actions = Information["Actions"];
-    JSON::Object &Conditions = Information["Conditions"];
-    JSON::Object &Expressions = Information["Expressions"];
+    const json_value &Actions = json["Actions"];
+    const json_value &Conditions = json["Conditions"];
+    const json_value &Expressions = json["Expressions"];
 
-    ActionJumps = new void * [Actions.Length + 1];
-    ConditionJumps = new void * [Conditions.Length + 1];
-    ExpressionJumps = new void * [Expressions.Length + 1];
+    ActionJumps = new void * [Actions.u.array.length + 1];
+    ConditionJumps = new void * [Conditions.u.array.length + 1];
+    ExpressionJumps = new void * [Expressions.u.array.length + 1];
 
-    ActionJumps [Actions.Length - 1] = 0;
-    ConditionJumps [Conditions.Length - 1] = 0;
-    ExpressionJumps [Expressions.Length - 1] = 0;
+    ActionJumps [Actions.u.array.length - 1] = 0;
+    ConditionJumps [Conditions.u.array.length - 1] = 0;
+    ExpressionJumps [Expressions.u.array.length - 1] = 0;
     
-    for(int i = 0; i < Actions.Length; ++ i)
+    for(unsigned int i = 0; i < Actions.u.array.length; ++ i)
     {
-        JSON::Object &Action = Actions[i];
+        const json_value &Action = Actions[i];
 
         ActionJumps [i] = (void *) Edif::Action;
 
@@ -248,19 +261,19 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
 
         ActionInfos.push_back(0);         // Flags
 
-        JSON::Object &Parameters = Action["Parameters"];
+        const json_value &Parameters = Action["Parameters"];
 
-        ActionInfos.push_back(Parameters.Length);
+        ActionInfos.push_back(Parameters.u.array.length);
 
         {   short IsFloat = 0;
 
-            for(int i = 0; i < Parameters.Length; ++ i)
+            for(unsigned int i = 0; i < Parameters.u.array.length; ++ i)
             {
-                JSON::Object &Parameter = Parameters[i];
+                const json_value &Parameter = Parameters[i];
 
                 const char * Type;
 
-                if(Parameter.Type == JSON::ObjectType::Map)
+                if(Parameter.type == json_object)
                     Type = Parameter["Type"];
                 else
                     Type = Parameter[0];
@@ -274,13 +287,13 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
             ActionFloatFlags.push_back(IsFloat);
         }
 
-        for(int i = 0; i < Parameters.Length; ++ i)
+        for(unsigned int i = 0; i < Parameters.u.array.length; ++ i)
             ActionInfos.push_back(0);
     }
 
-    for(int i = 0; i < Conditions.Length; ++ i)
+    for(unsigned int i = 0; i < Conditions.u.array.length; ++ i)
     {
-        JSON::Object &Condition = Conditions[i];
+        const json_value &Condition = Conditions[i];
 
         ConditionJumps [i] = (void *) Edif::Condition;
 
@@ -292,21 +305,21 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
         ConditionInfos.push_back(ConditionID);
         ConditionInfos.push_back(i);
 
-        ConditionInfos.push_back(Condition["Triggered"].Boolean != 0 ? 0 : (EVFLAGS_ALWAYS | EVFLAGS_NOTABLE));
+        ConditionInfos.push_back(((bool) Condition["Triggered"]) ? 0 : (EVFLAGS_ALWAYS | EVFLAGS_NOTABLE));
 
-        JSON::Object &Parameters = Condition["Parameters"];
+        const json_value &Parameters = Condition["Parameters"];
 
-        ConditionInfos.push_back(Parameters.Length);
+        ConditionInfos.push_back(Parameters.u.array.length);
 
         {   short IsFloat = 0;
 
-            for(int i = 0; i < Parameters.Length; ++ i)
+            for(unsigned int i = 0; i < Parameters.u.array.length; ++ i)
             {
-                JSON::Object &Parameter = Parameters[i];
+                const json_value &Parameter = Parameters[i];
 
                 const char * Type;
 
-                if(Parameter.Type == JSON::ObjectType::Map)
+                if(Parameter.type == json_object)
                     Type = Parameter["Type"];
                 else
                     Type = Parameter[0];
@@ -320,13 +333,13 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
             ConditionFloatFlags.push_back(IsFloat);
         }
 
-        for(int i = 0; i < Parameters.Length; ++ i)
+        for(unsigned int i = 0; i < Parameters.u.array.length; ++ i)
             ConditionInfos.push_back(0);
     }
 
-    for(int i = 0; i < Expressions.Length; ++ i)
+    for(unsigned int i = 0; i < Expressions.u.array.length; ++ i)
     {
-        JSON::Object &Expression = Expressions[i];
+        const json_value &Expression = Expressions[i];
 
         ExpressionJumps [i] = (void *) Edif::Expression;
 
@@ -358,19 +371,19 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
             ExpressionInfos.push_back(FlagsValue);
         }
 
-        JSON::Object &Parameters = Expression["Parameters"];
+        const json_value &Parameters = Expression["Parameters"];
 
-        ExpressionInfos.push_back(Parameters.Length);
+        ExpressionInfos.push_back(Parameters.u.array.length);
 
         {   short IsFloat = 0;
 
-            for(int i = 0; i < Parameters.Length; ++ i)
+            for(unsigned int i = 0; i < Parameters.u.array.length; ++ i)
             {
-                JSON::Object &Parameter = Parameters[i];
+                const json_value &Parameter = Parameters[i];
 
                 const char * Type;
 
-                if(Parameter.Type == JSON::ObjectType::Map)
+                if(Parameter.type == json_object)
                     Type = Parameter["Type"];
                 else
                     Type = Parameter[0];
@@ -384,13 +397,13 @@ Edif::SDK::SDK(mv * mV, const char * JSON) : Information(JSON::LoadSource::Objec
             ExpressionFloatFlags.push_back(IsFloat);
         }
 
-        for(int i = 0; i < Parameters.Length; ++ i)
+        for(unsigned int i = 0; i < Parameters.u.array.length; ++ i)
             ExpressionInfos.push_back(0);
     }
 
-    ActionMenu = LoadMenuJSON(Edif::ActionID(0), Information["ActionMenu"]);
-    ConditionMenu = LoadMenuJSON(Edif::ConditionID(0), Information["ConditionMenu"]);
-    ExpressionMenu = LoadMenuJSON(Edif::ExpressionID(0), Information["ExpressionMenu"]);
+    ActionMenu = LoadMenuJSON(Edif::ActionID(0), json["ActionMenu"]);
+    ConditionMenu = LoadMenuJSON(Edif::ConditionID(0), json["ConditionMenu"]);
+    ExpressionMenu = LoadMenuJSON(Edif::ExpressionID(0), json["ExpressionMenu"]);
 }
 
 Edif::SDK::~SDK()
@@ -484,16 +497,16 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
     return Result;
 }
 
-HMENU Edif::LoadMenuJSON(int BaseID, JSON::Object &Source, HMENU Parent)
+HMENU Edif::LoadMenuJSON(int BaseID, const json_value &Source, HMENU Parent)
 {
     if(!Parent)
         Parent = CreateMenu();
 
-    for(int i = 0; i < Source.Length; ++ i)
+    for(unsigned int i = 0; i < Source.u.array.length; ++ i)
     {
-        JSON::Object &MenuItem = Source[i];
+        const json_value &MenuItem = Source[i];
 
-        if(MenuItem.Type == JSON::ObjectType::String)
+        if(MenuItem.type == json_string)
         {
             if(!_stricmp(MenuItem, "Separator"))
             {
@@ -504,7 +517,7 @@ HMENU Edif::LoadMenuJSON(int BaseID, JSON::Object &Source, HMENU Parent)
             continue;
         }
 
-        if(MenuItem[0].Type == JSON::ObjectType::String && MenuItem[1].Type == JSON::ObjectType::List)
+        if(MenuItem[0].type == json_string && MenuItem[1].type == json_array)
         {
             HMENU SubMenu = CreatePopupMenu();
             LoadMenuJSON(BaseID, MenuItem, SubMenu);
@@ -516,11 +529,11 @@ HMENU Edif::LoadMenuJSON(int BaseID, JSON::Object &Source, HMENU Parent)
             continue;
         }
 
-        int ItemOffset = 0;
+        unsigned int ItemOffset = 0;
 
-        int ID = BaseID + (int) MenuItem[ItemOffset].Number;
+        int ID = BaseID + (int) MenuItem[ItemOffset].u.integer;
         TCHAR * Text = ConvertString(MenuItem[ItemOffset + 1]);
-        bool Disabled = MenuItem.Length > (ItemOffset + 2) ? MenuItem[ItemOffset + 2].Boolean != 0 : false;
+        bool Disabled = MenuItem.u.array.length > (ItemOffset + 2) ? ((bool) MenuItem[ItemOffset + 2]) != 0 : false;
 
         AppendMenu(Parent, Disabled ? MF_GRAYED | MF_UNCHECKED | MF_BYPOSITION | MF_STRING
                                 : MF_BYPOSITION | MF_STRING, ID, Text);

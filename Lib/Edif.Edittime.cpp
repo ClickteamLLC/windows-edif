@@ -6,7 +6,7 @@ void WINAPI	DLLExport GetObjInfos (mv _far *mV, void *, LPTSTR ObjName, LPTSTR O
 {
 #ifndef RUN_ONLY
 	
-    JSON::Object &Properties = SDK->Information["About"];
+    const json_value &Properties = SDK->json["About"];
 
 	Edif::ConvertAndCopyString(ObjAuthor,       Properties["Author"],	MAX_PATH);
     Edif::ConvertAndCopyString(ObjCopyright,    Properties["Copyright"],MAX_PATH);
@@ -27,7 +27,7 @@ LPCTSTR WINAPI GetHelpFileName()
 	// Or return the path of your file, relatively to the MMF directory
 	// if your file is not loaded by the MMF help file.
 	static TCHAR TempString[MAX_PATH];		// used by GetHelpFileName()
-	return Edif::ConvertAndCopyString(TempString, SDK->Information["About"]["Help"], MAX_PATH);
+	return Edif::ConvertAndCopyString(TempString, SDK->json["About"]["Help"], MAX_PATH);
 #else
 	return NULL;
 #endif // !defined(RUN_ONLY)
@@ -40,9 +40,9 @@ void WINAPI DLLExport GetConditionTitle(mv _far *mV, short code, short param, LP
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    JSON::Object &Parameter = SDK->Information["Conditions"][code]["Parameters"][param];
+    const json_value &Parameter = SDK->json["Conditions"][code]["Parameters"][param];
 
-    if(Parameter.Type == JSON::ObjectType::Map)
+    if(Parameter.type == json_object)
         Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
     else
         Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
@@ -57,9 +57,9 @@ void WINAPI DLLExport GetActionTitle(mv _far *mV, short code, short param, LPTST
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    JSON::Object &Parameter = SDK->Information["Actions"][code]["Parameters"][param];
+    const json_value &Parameter = SDK->json["Actions"][code]["Parameters"][param];
 
-    if(Parameter.Type == JSON::ObjectType::Map)
+    if(Parameter.type == json_object)
         Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
     else
         Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
@@ -75,9 +75,9 @@ void WINAPI DLLExport GetExpressionParam(mv _far *mV, short code, short param, L
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    JSON::Object &Parameter = SDK->Information["Expressions"][code]["Parameters"][param];
+    const json_value &Parameter = SDK->json["Expressions"][code]["Parameters"][param];
 
-    if(Parameter.Type == JSON::ObjectType::Map)
+    if(Parameter.type == json_object)
         Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
     else
         Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
@@ -94,7 +94,7 @@ void WINAPI DLLExport GetExpressionTitle(mv _far *mV, short code, LPTSTR strBuf,
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    Edif::ConvertAndCopyString(strBuf, SDK->Information["Expressions"][code]["Title"], maxLen);
+    Edif::ConvertAndCopyString(strBuf, SDK->json["Expressions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -106,7 +106,7 @@ void WINAPI DLLExport GetConditionString(mv _far *mV, short code, LPTSTR strPtr,
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    Edif::ConvertAndCopyString(strPtr, SDK->Information["Conditions"][code]["Title"], maxLen);
+    Edif::ConvertAndCopyString(strPtr, SDK->json["Conditions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -118,7 +118,7 @@ void WINAPI DLLExport GetActionString(mv _far *mV, short code, LPTSTR strPtr, sh
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    Edif::ConvertAndCopyString(strPtr, SDK->Information["Actions"][code]["Title"], maxLen);
+    Edif::ConvertAndCopyString(strPtr, SDK->json["Actions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -130,7 +130,7 @@ void WINAPI DLLExport GetExpressionString(mv _far *mV, short code, LPTSTR strPtr
 	if(!IS_COMPATIBLE(mV))
         return;
 
-    Edif::ConvertAndCopyString(strPtr, SDK->Information["Expressions"][code]["Title"], maxLen);
+    Edif::ConvertAndCopyString(strPtr, SDK->json["Expressions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -279,35 +279,35 @@ HMENU WINAPI DLLExport GetExpressionMenu(mv _far *mV, fpObjInfo oiPtr, LPEDATA e
 void AddDirectory(_tstring &From, _tstring &To)
 {
 	HANDLE FileHandle;
-	WIN32_FIND_DATA FileInformation;
+	WIN32_FIND_DATA Filejson;
 
 	_tstring SearchString;
 
 	SearchString += From;
 	SearchString += _T("*.*");
 
-	FileHandle = FindFirstFile(SearchString.c_str(), &FileInformation);
+	FileHandle = FindFirstFile(SearchString.c_str(), &Filejson);
 
 	if(FileHandle == INVALID_HANDLE_VALUE)
 	    return;
 
 	do
 	{
-        if(*FileInformation.cFileName == '.')
+        if(*Filejson.cFileName == '.')
             continue;
 
-		if((FileInformation.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+		if((Filejson.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
 		{
 			_tstring OldPath;
 
 			OldPath += From;
-			OldPath += FileInformation.cFileName;
+			OldPath += Filejson.cFileName;
 			OldPath += _T("\\");
 			
 			_tstring NewPath;
 
 			NewPath += To;
-			NewPath += FileInformation.cFileName;
+			NewPath += Filejson.cFileName;
 			NewPath += _T("\\");
 			
 			CreateDirectory(NewPath.c_str(), 0);
@@ -316,9 +316,9 @@ void AddDirectory(_tstring &From, _tstring &To)
             continue;
 		}
 
-		CopyFile((From + FileInformation.cFileName).c_str(), (To + FileInformation.cFileName).c_str(), FALSE);
+		CopyFile((From + Filejson.cFileName).c_str(), (To + Filejson.cFileName).c_str(), FALSE);
 
-	} while(FindNextFile(FileHandle, &FileInformation));
+	} while(FindNextFile(FileHandle, &Filejson));
 
 	FindClose(FileHandle);
 }

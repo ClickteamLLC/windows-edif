@@ -7,9 +7,9 @@ LPCTSTR * WINAPI DLLExport GetDependencies()
 {
 	if(!Dependencies)
     {
-        JSON::Object &DependenciesJSON = SDK->Information["About"]["Dependencies"];
+        const json_value &DependenciesJSON = SDK->json["About"]["Dependencies"];
 
-        Dependencies = new LPCTSTR [DependenciesJSON.Length + 2];
+        Dependencies = new LPCTSTR [DependenciesJSON.u.array.length + 2];
 
         int Offset = 0;
 
@@ -34,9 +34,9 @@ LPCTSTR * WINAPI DLLExport GetDependencies()
             Dependencies [Offset ++] = ++ Iterator;
         }
 
-        int i = 0;
+        unsigned int i = 0;
 
-        for(; i < DependenciesJSON.Length; ++ i)
+        for(; i < DependenciesJSON.u.array.length; ++ i)
 		{
 			TCHAR* tstr = Edif::ConvertString(DependenciesJSON[i]);
             Dependencies[Offset + i] = tstr;
@@ -55,9 +55,9 @@ short WINAPI DLLExport GetRunObjectInfos(mv _far *mV, fpKpxRunInfos infoPtr)
 	infoPtr->actions = &SDK->ActionJumps[0];
 	infoPtr->expressions = &SDK->ExpressionJumps[0];
 
-	infoPtr->numOfConditions = SDK->Information["Conditions"].Length;
-	infoPtr->numOfActions = SDK->Information["Actions"].Length;
-	infoPtr->numOfExpressions = SDK->Information["Expressions"].Length;
+	infoPtr->numOfConditions = SDK->json["Conditions"].u.array.length;
+	infoPtr->numOfActions = SDK->json["Actions"].u.array.length;
+	infoPtr->numOfExpressions = SDK->json["Expressions"].u.array.length;
 
 	infoPtr->editDataSize = sizeof(EDITDATA);
 
@@ -66,7 +66,7 @@ short WINAPI DLLExport GetRunObjectInfos(mv _far *mV, fpKpxRunInfos infoPtr)
 	infoPtr->editFlags = Extension::OEFLAGS;
 	infoPtr->editPrefs = Extension::OEPREFS;
 
-    memcpy(&infoPtr->identifier, SDK->Information["About"]["Identifier"], 4);
+    memcpy(&infoPtr->identifier, SDK->json["About"]["Identifier"], 4);
 	
     infoPtr->version = Extension::Version;
 	
