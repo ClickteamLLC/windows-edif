@@ -241,9 +241,9 @@ Edif::SDK::SDK(mv * mV, json_value &_json) : json (_json)
     ConditionJumps = new void * [Conditions.u.array.length + 1];
     ExpressionJumps = new void * [Expressions.u.array.length + 1];
 
-    ActionJumps [Actions.u.array.length - 1] = 0;
-    ConditionJumps [Conditions.u.array.length - 1] = 0;
-    ExpressionJumps [Expressions.u.array.length - 1] = 0;
+    ActionJumps [Actions.u.array.length] = 0;
+    ConditionJumps [Conditions.u.array.length] = 0;
+    ExpressionJumps [Expressions.u.array.length] = 0;
     
     for(unsigned int i = 0; i < Actions.u.array.length; ++ i)
     {
@@ -408,9 +408,12 @@ Edif::SDK::SDK(mv * mV, json_value &_json) : json (_json)
 
 Edif::SDK::~SDK()
 {
+    json_value_free (&json);
+
     delete [] ActionJumps;
     delete [] ConditionJumps;
     delete [] ExpressionJumps;
+
 	delete Icon;
 }
 
