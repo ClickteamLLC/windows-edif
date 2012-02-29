@@ -787,13 +787,18 @@ static void GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
 			*Iterator = 0;
 		}
 
-		// Data/Runtime - editor
-		_stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/Data/Runtime/%s"), ExecutablePath, Filename);
+		// Same path as the executable?
+		_stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/%s"), ExecutablePath, Filename);
 		if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
 		{
-			*Buffer = 0;
-			return;
-		}
+		    // No => try Data/Runtime
+		    _stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/Data/Runtime/%s"), ExecutablePath, Filename);
+		    if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
+		    {
+			    *Buffer = 0;
+			    return;
+		    }
+        }
 	}
 
     _tcscpy(Buffer, FullFilename);
