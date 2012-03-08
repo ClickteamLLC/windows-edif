@@ -120,6 +120,7 @@ short WINAPI DLLExport CreateRunObject(LPRDATA rdPtr, LPEDATA edPtr, fpcob cobPt
     /* Global to all extensions! Use the constructor of your Extension class (Extension.cpp) instead! */
 
     rdPtr->pExtension = new Extension(rdPtr, edPtr, cobPtr);
+	rdPtr->pExtension->Runtime.ObjectSelection.pExtension = rdPtr->pExtension;
 
 	return 0;
 }

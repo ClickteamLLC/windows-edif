@@ -12,7 +12,6 @@ Riggs::ObjectSelection::ObjectSelection(LPRH rhPtr)
 	this->ObjectList = rhPtr->rhObjectList;		//get a pointer to the mmf object list
 	this->OiList = rhPtr->rhOiList;				//get a pointer to the mmf object info list
 	this->QualToOiList = rhPtr->rhQualToOiList;	//get a pointer to the mmf qualifier to Oi list
-
 	oiListItemSize = sizeof(objInfoList);
 
 //Only add the sizes to the runtime structures if they weren't compiled directly for those runtimes

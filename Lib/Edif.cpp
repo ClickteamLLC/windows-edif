@@ -90,6 +90,9 @@ short ReadParameterType(const char * Text)
 	if(!_stricmp(Text, "Program"))
 		return PARAM_PROGRAM;
 
+	if(!_strnicmp(Text, "Custom", 6))
+		return PARAM_EXTBASE+atoi(Text+6);
+
     return 0;
 }
 

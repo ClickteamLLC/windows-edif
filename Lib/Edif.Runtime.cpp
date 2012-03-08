@@ -3,8 +3,6 @@
 
 Edif::Runtime::Runtime(LPRDATA _rdPtr) : rdPtr(_rdPtr), ObjectSelection(_rdPtr->rHo.hoAdRunHeader)
 {
-    ObjectSelection.pExtension = rdPtr->pExtension;
-
 }
 
 Edif::Runtime::~Runtime()
