@@ -1,4 +1,3 @@
-
 #include "Common.h"
 
 Edif::Runtime::Runtime(LPRDATA _rdPtr) : rdPtr(_rdPtr), ObjectSelection(_rdPtr->rHo.hoAdRunHeader)
