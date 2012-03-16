@@ -1,4 +1,3 @@
-
 #include "Common.h"
 
 Edif::Runtime::Runtime(LPRDATA _rdPtr) : rdPtr(_rdPtr), ObjectSelection(_rdPtr->rHo.hoAdRunHeader)
@@ -157,7 +156,7 @@ int Edif::Runtime::FixedFromLPRO(LPRO object)
 	return 0;
 }
 
-const HINSTANCE EdifGlobalID = (HINSTANCE) 0xED1FFFFF;
+extern HINSTANCE hInstLib;
 
 struct EdifGlobal
 {
@@ -174,7 +173,7 @@ void Edif::Runtime::WriteGlobal(const TCHAR * Name, void * Value)
 	while(rhPtr->rhApp->m_pParentApp)
 		rhPtr = rhPtr->rhApp->m_pParentApp->m_Frame->m_rhPtr;
 
-    EdifGlobal * Global = (EdifGlobal *) rhPtr->rh4.rh4Mv->mvGetExtUserData(rhPtr->rhApp, EdifGlobalID);
+    EdifGlobal * Global = (EdifGlobal *) rhPtr->rh4.rh4Mv->mvGetExtUserData(rhPtr->rhApp, hInstLib);
 
     if(!Global)
     {
@@ -185,7 +184,7 @@ void Edif::Runtime::WriteGlobal(const TCHAR * Name, void * Value)
 
         Global->Next = 0;
 
-        rhPtr->rh4.rh4Mv->mvSetExtUserData(rhPtr->rhApp, EdifGlobalID, Global);
+        rhPtr->rh4.rh4Mv->mvSetExtUserData(rhPtr->rhApp, hInstLib, Global);
 
         return;
     }
@@ -220,7 +219,7 @@ void * Edif::Runtime::ReadGlobal(const TCHAR * Name)
 	while(rhPtr->rhApp->m_pParentApp)
 		rhPtr = rhPtr->rhApp->m_pParentApp->m_Frame->m_rhPtr;
 
-    EdifGlobal * Global = (EdifGlobal *) rhPtr->rh4.rh4Mv->mvGetExtUserData(rhPtr->rhApp, EdifGlobalID);
+    EdifGlobal * Global = (EdifGlobal *) rhPtr->rh4.rh4Mv->mvGetExtUserData(rhPtr->rhApp, hInstLib);
 
     while(Global)
     {
