@@ -1,4 +1,3 @@
-
 #include "Common.h"
 
 Edif::SDK * SDK;
@@ -65,6 +64,9 @@ short ReadParameterType(const char * Text)
 
 	if(!_stricmp(Text, "Comparison"))
 		return PARAM_COMPARAISON;
+		
+	if(!_stricmp(Text, "StringComparison"))
+		return PARAM_CMPSTRING;
 
 	if(!_stricmp(Text, "Colour") || !_stricmp(Text, "Color"))
 		return PARAM_COLOUR;
