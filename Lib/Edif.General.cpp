@@ -15,9 +15,9 @@ LPCTSTR * WINAPI DLLExport GetDependencies()
 
         if (Edif::ExternalJSON)
         {
-            TCHAR JSONFilename [MAX_PATH];
+            TCHAR * JSONFilename = (TCHAR *)malloc(MAX_PATH * sizeof(TCHAR));
 
-            GetModuleFileName (hInstLib, JSONFilename, sizeof (JSONFilename)/sizeof(TCHAR));
+            GetModuleFileName (hInstLib, JSONFilename, MAX_PATH);
 
             TCHAR * Iterator = JSONFilename + _tcslen(JSONFilename) - 1;
 
@@ -40,7 +40,7 @@ LPCTSTR * WINAPI DLLExport GetDependencies()
 		{
 			TCHAR* tstr = Edif::ConvertString(DependenciesJSON[i]);
             Dependencies[Offset + i] = tstr;
-			Edif::FreeString(tstr);
+			//Edif::FreeString(tstr);
 		}
 
         Dependencies[Offset + i] = 0;
