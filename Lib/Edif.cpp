@@ -805,8 +805,8 @@ static void GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
 		    _stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/Data/Runtime/%s"), ExecutablePath, Filename);
 		    if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
 		    {
-                // No => try ../Data/Runtime (maybe we're in the Unicode or HWA folder)
-		        _stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/../Data/Runtime/%s"), ExecutablePath, Filename);
+                // No => try .. (maybe we're in the Unicode or HWA folder)
+		        _stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/../%s"), ExecutablePath, Filename);
 		        if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
 		        {
                     *Buffer = 0;
