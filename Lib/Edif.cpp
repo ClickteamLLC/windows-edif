@@ -196,6 +196,8 @@ int Edif::Init(mv _far * mV)
     json_settings settings;
     memset (&settings, 0, sizeof (settings));
 
+    settings.settings = json_setting_permissive_commas;
+
     json_value * json = json_parse_ex (&settings, copy, json_error);
 
     if (!json)
@@ -803,8 +805,13 @@ static void GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
 		    _stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/Data/Runtime/%s"), ExecutablePath, Filename);
 		    if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
 		    {
-			    *Buffer = 0;
-			    return;
+                // No => try ../Data/Runtime (maybe we're in the Unicode or HWA folder)
+		        _stprintf_s(FullFilename, sizeof(ExecutablePath)/sizeof(TCHAR), _T("%s/../Data/Runtime/%s"), ExecutablePath, Filename);
+		        if(GetFileAttributes(FullFilename) == 0xFFFFFFFF)
+		        {
+                    *Buffer = 0;
+			        return;
+                }
 		    }
         }
 	}
