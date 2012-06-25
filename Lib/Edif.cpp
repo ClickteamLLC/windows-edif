@@ -196,7 +196,7 @@ int Edif::Init(mv _far * mV)
     json_settings settings;
     memset (&settings, 0, sizeof (settings));
 
-    settings.settings = json_setting_permissive_commas;
+    // settings.settings = json_setting_permissive_commas;
 
     json_value * json = json_parse_ex (&settings, copy, json_error);
 
