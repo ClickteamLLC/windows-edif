@@ -112,6 +112,8 @@ namespace Edif
 		LPRO LPROFromFixed(int fixedValue);
 		int FixedFromLPRO(LPRO object);
 
+		void SetAngleOfObject(LPRO object, float acAngle);
+
 		void SetPosition(int X, int Y);
 		CallTables* GetCallTables();
         void CallMovement(int ID, long Parameter);

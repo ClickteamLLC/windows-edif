@@ -156,6 +156,18 @@ int Edif::Runtime::FixedFromLPRO(LPRO object)
 	return 0;
 }
 
+void Edif::Runtime::SetAngleOfObject(LPRO object, float acAngle)
+{
+	if(object == NULL)
+		return;
+
+	if(IsHWA())
+		memcpy(&object->roc.rcAngle, (int*)&acAngle, sizeof(int));
+	else
+		object->roc.rcAngle = (int)acAngle;
+		
+}
+
 extern HINSTANCE hInstLib;
 
 struct EdifGlobal
