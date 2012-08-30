@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "json.h"
@@ -206,3 +205,27 @@ namespace Edif
 }
 
 extern Edif::SDK * SDK;
+
+
+class Extension;
+
+struct RUNDATA
+{
+	//Main header
+	headerObject rHo;
+
+	char r //Placeholder for the optional structures
+	[
+		sizeof(rCom)+
+		sizeof(rMvt)+
+		sizeof(rSpr)+
+		sizeof(rVal)
+	];
+	//Pointers to the optional structures, null values mean that that OEFLAG was not specified.
+	rCom			*rc;				// Common structure for movements & animations
+	rMvt			*rm;				// Movements (OEFLAG_MOVEMENTS)
+	rSpr			*rs;				// Sprite (displayable objects) (OEFLAG_SPRITES)
+	rVal			*rv;				// Alterable values (OEFLAG_VALUES)
+
+	Extension * pExtension;
+};
