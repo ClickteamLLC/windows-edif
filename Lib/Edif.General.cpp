@@ -1,4 +1,3 @@
-
 #include "Common.h"
 
 LPCTSTR * Dependencies = 0;
@@ -117,9 +116,34 @@ extern "C"
 
 short WINAPI DLLExport CreateRunObject(LPRDATA rdPtr, LPEDATA edPtr, fpcob cobPtr)
 {
-    /* Global to all extensions! Use the constructor of your Extension class (Extension.cpp) instead! */
+	/* Global to all extensions! Use the constructor of your Extension class (Extension.cpp) instead! */
 
-    rdPtr->pExtension = new Extension(rdPtr, edPtr, cobPtr);
+	rdPtr->rc = 0;
+	rdPtr->rm = 0;
+	rdPtr->rs = 0;
+	rdPtr->rv = 0;
+	unsigned off = 0;
+	if(Extension::OEFLAGS & OEFLAG_MOVEMENTS
+	|| Extension::OEFLAGS & OEFLAG_SPRITES)
+	{
+		rdPtr->rc = (rCom *)(rdPtr->r + off);
+		off += sizeof(rCom);
+	}
+	if(Extension::OEFLAGS & OEFLAG_MOVEMENTS)
+	{
+		rdPtr->rm = (rMvt *)(rdPtr->r + off);
+		off += sizeof(rMvt);
+	}
+	if(Extension::OEFLAGS & OEFLAG_SPRITES)
+	{
+		rdPtr->rs = (rSpr *)(rdPtr->r + off);
+		off += sizeof(rSpr);
+	}
+	if(Extension::OEFLAGS & OEFLAG_VALUES)
+	{
+		rdPtr->rv = (rVal *)(rdPtr->r + off);
+	}
+	rdPtr->pExtension = new Extension(rdPtr, edPtr, cobPtr);
 	rdPtr->pExtension->Runtime.ObjectSelection.pExtension = rdPtr->pExtension;
 
 	return 0;
