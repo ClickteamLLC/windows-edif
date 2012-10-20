@@ -187,7 +187,7 @@ typedef sMask *LPSMASK;
 #define SCMF_PLATFORM	0x0001
 
 #ifndef PI
-#define     PI  ((double)3.141592653589)
+#define	 PI  ((double)3.141592653589)
 #endif
 
 // Allocate/Free surface
@@ -256,7 +256,7 @@ class SURFACES_API cSurface
 		int		GetLastError(void);
 
 		// ======================
-	    // Surface info
+		// Surface info
 		// ======================
 		int		GetWidth(void) const;
 		int		GetHeight(void) const;
@@ -264,7 +264,7 @@ class SURFACES_API cSurface
 		BOOL	GetInfo(int FAR & width, int FAR & height, int FAR & depth) const;
 
 		// ======================
-	    // Surface coordinate management
+		// Surface coordinate management
 		// ======================
 
 		void	SetOrigin(int x, int y);
@@ -277,7 +277,7 @@ class SURFACES_API cSurface
 		void	OffsetOrigin(POINT delta);
 
 		// ======================
-	    // Raster operations
+		// Raster operations
 		// ======================
 		LPBYTE	LockBuffer();
 		void	UnlockBuffer(LPBYTE spBuffer);
@@ -298,14 +298,14 @@ class SURFACES_API cSurface
 #endif
 
 		// ======================
-	    // Device context for graphic operations
+		// Device context for graphic operations
 		// ======================
 		HDC		GetDC(void);
 		void	ReleaseDC(HDC dc);
 		void	AttachWindow (HWND hWnd);
 
 		// ======================
-	    // Clipping
+		// Clipping
 		// ======================
 		void	GetClipRect(int FAR & x, int FAR & y, int FAR & w, int FAR & h);
 		void	SetClipRect(int x, int y, int w, int h);
@@ -584,7 +584,7 @@ class SURFACES_API cSurface
 		// Create icon
 		HICON	CreateIcon(int iconWidth, int iconHeight, COLORREF transpColor,POINT *pHotSpot);
 
-	    // Palette support
+		// Palette support
 		BOOL	Indexed(void);
 
 		BOOL	SetPalette(LPLOGPALETTE palette, SetPaletteAction action=SPA_NONE);

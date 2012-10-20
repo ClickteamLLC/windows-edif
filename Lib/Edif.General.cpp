@@ -5,47 +5,47 @@ LPCTSTR * Dependencies = 0;
 LPCTSTR * WINAPI DLLExport GetDependencies()
 {
 	if(!Dependencies)
-    {
-        const json_value &DependenciesJSON = SDK->json["About"]["Dependencies"];
+	{
+		const json_value &DependenciesJSON = SDK->json["About"]["Dependencies"];
 
-        Dependencies = new LPCTSTR [DependenciesJSON.u.array.length + 2];
+		Dependencies = new LPCTSTR [DependenciesJSON.u.array.length + 2];
 
-        int Offset = 0;
+		int Offset = 0;
 
-        if (Edif::ExternalJSON)
-        {
-            TCHAR * JSONFilename = (TCHAR *)malloc(MAX_PATH * sizeof(TCHAR));
+		if (Edif::ExternalJSON)
+		{
+			TCHAR * JSONFilename = (TCHAR *)malloc(MAX_PATH * sizeof(TCHAR));
 
-            GetModuleFileName (hInstLib, JSONFilename, MAX_PATH);
+			GetModuleFileName (hInstLib, JSONFilename, MAX_PATH);
 
-            TCHAR * Iterator = JSONFilename + _tcslen(JSONFilename) - 1;
+			TCHAR * Iterator = JSONFilename + _tcslen(JSONFilename) - 1;
 
-            while(*Iterator != '.')
-                -- Iterator;
+			while(*Iterator != '.')
+				-- Iterator;
 
-            _tcscpy(++ Iterator, _T("json"));
+			_tcscpy(++ Iterator, _T("json"));
 
-            Iterator = JSONFilename + _tcslen(JSONFilename) - 1;
+			Iterator = JSONFilename + _tcslen(JSONFilename) - 1;
 
-            while(*Iterator != '\\' && *Iterator != '/')
-                -- Iterator;
+			while(*Iterator != '\\' && *Iterator != '/')
+				-- Iterator;
 
-            Dependencies [Offset ++] = ++ Iterator;
-        }
+			Dependencies [Offset ++] = ++ Iterator;
+		}
 
-        unsigned int i = 0;
+		unsigned int i = 0;
 
-        for(; i < DependenciesJSON.u.array.length; ++ i)
+		for(; i < DependenciesJSON.u.array.length; ++ i)
 		{
 			TCHAR* tstr = Edif::ConvertString(DependenciesJSON[i]);
-            Dependencies[Offset + i] = tstr;
+			Dependencies[Offset + i] = tstr;
 			//Edif::FreeString(tstr);
 		}
 
-        Dependencies[Offset + i] = 0;
-    }
+		Dependencies[Offset + i] = 0;
+	}
 
-    return Dependencies;
+	return Dependencies;
 }
 
 short WINAPI DLLExport GetRunObjectInfos(mv _far *mV, fpKpxRunInfos infoPtr)
@@ -60,14 +60,14 @@ short WINAPI DLLExport GetRunObjectInfos(mv _far *mV, fpKpxRunInfos infoPtr)
 
 	infoPtr->editDataSize = sizeof(EDITDATA);
 
-    infoPtr->windowProcPriority = Extension::WindowProcPriority;
+	infoPtr->windowProcPriority = Extension::WindowProcPriority;
 
 	infoPtr->editFlags = Extension::OEFLAGS;
 	infoPtr->editPrefs = Extension::OEPREFS;
 
-    memcpy(&infoPtr->identifier, SDK->json["About"]["Identifier"], 4);
+	memcpy(&infoPtr->identifier, SDK->json["About"]["Identifier"], 4);
 	
-    infoPtr->version = Extension::Version;
+	infoPtr->version = Extension::Version;
 	
 	return TRUE;
 }
@@ -87,26 +87,26 @@ extern "C"
 
 			case KGI_PRODUCT:
 
-                #ifdef PROEXT
-				    return PRODUCT_VERSION_DEV;
-                #endif
+				#ifdef PROEXT
+					return PRODUCT_VERSION_DEV;
+				#endif
 
-                #ifdef TGFEXT
-				    return PRODUCT_VERSION_HOME;
-                #endif
+				#ifdef TGFEXT
+					return PRODUCT_VERSION_HOME;
+				#endif
 
-                return PRODUCT_VERSION_STANDARD;
+				return PRODUCT_VERSION_STANDARD;
 
 			case KGI_BUILD:
 				return Extension::MinimumBuild;
 
-            case KGI_UNICODE:
+			case KGI_UNICODE:
 
-                #ifdef _UNICODE
-                    return TRUE;
-                #else
-                    return FALSE;
-                #endif
+				#ifdef _UNICODE
+					return TRUE;
+				#else
+					return FALSE;
+				#endif
 
 			default:
 				return 0;
@@ -154,14 +154,14 @@ short WINAPI DLLExport CreateRunObject(LPRDATA rdPtr, LPEDATA edPtr, fpcob cobPt
 
 short WINAPI DLLExport DestroyRunObject(LPRDATA rdPtr, long fast)
 {
-    delete rdPtr->pExtension;
+	delete rdPtr->pExtension;
 
 	return 0;
 }
 
 short WINAPI DLLExport HandleRunObject(LPRDATA rdPtr)
 {
-    return rdPtr->pExtension->Handle();
+	return rdPtr->pExtension->Handle();
 }
 
 short WINAPI DLLExport DisplayRunObject(LPRDATA rdPtr)
@@ -185,13 +185,13 @@ short WINAPI DLLExport ContinueRunObject(LPRDATA rdPtr)
 }
 
 BOOL WINAPI SaveRunObject(LPRDATA rdPtr, HANDLE hf)
-{            
-    return rdPtr->pExtension->Save(hf) ? TRUE : FALSE;
+{			
+	return rdPtr->pExtension->Save(hf) ? TRUE : FALSE;
 }
 
 BOOL WINAPI LoadRunObject(LPRDATA rdPtr, HANDLE hf)
-{            
-    return rdPtr->pExtension->Load(hf) ? TRUE : FALSE;
+{			
+	return rdPtr->pExtension->Load(hf) ? TRUE : FALSE;
 }
 
 LPEVENTINFOS2 GetEventInformations(LPEVENTINFOS2 eiPtr, short code)

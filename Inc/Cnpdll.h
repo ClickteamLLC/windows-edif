@@ -1,12 +1,12 @@
 //----------------------------------------------//
-//          Constantes et structures            //
+//		  Constantes et structures			//
 //----------------------------------------------//
 
 #ifndef		_cnpdll_h		// Si deja inclus, ignorer
 #define		_cnpdll_h
 
 #ifndef PI
-#define     PI  ((double)3.1415926535)
+#define	 PI  ((double)3.1415926535)
 #endif
 
 #ifndef _H2INC
@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 // Include files for H2Inc
-#ifdef      _H2INC
+#ifdef	  _H2INC
 
 	#define NOATOM
 	#define NOMETAFILE		1
@@ -112,9 +112,9 @@ struct  sMask;
 
 	// Flags boites de dialogues (obsolete)
 	// -------------------------
-#define DL_MODAL            1
-#define DL_CENTER_WINDOW    2
-#define DL_CENTER_SCREEN    4
+#define DL_MODAL			1
+#define DL_CENTER_WINDOW	2
+#define DL_CENTER_SCREEN	4
 
 	// Messages propres a KNP
 	// ----------------------
@@ -155,8 +155,8 @@ struct  sMask;
 
 	// Identifiants errones
 	// --------------------
-#define NPSPR_ERROR     0
-#define HSPR_ERROR     0
+#define NPSPR_ERROR	 0
+#define HSPR_ERROR	 0
 
 enum {
 	WIN_MEMERR,
@@ -202,10 +202,10 @@ enum {
 
 // Modes graphiques
 #define GROP_NORMAL R2_COPYPEN
-#define GROP_XOR    R2_XORPEN
+#define GROP_XOR	R2_XORPEN
 
 // Modes collisions
-#define CM_BOX      		0
+#define CM_BOX	  		0
 #define CM_BITMAP   		1
 
 // Test collisions
@@ -222,7 +222,7 @@ enum {
 #define GCMF_PLATFORM		0x0001
 
 // Flags pour GetImageSize
-#define GIS_WITHMASK    0x8000
+#define GIS_WITHMASK	0x8000
 #define	GIS_EXACT		0x4000
 
 	// AddImage flags
@@ -284,7 +284,7 @@ enum {
 #define	PS_DSOUND			0x0100		// To play with Direct Sound
 
 	// AddFont flags
-#define AF_COMPARE		0x100       // Compare to others
+#define AF_COMPARE		0x100	   // Compare to others
 
 	// WinPasteText flags
 #define	WPTF_CALCRECT		0x8000
@@ -349,7 +349,7 @@ typedef struct  Sound
 typedef Sound* fpSound;
 
 	// Sound flags
-#define SP_WAVE				0x0001               // Flags
+#define SP_WAVE				0x0001			   // Flags
 #define SP_MIDI				0x0002
 #define SNDF_TYPEMASK		0x000F
 #define	SNDF_LOADONCALL		0x0010
@@ -367,9 +367,9 @@ typedef Sound* fpSound;
 // Structure Font
 typedef struct  FontW
 {
-	DWORD		fnCheckSum;     // Checksum (des images)
-	DWORD		fnCount;        // Compteur d'utilisations
-	DWORD		fnSize;         // Taille sans l'entete
+	DWORD		fnCheckSum;	 // Checksum (des images)
+	DWORD		fnCount;		// Compteur d'utilisations
+	DWORD		fnSize;		 // Taille sans l'entete
 	LOGFONTW	fnLf;			// Header font (pour CreateFont si Windows font)
 } FontW;
 typedef FontW *npFontW;
@@ -377,9 +377,9 @@ typedef FontW *fpFontW;
 
 typedef struct  FontA
 {
-	DWORD		fnCheckSum;     // Checksum (des images)
-	DWORD		fnCount;        // Compteur d'utilisations
-	DWORD		fnSize;         // Taille sans l'entete
+	DWORD		fnCheckSum;	 // Checksum (des images)
+	DWORD		fnCount;		// Compteur d'utilisations
+	DWORD		fnSize;		 // Taille sans l'entete
 	LOGFONTA	fnLf;			// Header font (pour CreateFont si Windows font)
 } FontA;
 typedef FontA *npFontA;
@@ -468,7 +468,7 @@ typedef struct tagSMI {
 #define	APPF_GLOBALSOUNDS			0x0004
 
 	// Objet sprite
-#define SF_RAMBO    		0x00000001		// flag "rentre dans tout le monde"
+#define SF_RAMBO			0x00000001		// flag "rentre dans tout le monde"
 #define SF_RECALCSURF		0x00000002		// Recalc surface (if rotation or stretch)
 #define SF_PRIVATE			0x00000004		// flag privé utilisé par le runtime pour la destruction des fade
 #define	SF_INACTIF			0x00000008		// flag "inactif" = reaffichage ssi intersection avec un autre
@@ -534,11 +534,11 @@ enum	{
 #ifndef _dllpriv_h
 typedef struct  tagObj
 {
-	UINT	objSize;                   // Taille de l'objet: 0 = fin objets
-	UINT	objPrevSize;               // Taille objet precedent (0 = 1er objet)
-	UINT	objType;                   // Type d'objet (1=vide,2=appli,3=fenetre,...)
-	UINT	objPrev;                   // Adresse objet precedent de meme type (0 = first)
-	UINT	objNext;                   // Adresse objet suivant de meme type (0 = last)
+	UINT	objSize;				   // Taille de l'objet: 0 = fin objets
+	UINT	objPrevSize;			   // Taille objet precedent (0 = 1er objet)
+	UINT	objType;				   // Type d'objet (1=vide,2=appli,3=fenetre,...)
+	UINT	objPrev;				   // Adresse objet precedent de meme type (0 = first)
+	UINT	objNext;				   // Adresse objet suivant de meme type (0 = last)
 } Obj;
 typedef Obj *npObj;
 typedef Obj *fpObj;
@@ -607,8 +607,8 @@ typedef struct  Spr
 	// Image or owner-draw routine
 	union	{
 		struct	{
-	DWORD		sprImg;             // Numero d'image
-	DWORD		sprImgNew;          // Nouvelle image
+	DWORD		sprImg;			 // Numero d'image
+	DWORD		sprImgNew;		  // Nouvelle image
 				};
 	LPARAM		sprRout;			// Ownerdraw callback routine
 			};
@@ -796,14 +796,14 @@ DLLExport32 LRESULT CALLBACK DefMsgProcW	(HWND hWin, UINT uMsg, WPARAM wParam, L
 
 	// Menus
 	// -----
-DLLExport32 HMENU	WINAPI WinSetMenu      (npWin, HMENU, HACCEL);
-//DLLExport32 void	WINAPI WinSetAccel     (npWin, HACCEL);
+DLLExport32 HMENU	WINAPI WinSetMenu	  (npWin, HMENU, HACCEL);
+//DLLExport32 void	WINAPI WinSetAccel	 (npWin, HACCEL);
 
 	// Souris
 	// ------
-DLLExport32 HCURSOR	WINAPI WinSetMouse     (npWin, HCURSOR);
-DLLExport32 void	WINAPI WinStartWait    (npWin);
-DLLExport32 void	WINAPI WinEndWait      (npWin);
+DLLExport32 HCURSOR	WINAPI WinSetMouse	 (npWin, HCURSOR);
+DLLExport32 void	WINAPI WinStartWait	(npWin);
+DLLExport32 void	WINAPI WinEndWait	  (npWin);
 
 	// Events
 	// ------
@@ -976,15 +976,15 @@ DLLExport32 npSpr   WINAPI SpriteCol_TestPoint		(npWin, npSpr, int, int, int, DW
 DLLExport32 npSpr   WINAPI SpriteCol_TestRect		(npWin, npSpr, int, int, int, int, int, DWORD);		// Entre 1 rectangle et les sprites sauf un
 DLLExport32 npSpr	WINAPI SpriteCol_TestSprite		(npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, int newAngle, float newScaleX, float newScaleY, int subHt, DWORD dwFlags);
 DLLExport32 UINT	WINAPI SpriteCol_TestSprite_All	(npWin, npSpr, LPVOID*, DWORD, int, int, int, float, float, DWORD);
-DLLExport32 int     WINAPI WinSetColMode			(npWin, WORD);						// Mode BOX ou BITMAP
+DLLExport32 int	 WINAPI WinSetColMode			(npWin, WORD);						// Mode BOX ou BITMAP
 
 DLLExport32 BOOL	WINAPI ColMask_Create			(npWin, UINT, UINT, DWORD);			// Creation bitmap masque fond
 DLLExport32 BOOL	WINAPI ColMask_CreateEx			(npWin, int, int, int, int, DWORD);
-DLLExport32 void    WINAPI ColMask_Kill				(npWin);							// Destruction masque fond
-DLLExport32 void    WINAPI ColMask_Fill				(npWin, DWORD);						// Init masque fond
-DLLExport32 int     WINAPI ColMask_FillRectangle	(npWin, int, int, int, int, DWORD);
+DLLExport32 void	WINAPI ColMask_Kill				(npWin);							// Destruction masque fond
+DLLExport32 void	WINAPI ColMask_Fill				(npWin, DWORD);						// Init masque fond
+DLLExport32 int	 WINAPI ColMask_FillRectangle	(npWin, int, int, int, int, DWORD);
 DLLExport32 void	WINAPI ColMask_OrImage			(npWin, DWORD, int, int, DWORD);
-DLLExport32 void    WINAPI ColMask_OrMask			(npWin, sMask*, int, int, DWORD, DWORD);
+DLLExport32 void	WINAPI ColMask_OrMask			(npWin, sMask*, int, int, DWORD, DWORD);
 DLLExport32 void	WINAPI ColMask_OrPlatform		(npWin, DWORD, int, int);
 DLLExport32 void	WINAPI ColMask_OrPlatformMask	(npWin, sMask*, int, int);
 DLLExport32 int		WINAPI ColMask_Scroll			(npWin, int, int, RECT   *, RECT   *);
@@ -994,7 +994,7 @@ DLLExport32 void	WINAPI ColMask_SetClip			(npWin, RECT *);
 
 DLLExport32 BOOL	WINAPI ColMask_TestPoint		(npWin ptrWin, int x, int y, UINT nPlane);
 DLLExport32 BOOL	WINAPI ColMask_TestSprite		(npWin ptrWin, npSpr pSpr, int newImg, int newX, int newY, int newAngle, float newScaleX, float newScaleY, int subHt, UINT nPlane);
-DLLExport32 int     WINAPI ColMask_TestRect			(npWin, int, int, int, int, UINT nPlane);
+DLLExport32 int	 WINAPI ColMask_TestRect			(npWin, int, int, int, int, UINT nPlane);
 
 DLLExport32 BOOL	WINAPI Mask_TestPoint			(LPBYTE pMask, int x, int y, int nMaskWidth, int nMaskHeight);
 DLLExport32 BOOL	WINAPI Mask_TestMask			(LPBYTE pMaskBits1, LPBYTE pMaskBits2, int x1Spr1, int y1Spr1, int wSpr1, int hSpr1, int x1Spr2, int y1Spr2, int wSpr2, int hSpr2);
@@ -1073,20 +1073,20 @@ DLLExport32 void WINAPI SetSndFreq (npAppli ptApp, UINT sType, UINT sNum, DWORD 
 DLLExport32 DWORD WINAPI GetSndChannelFreq (npAppli ptApp, UINT nChannel);
 DLLExport32 DWORD WINAPI GetSndFreq (npAppli ptApp, UINT sType, UINT sNum);
 
-DLLExport32 UINT    WINAPI AddSoundA		(npAppli, UINT, LPSTR, LPBYTE, DWORD);
+DLLExport32 UINT	WINAPI AddSoundA		(npAppli, UINT, LPSTR, LPBYTE, DWORD);
 DLLExport32 UINT	WINAPI ReplaceSoundA	(npAppli ptApp, UINT sFlags, UINT nSound, LPSTR fpName, LPBYTE lpData, DWORD dwDataSize);
 DLLExport32 BOOL	WINAPI SetSoundFlags	(npAppli ptApp, UINT nSound, UINT sFlags);
 DLLExport32 DWORD	WINAPI IncSoundCount	(npAppli, UINT);
-DLLExport32 int     WINAPI GetSoundInfoA	(npAppli, UINT, fpSound);
+DLLExport32 int	 WINAPI GetSoundInfoA	(npAppli, UINT, fpSound);
 DLLExport32 int		WINAPI GetSoundNameA	(npAppli, UINT, LPSTR, UINT);
 DLLExport32 long	WINAPI GetSoundData		(npAppli, UINT, LPBYTE);
 DLLExport32 LPBYTE	WINAPI GetSoundDataPtr	(npAppli, UINT);
 DLLExport32 long	WINAPI DelSound			(npAppli, UINT);
 
-DLLExport32 UINT    WINAPI AddSoundW		(npAppli, UINT, LPWSTR, LPBYTE, DWORD);
+DLLExport32 UINT	WINAPI AddSoundW		(npAppli, UINT, LPWSTR, LPBYTE, DWORD);
 DLLExport32 UINT	WINAPI ReplaceSoundW	(npAppli ptApp, UINT sFlags, UINT nSound, LPWSTR fpName, LPBYTE lpData, DWORD dwDataSize);
 DLLExport32 int		WINAPI GetSoundNameW	(npAppli, UINT, LPWSTR, UINT);
-DLLExport32 int     WINAPI GetSoundInfoW	(npAppli, UINT, fpSound);
+DLLExport32 int	 WINAPI GetSoundInfoW	(npAppli, UINT, fpSound);
 
 #ifdef _UNICODE
 #define AddSound		AddSoundW

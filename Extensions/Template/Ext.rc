@@ -42,24 +42,24 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
  FILETYPE 0x1L
  FILESUBTYPE 0x0L
 BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "040904e4"
-        BEGIN
-            VALUE "CompanyName", "Clickteam"
-            VALUE "FileDescription", "Edif Object"
-            VALUE "FileVersion", "2.00"
-            VALUE "InternalName", "EdifExt"
-            VALUE "LegalCopyright", "Copyright © 2012 Clickteam"
-            VALUE "OriginalFilename", "EdifExt.mfx"
-            VALUE "ProductVersion", "1, 0, 0, 1"
-            VALUE "SpecialBuild", "00000001"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x409, 1252
-    END
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904e4"
+		BEGIN
+			VALUE "CompanyName", "Clickteam"
+			VALUE "FileDescription", "Edif Object"
+			VALUE "FileVersion", "2.00"
+			VALUE "InternalName", "EdifExt"
+			VALUE "LegalCopyright", "Copyright © 2012 Clickteam"
+			VALUE "OriginalFilename", "EdifExt.mfx"
+			VALUE "ProductVersion", "1, 0, 0, 1"
+			VALUE "SpecialBuild", "00000001"
+		END
+	END
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x409, 1252
+	END
 END
 
 
@@ -70,7 +70,7 @@ END
 
 KPX_MAGICNUMBER RCDATA 
 BEGIN
-    0x2516, 0x5908
+	0x2516, 0x5908
 END
 
 
@@ -82,25 +82,25 @@ END
 
 1 TEXTINCLUDE 
 BEGIN
-    "resource.h\0"
+	"resource.h\0"
 END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""..\\..\\Inc\\ccx.h""\r\n"
-    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""windows.h""\r\n"
-    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "\0"
+	"#include ""..\\..\\Inc\\ccx.h""\r\n"
+	"#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+	"#include ""windows.h""\r\n"
+	"#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+	"\0"
 END
 
 3 TEXTINCLUDE 
 BEGIN
-    "\r\n"
-    "\0"
+	"\r\n"
+	"\0"
 END
 
-#endif    // APSTUDIO_INVOKED
+#endif	// APSTUDIO_INVOKED
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -110,10 +110,10 @@ END
 
 STRINGTABLE 
 BEGIN
-    KPX_MARK                "MF2"
+	KPX_MARK				"MF2"
 END
 
-#endif    // English (U.S.) resources
+#endif	// English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -133,13 +133,13 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 
 #if defined(APSTUDIO_INVOKED) || defined(EDITOR)
 #if defined(APSTUDIO_INVOKED)
-IDR_EDIF_ICON$(EDITOR)  EDIF                    "Icon.png"
+IDR_EDIF_ICON$(EDITOR)  EDIF					"Icon.png"
 #else
-IDR_EDIF_ICON           EDIF                    "Icon.png"
+IDR_EDIF_ICON		   EDIF					"Icon.png"
 #endif
 #endif
-IDR_EDIF_JSON           EDIF                    "Ext.json"
-#endif    // English (U.K.) resources
+IDR_EDIF_JSON		   EDIF					"Ext.json"
+#endif	// English (U.K.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -152,5 +152,5 @@ IDR_EDIF_JSON           EDIF                    "Ext.json"
 
 
 /////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
+#endif	// not APSTUDIO_INVOKED
 

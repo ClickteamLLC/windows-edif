@@ -2,17 +2,17 @@
 #include "Common.h"
 
 void WINAPI	DLLExport GetObjInfos (mv _far *mV, void *, LPTSTR ObjName, LPTSTR ObjAuthor,
-                                            LPTSTR ObjCopyright, LPTSTR ObjComment, LPTSTR ObjHttp)
+											LPTSTR ObjCopyright, LPTSTR ObjComment, LPTSTR ObjHttp)
 {
 #ifndef RUN_ONLY
 	
-    const json_value &Properties = SDK->json["About"];
+	const json_value &Properties = SDK->json["About"];
 
-	Edif::ConvertAndCopyString(ObjAuthor,       Properties["Author"],	MAX_PATH);
-    Edif::ConvertAndCopyString(ObjCopyright,    Properties["Copyright"],MAX_PATH);
-    Edif::ConvertAndCopyString(ObjComment,      Properties["Comment"],	MAX_PATH);
-    Edif::ConvertAndCopyString(ObjHttp,         Properties["URL"],		MAX_PATH);
-    Edif::ConvertAndCopyString(ObjName,         Properties["Name"],		MAX_PATH);
+	Edif::ConvertAndCopyString(ObjAuthor,	Properties["Author"],	MAX_PATH);
+	Edif::ConvertAndCopyString(ObjCopyright,Properties["Copyright"],MAX_PATH);
+	Edif::ConvertAndCopyString(ObjComment,	Properties["Comment"],	MAX_PATH);
+	Edif::ConvertAndCopyString(ObjHttp,		Properties["URL"],		MAX_PATH);
+	Edif::ConvertAndCopyString(ObjName,		Properties["Name"],		MAX_PATH);
 
 
 #endif // !defined(RUN_ONLY)
@@ -38,14 +38,14 @@ void WINAPI DLLExport GetConditionTitle(mv _far *mV, short code, short param, LP
 #ifndef RUN_ONLY
 
 	if(!IS_COMPATIBLE(mV))
-        return;
+		return;
 
-    const json_value &Parameter = SDK->json["Conditions"][code]["Parameters"][param];
+	const json_value &Parameter = SDK->json["Conditions"][code]["Parameters"][param];
 
-    if(Parameter.type == json_object)
-        Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
-    else
-        Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
+	if(Parameter.type == json_object)
+		Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
+	else
+		Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -55,14 +55,14 @@ void WINAPI DLLExport GetActionTitle(mv _far *mV, short code, short param, LPTST
 #ifndef RUN_ONLY
 
 	if(!IS_COMPATIBLE(mV))
-        return;
+		return;
 
-    const json_value &Parameter = SDK->json["Actions"][code]["Parameters"][param];
+	const json_value &Parameter = SDK->json["Actions"][code]["Parameters"][param];
 
-    if(Parameter.type == json_object)
-        Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
-    else
-        Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
+	if(Parameter.type == json_object)
+		Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
+	else
+		Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -73,14 +73,14 @@ void WINAPI DLLExport GetExpressionParam(mv _far *mV, short code, short param, L
 #ifndef RUN_ONLY
 
 	if(!IS_COMPATIBLE(mV))
-        return;
+		return;
 
-    const json_value &Parameter = SDK->json["Expressions"][code]["Parameters"][param];
+	const json_value &Parameter = SDK->json["Expressions"][code]["Parameters"][param];
 
-    if(Parameter.type == json_object)
-        Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
-    else
-        Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
+	if(Parameter.type == json_object)
+		Edif::ConvertAndCopyString(strBuf, Parameter["Title"], maxLen);
+	else
+		Edif::ConvertAndCopyString(strBuf, Parameter[1], maxLen);
 
 
 #endif // !defined(RUN_ONLY)
@@ -92,9 +92,9 @@ void WINAPI DLLExport GetExpressionTitle(mv _far *mV, short code, LPTSTR strBuf,
 #ifndef RUN_ONLY
 
 	if(!IS_COMPATIBLE(mV))
-        return;
+		return;
 
-    Edif::ConvertAndCopyString(strBuf, SDK->json["Expressions"][code]["Title"], maxLen);
+	Edif::ConvertAndCopyString(strBuf, SDK->json["Expressions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -104,9 +104,9 @@ void WINAPI DLLExport GetConditionString(mv _far *mV, short code, LPTSTR strPtr,
 #ifndef RUN_ONLY
 
 	if(!IS_COMPATIBLE(mV))
-        return;
+		return;
 
-    Edif::ConvertAndCopyString(strPtr, SDK->json["Conditions"][code]["Title"], maxLen);
+	Edif::ConvertAndCopyString(strPtr, SDK->json["Conditions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -116,9 +116,9 @@ void WINAPI DLLExport GetActionString(mv _far *mV, short code, LPTSTR strPtr, sh
 #ifndef RUN_ONLY
 
 	if(!IS_COMPATIBLE(mV))
-        return;
+		return;
 
-    Edif::ConvertAndCopyString(strPtr, SDK->json["Actions"][code]["Title"], maxLen);
+	Edif::ConvertAndCopyString(strPtr, SDK->json["Actions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -128,9 +128,9 @@ void WINAPI DLLExport GetExpressionString(mv _far *mV, short code, LPTSTR strPtr
 #ifndef RUN_ONLY
 
 	if(!IS_COMPATIBLE(mV))
-        return;
+		return;
 
-    Edif::ConvertAndCopyString(strPtr, SDK->json["Expressions"][code]["Title"], maxLen);
+	Edif::ConvertAndCopyString(strPtr, SDK->json["Expressions"][code]["Title"], maxLen);
 
 #endif // !defined(RUN_ONLY)
 }
@@ -172,7 +172,7 @@ short WINAPI DLLExport GetConditionCodeFromMenu(mv _far *mV, short menuId)
 {
 #ifndef RUN_ONLY
 	
-    return menuId - Edif::ConditionID(0);
+	return menuId - Edif::ConditionID(0);
 
 #endif // !defined(RUN_ONLY)
 	return -1;
@@ -182,7 +182,7 @@ short WINAPI DLLExport GetActionCodeFromMenu(mv _far *mV, short menuId)
 {
 #ifndef RUN_ONLY
 
-    return menuId - Edif::ActionID(0);
+	return menuId - Edif::ActionID(0);
 
 #endif // !defined(RUN_ONLY)
 	return -1;
@@ -192,7 +192,7 @@ short WINAPI DLLExport GetExpressionCodeFromMenu(mv _far *mV, short menuId)
 {
 #ifndef RUN_ONLY
 
-    return menuId - Edif::ExpressionID(0);
+	return menuId - Edif::ExpressionID(0);
 
 #endif // !defined(RUN_ONLY)
 	return -1;
@@ -233,11 +233,11 @@ HMENU WINAPI DLLExport GetConditionMenu(mv _far *mV, fpObjInfo oiPtr, LPEDATA ed
 #ifndef RUN_ONLY
 	// Check compatibility
 	if ( IS_COMPATIBLE(mV) )
-    {
-        HMENU Menu = CreatePopupMenu();
-        menucpy(Menu, Edif::ConditionMenu);
+	{
+		HMENU Menu = CreatePopupMenu();
+		menucpy(Menu, Edif::ConditionMenu);
 		return Menu;
-    }
+	}
 #endif // !defined(RUN_ONLY)
 	return NULL;
 }
@@ -247,11 +247,11 @@ HMENU WINAPI DLLExport GetActionMenu(mv _far *mV, fpObjInfo oiPtr, LPEDATA edPtr
 #ifndef RUN_ONLY
 	// Check compatibility
 	if ( IS_COMPATIBLE(mV) )
-    {
-        HMENU Menu = CreatePopupMenu();
-        menucpy(Menu, Edif::ActionMenu);
-        return Menu;
-    }
+	{
+		HMENU Menu = CreatePopupMenu();
+		menucpy(Menu, Edif::ActionMenu);
+		return Menu;
+	}
 #endif // !defined(RUN_ONLY)
 	return NULL;
 }
@@ -261,11 +261,11 @@ HMENU WINAPI DLLExport GetExpressionMenu(mv _far *mV, fpObjInfo oiPtr, LPEDATA e
 #ifndef RUN_ONLY
 	// Check compatibility
 	if ( IS_COMPATIBLE(mV) )
-    {
-        HMENU Menu = CreatePopupMenu();
-        menucpy(Menu, Edif::ExpressionMenu);
+	{
+		HMENU Menu = CreatePopupMenu();
+		menucpy(Menu, Edif::ExpressionMenu);
 		return Menu;
-    }
+	}
 #endif // !defined(RUN_ONLY)
 	return NULL;
 }
@@ -289,12 +289,12 @@ void AddDirectory(_tstring &From, _tstring &To)
 	FileHandle = FindFirstFile(SearchString.c_str(), &Filejson);
 
 	if(FileHandle == INVALID_HANDLE_VALUE)
-	    return;
+		return;
 
 	do
 	{
-        if(*Filejson.cFileName == '.')
-            continue;
+		if(*Filejson.cFileName == '.')
+			continue;
 
 		if((Filejson.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
 		{
@@ -313,7 +313,7 @@ void AddDirectory(_tstring &From, _tstring &To)
 			CreateDirectory(NewPath.c_str(), 0);
 			AddDirectory(OldPath, NewPath);
 			
-            continue;
+			continue;
 		}
 
 		CopyFile((From + Filejson.cFileName).c_str(), (To + Filejson.cFileName).c_str(), FALSE);
@@ -327,25 +327,25 @@ void WINAPI PrepareFlexBuild(LPMV pMV, LPEDATA edPtr, LPCWSTR wTempFolder)
 {
 #if !defined(RUN_ONLY)
 
-    TCHAR FlashFolderPath[MAX_PATH];
-    Edif::GetSiblingPath(FlashFolderPath, _T("Flash")); 
+	TCHAR FlashFolderPath[MAX_PATH];
+	Edif::GetSiblingPath(FlashFolderPath, _T("Flash")); 
 
-    if (!*FlashFolderPath)
-        return;
+	if (!*FlashFolderPath)
+		return;
 
-    LPTSTR TempFolder;
+	LPTSTR TempFolder;
 
 #ifdef _UNICODE
 	TempFolder = (LPTSTR)wTempFolder;
 #else
-    {   size_t Length = WideCharToMultiByte(CP_ACP, 0, wTempFolder, -1, 0, 0, 0, 0);
-        TempFolder = (LPSTR) alloca(Length + 1);
+	{   size_t Length = WideCharToMultiByte(CP_ACP, 0, wTempFolder, -1, 0, 0, 0, 0);
+		TempFolder = (LPSTR) alloca(Length + 1);
 
-        WideCharToMultiByte(CP_ACP, 0, wTempFolder, -1, TempFolder, Length, 0, 0);
-    }
+		WideCharToMultiByte(CP_ACP, 0, wTempFolder, -1, TempFolder, Length, 0, 0);
+	}
 #endif
 
-    AddDirectory(((_tstring) FlashFolderPath + _T("\\")), (_tstring) TempFolder);
+	AddDirectory(((_tstring) FlashFolderPath + _T("\\")), (_tstring) TempFolder);
 
 #endif // !defined(RUN_ONLY)
 }
