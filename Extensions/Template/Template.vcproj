@@ -1444,7 +1444,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\Extension.h"
+					RelativePath=".\Extension.hpp"
 					>
 				</File>
 			</Filter>

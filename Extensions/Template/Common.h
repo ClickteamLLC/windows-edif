@@ -33,4 +33,4 @@
 typedef std::basic_string<TCHAR> stdtstring;
 
 #include "EditData.hpp"
-#include "Extension.h"
+#include "Extension.hpp"
