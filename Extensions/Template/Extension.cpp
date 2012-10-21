@@ -1,3 +1,21 @@
+/* Extension.cpp
+ * This file contains the definitions for
+ * your extension's general runtime functions,
+ * such as the constructor and destructor,
+ * handling routines, etc.
+ * Functions defined here:
+ * Extension::Extension <constructor>
+ * Extension::~Extension <destructor>
+ * Extension::Handle
+ * Extension::Display
+ * Extension::Pause
+ * Extension::Continue
+ * Extension::Save
+ * Extension::Load
+ * Extension::Action		<--|
+ * Extension::Condition		<--|- not what you think!
+ * Extension::Expression	<--|
+ */
 
 #include "Common.h"
 
@@ -83,7 +101,7 @@ short Extension::Handle()
 
 	*/
 
-	// Will not be called next loop	
+	//Will not be called next loop	
 	return REFLAG_ONESHOT;
 }
 

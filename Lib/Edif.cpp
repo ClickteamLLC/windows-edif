@@ -11,103 +11,43 @@ HMENU Edif::ActionMenu, Edif::ConditionMenu, Edif::ExpressionMenu;
 
 short ReadParameterType(const char * Text)
 {
-	if(!_stricmp(Text, "Text") || !_stricmp(Text, "String"))
-		return PARAM_EXPSTRING;
-
-	if(!_stricmp(Text, "Filename") || !_stricmp(Text, "File"))
-		return PARAM_FILENAME;
-
-	if(!_stricmp(Text, "Float"))
-		return PARAM_EXPRESSION;
-
-	if(!_stricmp(Text, "Integer"))
-		return PARAM_EXPRESSION;
-
-	if(!_stricmp(Text, "Object"))
-		return PARAM_OBJECT;
-
-	if(!_stricmp(Text, "Position"))
-		return PARAM_POSITION;
-
-	if(!_stricmp(Text, "Create"))
-		return PARAM_CREATE;
-
-	if(!_stricmp(Text, "SysCreate"))
-		return PARAM_SYSCREATE;
-
-	if(!_stricmp(Text, "Animation"))
-		return PARAM_ANIMATION;
-
-	if(!_stricmp(Text, "Nop"))
-		return PARAM_NOP;
-
-	if(!_stricmp(Text, "Player"))
-		return PARAM_PLAYER;
-
-	if(!_stricmp(Text, "Every"))
-		return PARAM_EVERY;
-
-	if(!_stricmp(Text, "Key"))
-		return PARAM_KEY;
-
-	if(!_stricmp(Text, "Speed"))
-		return PARAM_SPEED;
-
-	if(!_stricmp(Text, "JoyDirection"))
-		return PARAM_JOYDIRECTION;
-
-	if(!_stricmp(Text, "Shoot"))
-		return PARAM_SHOOT;
-
-	if(!_stricmp(Text, "Zone"))
-		return PARAM_ZONE;
-
-	if(!_stricmp(Text, "Comparison"))
-		return PARAM_COMPARAISON;
-		
-	if(!_stricmp(Text, "StringComparison"))
-		return PARAM_CMPSTRING;
-
-	if(!_stricmp(Text, "Colour") || !_stricmp(Text, "Color"))
-		return PARAM_COLOUR;
-
-	if(!_stricmp(Text, "Frame"))
-		return PARAM_FRAME;
-
-	if(!_stricmp(Text, "SampleLoop"))
-		return PARAM_SAMLOOP;
-
-	if(!_stricmp(Text, "MusicLoop"))
-		return PARAM_MUSLOOP;
-
-	if(!_stricmp(Text, "NewDirection"))
-		return PARAM_NEWDIRECTION;
-
-	if(!_stricmp(Text, "TextNumber"))
-		return PARAM_TEXTNUMBER;
-
-	if(!_stricmp(Text, "Click"))
-		return PARAM_CLICK;
-
-	if(!_stricmp(Text, "Program"))
-		return PARAM_PROGRAM;
-
-	if(!_strnicmp(Text, "Custom", 6))
-		return PARAM_EXTBASE+atoi(Text+6);
+	if(!_stricmp(Text, "Text") || !_stricmp(Text, "String"))	return PARAM_EXPSTRING;
+	if(!_stricmp(Text, "Filename") || !_stricmp(Text, "File"))	return PARAM_FILENAME;
+	if(!_stricmp(Text, "Float"))								return PARAM_EXPRESSION;
+	if(!_stricmp(Text, "Integer"))								return PARAM_EXPRESSION;
+	if(!_stricmp(Text, "Object"))								return PARAM_OBJECT;
+	if(!_stricmp(Text, "Position"))								return PARAM_POSITION;
+	if(!_stricmp(Text, "Create"))								return PARAM_CREATE;
+	if(!_stricmp(Text, "SysCreate"))							return PARAM_SYSCREATE;
+	if(!_stricmp(Text, "Animation"))							return PARAM_ANIMATION;
+	if(!_stricmp(Text, "Nothing"))								return PARAM_NOP;
+	if(!_stricmp(Text, "Player"))								return PARAM_PLAYER;
+	if(!_stricmp(Text, "Every"))								return PARAM_EVERY;
+	if(!_stricmp(Text, "Key"))									return PARAM_KEY;
+	if(!_stricmp(Text, "Speed"))								return PARAM_SPEED;
+	if(!_stricmp(Text, "JoyDirection"))							return PARAM_JOYDIRECTION;
+	if(!_stricmp(Text, "Shoot"))								return PARAM_SHOOT;
+	if(!_stricmp(Text, "Zone"))									return PARAM_ZONE;
+	if(!_stricmp(Text, "Comparison"))							return PARAM_COMPARAISON;
+	if(!_stricmp(Text, "StringComparison"))						return PARAM_CMPSTRING;
+	if(!_stricmp(Text, "Colour") || !_stricmp(Text, "Color"))	return PARAM_COLOUR;
+	if(!_stricmp(Text, "Frame"))								return PARAM_FRAME;
+	if(!_stricmp(Text, "SampleLoop"))							return PARAM_SAMLOOP;
+	if(!_stricmp(Text, "MusicLoop"))							return PARAM_MUSLOOP;
+	if(!_stricmp(Text, "NewDirection"))							return PARAM_NEWDIRECTION;
+	if(!_stricmp(Text, "TextNumber"))							return PARAM_TEXTNUMBER;
+	if(!_stricmp(Text, "Click"))								return PARAM_CLICK;
+	if(!_stricmp(Text, "Program"))								return PARAM_PROGRAM;
+	if(!_strnicmp(Text, "Custom", 6))							return PARAM_EXTBASE+atoi(Text+6);
 
 	return 0;
 }
 
 short ReadExpressionParameterType(const char * Text)
 {
-	if(!_stricmp(Text, "Text") || !_stricmp(Text, "String"))
-		return EXPPARAM_STRING;
-
-	if(!_stricmp(Text, "Float"))
-		return EXPPARAM_LONG;
-
-	if(!_stricmp(Text, "Integer"))
-		return EXPPARAM_LONG;
+	if(!_stricmp(Text, "Text") || !_stricmp(Text, "String"))	return EXPPARAM_STRING;
+	if(!_stricmp(Text, "Float"))								return EXPPARAM_LONG;
+	if(!_stricmp(Text, "Integer"))								return EXPPARAM_LONG;
 
 	return 0;
 }
@@ -262,11 +202,11 @@ Edif::SDK::SDK(mv * mV, json_value &_json) : json (_json)
 
 		int ActionID = Edif::ActionID(i);
 
-		ActionInfos.push_back(ActionID);  // Menu ID
-		ActionInfos.push_back(ActionID);  // String ID
-		ActionInfos.push_back(i);		 // Code
+		ActionInfos.push_back(ActionID);	// Menu ID
+		ActionInfos.push_back(ActionID);	// String ID
+		ActionInfos.push_back(i);			// Code
 
-		ActionInfos.push_back(0);		 // Flags
+		ActionInfos.push_back(0);			// Flags
 
 		const json_value &Parameters = Action["Parameters"];
 
@@ -546,7 +486,7 @@ HMENU Edif::LoadMenuJSON(int BaseID, const json_value &Source, HMENU Parent)
 		bool Disabled = MenuItem.u.array.length > (ItemOffset + 2) ? ((bool) MenuItem[ItemOffset + 2]) != 0 : false;
 
 		AppendMenu(Parent, Disabled ? MF_GRAYED | MF_UNCHECKED | MF_BYPOSITION | MF_STRING
-								: MF_BYPOSITION | MF_STRING, ID, Text);
+									: MF_BYPOSITION | MF_STRING, ID, Text);
 
 		FreeString(Text);
 	}
