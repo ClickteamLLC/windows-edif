@@ -55,6 +55,7 @@ struct EditData
 		//MyArray = from.MyArray;
 	}
 
+#ifndef RUN_ONLY
 	/* Serialize
 	 * This is where you need to "write" data
 	 * to SerializedED like a file. Make sure
@@ -101,6 +102,7 @@ struct EditData
 		//Done!
 		return true; //return false in the event of an error
 	}
+#endif
 
 	/* <constructor>
 	 * This is the primary constructor for the
