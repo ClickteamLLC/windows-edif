@@ -114,7 +114,7 @@ public:
 
 	//Expressions - Defined in Expressions.cpp
 	int Add(int FirstNumber, int SecondNumber);
-	const char * HelloWorld();
+	const TCHAR * HelloWorld();
 
 
 	short Handle();			//defined & documented in Extension.cpp
