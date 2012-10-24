@@ -155,8 +155,8 @@ namespace Edif
 
 	int GetDependency (char *& Buffer, size_t &Size, const TCHAR * FileExtension, int Resource);
 
-	TCHAR* ConvertString(const char* urf8String);
-	TCHAR* ConvertAndCopyString(TCHAR* tstr, const char* urf8String, int maxLength);
+	TCHAR* ConvertString(const char* utf8String);
+	TCHAR* ConvertAndCopyString(TCHAR* tstr, const char* utf8String, int maxLength);
 	inline void FreeString(TCHAR* s)
 	{
 		free(s);
@@ -228,10 +228,10 @@ struct RD
 		sizeof(rVal)
 	];
 	//Pointers to the optional structures, null values mean that that OEFLAG was not specified.
-	rCom			*rc;				// Common structure for movements & animations
-	rMvt			*rm;				// Movements (OEFLAG_MOVEMENTS)
-	rSpr			*rs;				// Sprite (displayable objects) (OEFLAG_SPRITES)
-	rVal			*rv;				// Alterable values (OEFLAG_VALUES)
+	rCom *rc; // Common structure for movements & animations
+	rMvt *rm; // Movements (OEFLAG_MOVEMENTS)
+	rSpr *rs; // Sprite (displayable objects) (OEFLAG_SPRITES)
+	rVal *rv; // Alterable values (OEFLAG_VALUES)
 
 	Extension * pExtension;
 };
