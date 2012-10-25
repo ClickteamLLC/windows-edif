@@ -65,9 +65,10 @@ void Edif::Init(mv * _far mV, LPEDATA edPtr)
 	if(_tcscmp(MFXName, _T("Template")) == 0)
 	{
 		MessageBox(0, _T("You forgot to change the MFX filename"
-						" in the project settings!\nChange the"
-						" output path in the linker options for"
-						" each build configuration."), _T("EDIF extension named Template.mfx"), MB_OK);
+						" in BuildSettings.vsprops!\nChange the"
+						" \"Template.mfx\" filename to whatever"
+						" filename you want (spaces/underscores"
+						" only, please)."), _T("EDIF extension named Template.mfx"), MB_OK);
 	}
 }
 

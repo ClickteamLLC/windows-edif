@@ -1513,14 +1513,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Lib\ObjectSelection.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\ObjectSelection.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Inc\Palet.h"
 				>
 			</File>
@@ -1591,6 +1583,18 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Riggs"
+				>
+				<File
+					RelativePath="..\..\Lib\ObjectSelection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\ObjectSelection.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>
