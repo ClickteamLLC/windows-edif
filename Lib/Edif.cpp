@@ -58,6 +58,7 @@ void Edif::Init(mv * _far mV, LPEDATA edPtr)
 
 	mvInvalidateObject(mV, edPtr);
 
+#ifndef RUN_ONLY
 	TCHAR MFXPath[_MAX_PATH];
 	GetModuleFileName(hInstLib, MFXPath, _MAX_PATH);
 	TCHAR MFXName[_MAX_FNAME];
@@ -70,6 +71,7 @@ void Edif::Init(mv * _far mV, LPEDATA edPtr)
 						" filename you want (spaces/underscores"
 						" only, please)."), _T("EDIF extension named Template.mfx"), MB_OK);
 	}
+#endif
 }
 
 void Edif::Free(mv * _far mV)
