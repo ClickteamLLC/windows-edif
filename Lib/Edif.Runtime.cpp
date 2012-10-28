@@ -168,8 +168,6 @@ void Edif::Runtime::SetAngleOfObject(LPRO object, float acAngle)
 		
 }
 
-extern HINSTANCE hInstLib;
-
 struct EdifGlobal
 {
 	TCHAR Name[256];
