@@ -239,7 +239,7 @@ void MMF2Func SetPropCheck(mv *mV, SerializedED *SED, UINT PropID, BOOL Ticked)
  * If you use a button proeprty or a
  * property that has a button, then
  * you would be impolite to ignore
- * the user when the click on that
+ * the user when they click on that
  * button. Here is where you respond
  * to that button press e.g. with
  * a dialog.
