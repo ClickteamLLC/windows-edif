@@ -1,6 +1,5 @@
-
 // By Anders Riggelsen (Andos)
-// http://www.clickteam.com/epicenter/ubbthreads.php?ubb=showflat&Number=214148&gonew=1
+// http://community.clickteam.com/showthread.php?t=61672
 
 // These files do not match up with the originals - modified for Edif (callbacks inside the extension class, etc..)
 
