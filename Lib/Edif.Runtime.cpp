@@ -164,7 +164,7 @@ void Edif::Runtime::SetAngleOfObject(LPRO object, float acAngle)
 	if(IsHWA())
 		memcpy(&object->roc.rcAngle, (int*)&acAngle, sizeof(int));
 	else
-		object->roc.rcAngle = (int)acAngle;
+		object->roc.rcAngle = (ANGLETYPE)acAngle;
 		
 }
 

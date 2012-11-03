@@ -1,5 +1,5 @@
-
 #include "Common.h"
+using namespace std;
 
 void WINAPI	DLLExport GetObjInfos (mv _far *mV, void *, LPTSTR ObjName, LPTSTR ObjAuthor,
 											LPTSTR ObjCopyright, LPTSTR ObjComment, LPTSTR ObjHttp)

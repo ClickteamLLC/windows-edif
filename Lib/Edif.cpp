@@ -1,4 +1,5 @@
 #include "Common.h"
+using namespace std;
 
 Edif::SDK * SDK;
 
@@ -65,11 +66,11 @@ void Edif::Init(mv * _far mV, LPEDATA edPtr)
 	_tsplitpath(MFXPath, 0, 0, MFXName, 0);
 	if(_tcscmp(MFXName, _T("Template")) == 0)
 	{
-		MessageBox(0, _T("You forgot to change the MFX filename"
-						" in BuildSettings.vsprops!\nChange the"
-						" \"Template.mfx\" filename to whatever"
-						" filename you want (spaces/underscores"
-						" only, please)."), _T("EDIF extension named Template.mfx"), MB_OK);
+		MessageBox(0, _T("You forgot to change the MFX filename ")
+					  _T("in BuildSettings.vsprops!\nChange the ")
+					  _T("\"Template.mfx\" filename to whatever ")
+					  _T("filename you want (spaces/underscores ")
+					  _T("only, please)."), _T("EDIF extension named Template.mfx"), MB_OK);
 	}
 #endif
 }

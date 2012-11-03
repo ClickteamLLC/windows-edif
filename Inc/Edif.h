@@ -11,9 +11,7 @@
 #include "Patch.h"
 
 #include <vector>
-#include <list>
 #include <string>
-using namespace std;
 
 class Extension;
 
@@ -55,23 +53,23 @@ namespace Edif
 		SDK (mv * mV, json_value &);
 		~SDK ();
 
-		vector<short> ActionInfos;
-		vector<short> ConditionInfos;
-		vector<short> ExpressionInfos;
+		std::vector<short> ActionInfos;
+		std::vector<short> ConditionInfos;
+		std::vector<short> ExpressionInfos;
 
 		void ** ActionJumps;
 		void ** ConditionJumps;
 		void ** ExpressionJumps;
 
-		vector<void *> ActionFunctions;
-		vector<void *> ConditionFunctions;
-		vector<void *> ExpressionFunctions;
+		std::vector<void *> ActionFunctions;
+		std::vector<void *> ConditionFunctions;
+		std::vector<void *> ExpressionFunctions;
 
-		vector<char> ExpressionTypes;
+		std::vector<char> ExpressionTypes;
 
-		vector<short> ActionFloatFlags;
-		vector<short> ConditionFloatFlags;
-		vector<short> ExpressionFloatFlags;
+		std::vector<short> ActionFloatFlags;
+		std::vector<short> ConditionFloatFlags;
+		std::vector<short> ExpressionFloatFlags;
 
 		unsigned char * FunctionMemory;
 
