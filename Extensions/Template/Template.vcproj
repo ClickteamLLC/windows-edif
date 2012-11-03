@@ -1456,98 +1456,6 @@
 		<Filter
 			Name="Global to All Extensions"
 			>
-			<File
-				RelativePath="..\..\Inc\Ccx.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Ccxhdr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\CfcError.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\CfcFile.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Cncf.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\cncr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Cncy.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Cnpdll.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\colors.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\EVTCCX.H"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Fill.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\FilterMgr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\ImageFlt.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\ImgFlt.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Palet.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Patch.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\PictEdDefs.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Props.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\PTYPE.H"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\SoundFilter.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\SoundFilterMgr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\Surface.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Inc\WinMacro.h"
-				>
-			</File>
 			<Filter
 				Name="Edif"
 				>
@@ -1583,18 +1491,126 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Riggs"
+					>
+					<File
+						RelativePath="..\..\Lib\ObjectSelection.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Inc\ObjectSelection.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
-				Name="Riggs"
+				Name="MMF2 SDK"
 				>
 				<File
-					RelativePath="..\..\Lib\ObjectSelection.cpp"
+					RelativePath="..\..\Inc\Ccx.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\Inc\ObjectSelection.h"
+					RelativePath="..\..\Inc\Ccxhdr.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\Inc\CfcError.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\CfcFile.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\Cncf.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\cncr.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\Cncy.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\Cnpdll.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\colors.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\EVTCCX.H"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\Fill.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\Palet.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\Patch.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\PictEdDefs.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\Props.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\PTYPE.H"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\Surface.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Inc\WinMacro.h"
+					>
+				</File>
+				<Filter
+					Name="Filters"
+					>
+					<File
+						RelativePath="..\..\Inc\FilterMgr.h"
+						>
+					</File>
+					<Filter
+						Name="Images"
+						>
+						<File
+							RelativePath="..\..\Inc\ImageFlt.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Inc\ImgFlt.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Sound"
+						>
+						<File
+							RelativePath="..\..\Inc\SoundFilter.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Inc\SoundFilterMgr.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

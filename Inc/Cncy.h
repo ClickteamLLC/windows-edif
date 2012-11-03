@@ -1310,7 +1310,7 @@ typedef	struct	mv {
 	DWORD				(CALLBACK * mvGetVersion) ();
 
 	// Editor & Runtime: callback function for properties or other functions
-	#ifdef _cplusplus
+	#ifdef __cplusplus
 		LRESULT			(CALLBACK * mvCallFunction) (LPVOID edPtr, int nFnc, LPARAM lParam1=0, LPARAM lParam2=0, LPARAM lParam3=0);
 	#else
 		LRESULT			(CALLBACK * mvCallFunction) (LPVOID edPtr, int nFnc, LPARAM lParam1, LPARAM lParam2, LPARAM lParam3);
