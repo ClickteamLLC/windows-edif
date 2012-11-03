@@ -66,11 +66,15 @@ void Edif::Init(mv * _far mV, LPEDATA edPtr)
 	_tsplitpath(MFXPath, 0, 0, MFXName, 0);
 	if(_tcscmp(MFXName, _T("Template")) == 0)
 	{
+		TCHAR *extname;
 		MessageBox(0, _T("You forgot to change the MFX filename ")
 					  _T("in BuildSettings.vsprops!\nChange the ")
 					  _T("\"Template.mfx\" filename to whatever ")
 					  _T("filename you want (letters/underscores")
-					  _T(" only, please)."), _T("EDIF extension named Template.mfx"), MB_OK);
+					  _T(" only, please)."),
+					 (_T("\"")+std::basic_string<TCHAR>(extname = ConvertString(::SDK->json["About"]["Name"]))
+					 +_T("\" named Template.mfx - EDIF")).c_str(), MB_OK);
+		FreeString(extname);
 	}
 #endif
 }
