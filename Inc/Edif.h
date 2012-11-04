@@ -134,6 +134,8 @@ namespace Edif
 
 		void WriteGlobal(const TCHAR * Name, void * Value);
 		void * ReadGlobal(const TCHAR * Name);
+		static void WriteGlobal(mv * mV, CRunApp * App, const TCHAR * Name, void * Value);
+		static void * ReadGlobal(mv * mV, CRunApp * App, const TCHAR * Name);
 
 		#ifdef EdifUseJS
 		

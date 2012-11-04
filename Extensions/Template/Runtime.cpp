@@ -87,7 +87,8 @@
  */
 void MMF2Func StartApp(mv *mV, CRunApp *App)
 {
-	//
+//	delete (MyGlobalData *)Edif::Runtime::ReadGlobal(mV, App, "My Global Data");
+//	Edif::Runtime::WriteGlobal(mV, App, "My Global Data", new MyGlobalData());
 }
 
 /* EndApp
@@ -99,7 +100,7 @@ void MMF2Func StartApp(mv *mV, CRunApp *App)
  */
 void MMF2Func EndApp(mv *mV, CRunApp *App)
 {
-	//
+//	delete (MyGlobalData *)Edif::Runtime::ReadGlobal(mV, App, "My Global Data");
 }
 
 /* StartFrame
@@ -113,7 +114,17 @@ void MMF2Func EndApp(mv *mV, CRunApp *App)
  */
 void MMF2Func StartFrame(mv *mV, CRunApp *App, int FrameIndex)
 {
-	//
+//	if(!Edif::Runtime::ReadGlobal(mV, App, "My Global Data Backup")) //first time on this frame
+//	{
+//		Edif::Runtime::WriteGlobal(mV, App, "My Global Data Backup",
+//			new MyGlobalData(*(MyGlobalData *)Edif::Runtime::ReadGlobal(mV, App, "My Global Data"))); //copy
+//	}
+//	else //frame restarting, restore initial global data
+//	{
+//		delete (MyGlobalData *)Edif::Runtime::ReadGlobal(mV, App, "My Global Data");
+//		Edif::Runtime::WriteGlobal(mV, App, "My Global Data",
+//			new MyGlobalData(*(MyGlobalData *)Edif::Runtime::ReadGlobal(mV, App, "My Global Data Backup"))); //copy
+//	}
 }
 
 /* EndFrame
@@ -123,7 +134,7 @@ void MMF2Func StartFrame(mv *mV, CRunApp *App, int FrameIndex)
  */
 void MMF2Func EndFrame(mv *mV, CRunApp *App, int FrameIndex)
 {
-	//
+//	delete (MyGlobalData *)Edif::Runtime::ReadGlobal(mV, App, "My Global Data Backup");
 }
 
 

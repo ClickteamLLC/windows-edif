@@ -176,14 +176,9 @@ struct EdifGlobal
 	EdifGlobal * Next;
 };
 
-void Edif::Runtime::WriteGlobal(const TCHAR * Name, void * Value)
+void Edif::Runtime::WriteGlobal(mv * mV, CRunApp * App, const TCHAR * Name, void * Value)
 {
-	LPRH rhPtr = rdPtr->rHo.hoAdRunHeader;
-
-	while(rhPtr->rhApp->m_pParentApp)
-		rhPtr = rhPtr->rhApp->m_pParentApp->m_Frame->m_rhPtr;
-
-	EdifGlobal * Global = (EdifGlobal *) rhPtr->rh4.rh4Mv->mvGetExtUserData(rhPtr->rhApp, hInstLib);
+	EdifGlobal * Global = (EdifGlobal *) mV->mvGetExtUserData(App, hInstLib);
 
 	if(!Global)
 	{
@@ -194,7 +189,7 @@ void Edif::Runtime::WriteGlobal(const TCHAR * Name, void * Value)
 
 		Global->Next = 0;
 
-		rhPtr->rh4.rh4Mv->mvSetExtUserData(rhPtr->rhApp, hInstLib, Global);
+		mV->mvSetExtUserData(App, hInstLib, Global);
 
 		return;
 	}
@@ -222,14 +217,19 @@ void Edif::Runtime::WriteGlobal(const TCHAR * Name, void * Value)
 	Global->Next = 0;
 }
 
-void * Edif::Runtime::ReadGlobal(const TCHAR * Name)
+void Edif::Runtime::WriteGlobal(const TCHAR * Name, void * Value)
 {
 	LPRH rhPtr = rdPtr->rHo.hoAdRunHeader;
 
 	while(rhPtr->rhApp->m_pParentApp)
 		rhPtr = rhPtr->rhApp->m_pParentApp->m_Frame->m_rhPtr;
 
-	EdifGlobal * Global = (EdifGlobal *) rhPtr->rh4.rh4Mv->mvGetExtUserData(rhPtr->rhApp, hInstLib);
+	WriteGlobal(rhPtr->rh4.rh4Mv, rhPtr->rhApp, Name, Value);
+}
+
+void * Edif::Runtime::ReadGlobal(mv * mV, CRunApp * App, const TCHAR * Name)
+{
+	EdifGlobal * Global = (EdifGlobal *) mV->mvGetExtUserData(App, hInstLib);
 
 	while(Global)
 	{
@@ -240,6 +240,16 @@ void * Edif::Runtime::ReadGlobal(const TCHAR * Name)
 	}
 
 	return 0;
+}
+
+void * Edif::Runtime::ReadGlobal(const TCHAR * Name)
+{
+	LPRH rhPtr = rdPtr->rHo.hoAdRunHeader;
+
+	while(rhPtr->rhApp->m_pParentApp)
+		rhPtr = rhPtr->rhApp->m_pParentApp->m_Frame->m_rhPtr;
+
+	return ReadGlobal(rhPtr->rh4.rh4Mv, rhPtr->rhApp, Name);
 }
 
 #ifdef EdifUseJS
