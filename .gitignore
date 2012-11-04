@@ -1,3 +1,15 @@
+# Template project built files
+Extensions/Template/MFX/
+Extensions/Template/Debug HWA/
+Extensions/Template/DebugUnicode/
+Extensions/Template/Edittime HWA/
+Extensions/Template/ReleaseEditor/
+Extensions/Template/ReleaseEditorUnicode/
+Extensions/Template/ReleaseRuntime/
+Extensions/Template/ReleaseRuntimeUnicode/
+Extensions/Template/Runtime HWA/
+
+
 #################
 ## Eclipse
 #################
