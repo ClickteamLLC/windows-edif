@@ -101,6 +101,7 @@ void MMF2Func StartApp(mv *mV, CRunApp *App)
 void MMF2Func EndApp(mv *mV, CRunApp *App)
 {
 //	delete (MyGlobalData *)Edif::Runtime::ReadGlobal(mV, App, "My Global Data");
+//	Edif::Runtime:WriteGlobal(mV, App, "My Global Data", 0); //clear dangling pointer
 }
 
 /* StartFrame
@@ -135,6 +136,7 @@ void MMF2Func StartFrame(mv *mV, CRunApp *App, int FrameIndex)
 void MMF2Func EndFrame(mv *mV, CRunApp *App, int FrameIndex)
 {
 //	delete (MyGlobalData *)Edif::Runtime::ReadGlobal(mV, App, "My Global Data Backup");
+//	Edif::Runtime:WriteGlobal(mV, App, "My Global Data Backup", 0); //clear dangling pointer
 }
 
 
