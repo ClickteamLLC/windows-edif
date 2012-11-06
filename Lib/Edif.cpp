@@ -156,7 +156,9 @@ int Edif::Init(mv _far * mV)
 	json_settings settings;
 	memset (&settings, 0, sizeof (settings));
 
-//	settings.settings = json_relaxed_commas;
+#ifdef UsingJsonWithoutCommas
+	settings.settings |= json_relaxed_commas;
+#endif
 
 	json_value * json = json_parse_ex (&settings, copy, json_error);
 

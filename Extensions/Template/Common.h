@@ -17,6 +17,9 @@
 	#define MMFEXT	//MMF2, MMF2 Dev
 //	#define PROEXT	//MMF2 Dev only
 
+//Define this if you want legacy comma-less JSON support
+//	#define UsingJsonWithoutCommas
+
 #include "Edif.h"
 #include "Resource.h"
 
