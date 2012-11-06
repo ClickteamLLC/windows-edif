@@ -234,7 +234,7 @@ Edif::SDK::SDK(mv * mV, json_value &_json) : json (_json)
 
 		ActionInfos.push_back(Parameters.u.array.length);
 
-		{   short IsFloat = 0;
+		{	short IsFloat = 0;
 
 			for(unsigned int i = 0; i < Parameters.u.array.length; ++ i)
 			{
@@ -531,7 +531,7 @@ long __stdcall Edif::Condition(LPRDATA rdPtr, long param1, long param2)
 	int Result = ActionOrCondition(::SDK->ConditionFloatFlags, (LPEVENTINFOS2) &::SDK->ConditionInfos[0],
 								Function, ID, rdPtr, param1, param2);
 
-	return *(char *) &Result;
+	return Result;
 }
 
 short __stdcall Edif::Action(LPRDATA rdPtr, long param1, long param2)
