@@ -21,16 +21,13 @@ void WINAPI	DLLExport GetObjInfos (mv _far *mV, void *, LPTSTR ObjName, LPTSTR O
 LPCTSTR WINAPI GetHelpFileName()
 {
 #ifndef RUN_ONLY
-	// Return a file without path if your help file can be loaded by the MMF help file.
-//	return "MyExt.chm";
 
-	// Or return the path of your file, relatively to the MMF directory
-	// if your file is not loaded by the MMF help file.
-	static TCHAR TempString[MAX_PATH];		// used by GetHelpFileName()
+	static TCHAR TempString[MAX_PATH];
 	return Edif::ConvertAndCopyString(TempString, SDK->json["About"]["Help"], MAX_PATH);
-#else
-	return NULL;
+
 #endif // !defined(RUN_ONLY)
+
+	return NULL;
 }
 
 void WINAPI DLLExport GetConditionTitle(mv _far *mV, short code, short param, LPTSTR strBuf, short maxLen)
