@@ -18,6 +18,8 @@
 		["Sub Menu",
 			[1, "Second Action Example"]
 		],
+		"Separator",
+		[0, "A Disabled Menu Item", true],
 		"Separator"
 	],
 	"ConditionMenu":
