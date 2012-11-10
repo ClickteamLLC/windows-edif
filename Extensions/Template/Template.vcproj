@@ -1483,11 +1483,11 @@
 					Name="json"
 					>
 					<File
-						RelativePath="..\..\Lib\json.c"
+						RelativePath="..\..\json-parser\json.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Inc\json.h"
+						RelativePath="..\..\json-parser\json.h"
 						>
 					</File>
 				</Filter>
