@@ -8,7 +8,9 @@ Extensions/Template/ReleaseEditorUnicode/
 Extensions/Template/ReleaseRuntime/
 Extensions/Template/ReleaseRuntimeUnicode/
 Extensions/Template/Runtime HWA/
-
+# Users' extensions if they cloned the repo
+!Extensions/Template/
+!Extensions/AutoInstall.bat
 
 #################
 ## Eclipse
