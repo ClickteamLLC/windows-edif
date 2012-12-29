@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Extensions"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions"
 			/>
 		</Configuration>
 		<Configuration
@@ -216,7 +216,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Extensions"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions"
 			/>
 		</Configuration>
 		<Configuration
@@ -318,7 +318,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Data\Runtime"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Data\Runtime"
 			/>
 		</Configuration>
 		<Configuration
@@ -419,7 +419,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Extensions\Unicode"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions\Unicode"
 			/>
 		</Configuration>
 		<Configuration
@@ -522,7 +522,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Extensions\Unicode"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions\Unicode"
 			/>
 		</Configuration>
 		<Configuration
@@ -625,7 +625,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Data\Runtime\Unicode"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Data\Runtime\Unicode"
 			/>
 		</Configuration>
 		<Configuration
@@ -726,7 +726,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Extensions\HWA"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions\HWA"
 			/>
 		</Configuration>
 		<Configuration
@@ -829,7 +829,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Extensions\HWA"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions\HWA"
 			/>
 		</Configuration>
 		<Configuration
@@ -931,7 +931,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat $(TargetPath) \Data\Runtime\HWA"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Data\Runtime\HWA"
 			/>
 		</Configuration>
 	</Configurations>
