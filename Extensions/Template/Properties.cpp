@@ -166,12 +166,12 @@ void MMF2Func SetPropValue(mv *mV, SerializedED *SED, UINT PropID, CPropValue *P
 	//EditData ed (SED);
 	//switch(PropID)
 	//{
-	//case PropData::MyString:
+	//case Prop::MyString:
 	//	{
 	//		ed.MyString = (LPSTR)((CPropDataValue*)PropVal)->m_pData;
 	//		break;
 	//	}
-	//case PropData::MyInt:
+	//case Prop::MyInt:
 	//	{
 	//		ed.MyInt = (CPropDWordValue*)PropVal)->m_dwValue;
 	//		break;
