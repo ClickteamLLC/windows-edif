@@ -269,4 +269,6 @@ struct SerializedED
 	char data[1];
 };
 
+#include "EDStream.hpp"
+
 #define MMF2Func WINAPI DLLExport

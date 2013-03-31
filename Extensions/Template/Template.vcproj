@@ -1479,6 +1479,10 @@
 					RelativePath="..\..\Lib\Edif.Runtime.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\Inc\EDStream.hpp"
+					>
+				</File>
 				<Filter
 					Name="json"
 					>
