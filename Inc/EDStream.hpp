@@ -1,3 +1,7 @@
+/* Note:
+ * This is not an independent header!
+ */
+
 #ifndef __EditDataStream_HeaderPlusPlus__
 #define __EditDataStream_HeaderPlusPlus__
 
