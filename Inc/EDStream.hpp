@@ -66,6 +66,9 @@ struct EDOStream : std::basic_ostream<TCHAR>
 		{
 			setp(&b.front(), &b.front());
 		}
+		virtual ~Buf()
+		{
+		}
 
 	private:
 		mv *mV;
