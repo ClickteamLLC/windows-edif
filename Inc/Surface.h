@@ -71,7 +71,7 @@ typedef enum {
 	BOP_EFFECTEX,
 	BOP_MAX,
 	BOP_MASK = 0xFFF,
-	BOP_RGBAFILTER = 0x1000,
+	BOP_RGBAFILTER = 0x1000,	// Same as RGB coefficient & Blend coefficient in MMF. BGRA format (highest byte is alpha)
 } BlitOp;
 
 #define ALPHATOSEMITRANSP(a) ((a==0) ? 128:(255-a)/2)
