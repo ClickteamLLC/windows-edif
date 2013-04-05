@@ -150,7 +150,7 @@ enum {
 // Blilt options
 enum {
 	BLTF_ANTIA				= 0x0001,		// Anti-aliasing
-	BLTF_COPYALPHA			= 0x0002,		// Copy alpha channel to destination alpha channel instead of applying it (Note: Do not use in HWA mode	)
+	BLTF_COPYALPHA			= 0x0002,		// Copy alpha channel to destination alpha channel instead of applying it (Note: Do not use in HWA mode)
 #ifdef HWABETA
 	BLTF_SAFESRC			= 0x0010,
 	BLTF_TILE				= 0x0020
