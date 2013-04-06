@@ -1,4 +1,6 @@
 # Template project built files
+Extensions/
+!Extensions/Template/
 Extensions/Template/MFX/
 Extensions/Template/Debug HWA/
 Extensions/Template/DebugUnicode/
