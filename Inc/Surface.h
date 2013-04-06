@@ -71,7 +71,7 @@ typedef enum {
 	BOP_EFFECTEX,
 	BOP_MAX,
 	BOP_MASK = 0xFFF,
-	BOP_RGBAFILTER = 0x1000,
+	BOP_RGBAFILTER = 0x1000,	// Same as RGB coefficient & Blend coefficient in MMF. BGRA format (highest byte is alpha)
 } BlitOp;
 
 #define ALPHATOSEMITRANSP(a) ((a==0) ? 128:(255-a)/2)
@@ -107,11 +107,11 @@ enum
 	ST_MEMORY,					// Buffer only
 	ST_MEMORYWITHDC,			// Buffer + DC (i.e. DIBSection, DDRAW surface, etc...
 	ST_MEMORYWITHPERMANENTDC,	// Buffer + permanent DC (i.e. DIBDC)
-	ST_DDRAW_SYSTEMMEMORY,		// Surface Direct Draw en mémoire systeme
+	ST_DDRAW_SYSTEMMEMORY,		// Surface Direct Draw Surface in system memory
 	ST_HWA_SCREEN,				// Screen surface in HWA mode
-	ST_HWA_RTTEXTURE,			// Render target texture in HWA mode
-	ST_HWA_ROUTEXTURE,			// HWA texture created in video memory, unmanaged (lost when device is lost)
-	ST_HWA_ROMTEXTURE,			// HWA texture created in video memory, managed (automatically reloaded when the device is lost)
+	ST_HWA_RTTEXTURE,			// Render target texture in HWA mode. Fast writing, can be used as viewport surface
+	ST_HWA_ROUTEXTURE,			// HWA texture created in video memory, unmanaged (lost when device is lost). Slow writing, should be treated read-only
+	ST_HWA_ROMTEXTURE,			// HWA texture created in video memory, managed (automatically reloaded when the device is lost). Slow writing, should be treated read-only
 	ST_MAX
 };
 
@@ -150,7 +150,7 @@ enum {
 // Blilt options
 enum {
 	BLTF_ANTIA				= 0x0001,		// Anti-aliasing
-	BLTF_COPYALPHA			= 0x0002,		// Copy alpha channel to destination alpha channel instead of applying it
+	BLTF_COPYALPHA			= 0x0002,		// Copy alpha channel to destination alpha channel instead of applying it (Note: Do not use in HWA mode)
 #ifdef HWABETA
 	BLTF_SAFESRC			= 0x0010,
 	BLTF_TILE				= 0x0020
