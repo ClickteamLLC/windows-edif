@@ -32,6 +32,19 @@ typedef	BOOL (CALLBACK * LPENUMSCREENMODESPROC)(DisplayMode*, LPVOID);
 typedef	void (CALLBACK * LOSTDEVICECALLBACKPROC)(cSurface*, LPARAM);
 #endif
 
+// Direct3D surface information (Call cSurface::GetDriverInfo)
+typedef struct D3DSURFINFO {
+	DWORD m_lSize;
+	int m_nD3DVersion; // 8 or 9
+	LPVOID m_pD3D; // LPDIRECT3D8 or LPDIRECT3D9
+	LPVOID m_pD3DDevice; // LPDIRECT3DDEVICE8 or LPDIRECT3DDEVICE9
+	LPVOID m_pD3DTexture; // LPDIRECT3DTEXTURE8 or LPDIRECT3DTEXTURE9
+	int m_dwPixelShaderVersion;
+	int m_dwVertexShaderVersion; // not used
+	int m_dwMaxTextureWidth;
+	int m_dwMaxTextureHeight;
+ } D3DSURFINFO;
+
 // System colors
 #ifndef COLOR_GRADIENTINACTIVECAPTION
 #define COLOR_GRADIENTINACTIVECAPTION	28
