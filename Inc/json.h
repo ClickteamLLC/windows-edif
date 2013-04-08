@@ -35,6 +35,15 @@
    #define json_char char
 #endif
 
+#ifndef json_int_t
+   #ifndef _WIN32
+      #include <inttypes.h>
+      #define json_int_t int64_t
+   #else
+      #define json_int_t __int64
+   #endif
+#endif
+
 #ifdef __cplusplus
 
    #include <string.h>
@@ -77,7 +86,7 @@ typedef struct _json_value
    union
    {
       int boolean;
-      long integer;
+      json_int_t integer;
       double dbl;
 
       struct
@@ -162,12 +171,42 @@ typedef struct _json_value
             };
          }
 
-         inline operator long () const
-         {  return u.integer;
+         inline operator json_int_t () const
+         {  
+            switch (type)
+            {
+               case json_integer:
+                  return u.integer;
+
+               case json_double:
+                  return (json_int_t) u.dbl;
+
+               default:
+                  return 0;
+            };
          }
 
          inline operator bool () const
-         {  return u.boolean != 0;
+         {  
+            if (type != json_boolean)
+               return false;
+
+            return u.boolean != 0;
+         }
+
+         inline operator double () const
+         {  
+            switch (type)
+            {
+               case json_integer:
+                  return (double) u.integer;
+
+               case json_double:
+                  return u.dbl;
+
+               default:
+                  return 0;
+            };
          }
 
    #endif
