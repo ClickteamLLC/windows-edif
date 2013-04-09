@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="Template"
 	ProjectGUID="{3BCB4C73-71F6-43B6-803D-41411F92652A}"
 	RootNamespace="Template"
@@ -80,7 +80,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.lib"
-				OutputFile="$(ProjectDir)\MFX\Extensions\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Extensions\$(ProjectName).mfx"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -180,7 +180,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.lib"
-				OutputFile="$(ProjectDir)\MFX\Extensions\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Extensions\$(ProjectName).mfx"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -216,7 +216,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine="..\AutoInstall.bat $(TargetPath) \Extensions"
 			/>
 		</Configuration>
@@ -284,7 +283,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.lib"
-				OutputFile="$(ProjectDir)\MFX\Data\Runtime\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Data\Runtime\$(ProjectName).mfx"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -384,7 +383,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2u.lib"
-				OutputFile="$(ProjectDir)\MFX\Extensions\Unicode\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Extensions\Unicode\$(ProjectName).mfx"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -488,7 +487,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2u.lib"
-				OutputFile="$(ProjectDir)\MFX\Extensions\Unicode\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Extensions\Unicode\$(ProjectName).mfx"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -591,7 +590,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2u.lib"
-				OutputFile="$(ProjectDir)\MFX\Data\Runtime\Unicode\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Data\Runtime\Unicode\$(ProjectName).mfx"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -691,7 +690,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2hwa.lib"
-				OutputFile="$(ProjectDir)\MFX\Extensions\HWA\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Extensions\HWA\$(ProjectName).mfx"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -795,7 +794,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2hwa.lib"
-				OutputFile="$(ProjectDir)\MFX\Extensions\HWA\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Extensions\HWA\$(ProjectName).mfx"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -897,7 +896,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2hwa.lib"
-				OutputFile="$(ProjectDir)\MFX\Data\Runtime\HWA\Template.mfx"
+				OutputFile="$(ProjectDir)\MFX\Data\Runtime\HWA\$(ProjectName).mfx"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
