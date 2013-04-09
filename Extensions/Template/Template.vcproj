@@ -689,7 +689,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2hwa.lib"
 				OutputFile="$(ProjectDir)\MFX\Extensions\HWA\$(MFX_Name)"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -793,7 +793,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2hwa.lib"
 				OutputFile="$(ProjectDir)\MFX\Extensions\HWA\$(MFX_Name)"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -895,7 +895,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2hwa.lib"
 				OutputFile="$(ProjectDir)\MFX\Data\Runtime\HWA\$(MFX_Name)"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
