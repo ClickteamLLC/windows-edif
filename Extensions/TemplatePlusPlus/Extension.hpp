@@ -47,7 +47,7 @@ public:
 	 * version of MMF2 to get access to some
 	 * new SDK feature.
 	 */
-	static const int MinimumBuild = 255;
+	static const int MinimumBuild = 257;
 
 	/* Version
 	 * This is the version of your extension
