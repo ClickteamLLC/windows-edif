@@ -20,7 +20,6 @@
 			OutputDirectory=".\ReleaseEditor"
 			IntermediateDirectory=".\ReleaseEditor"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
@@ -123,7 +122,6 @@
 			OutputDirectory=".\Debug"
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
@@ -224,7 +222,6 @@
 			OutputDirectory=".\ReleaseRuntime"
 			IntermediateDirectory=".\ReleaseRuntime"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -326,7 +323,6 @@
 			OutputDirectory=".\DebugUnicode"
 			IntermediateDirectory=".\DebugUnicode"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -427,7 +423,6 @@
 			OutputDirectory=".\ReleaseEditorUnicode"
 			IntermediateDirectory=".\ReleaseEditorUnicode"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -530,7 +525,6 @@
 			OutputDirectory=".\ReleaseRuntimeUnicode"
 			IntermediateDirectory=".\ReleaseRuntimeUnicode"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -633,7 +627,6 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
@@ -734,7 +727,6 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
@@ -837,7 +829,6 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets=""
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1452,6 +1443,10 @@
 		<Filter
 			Name="Global to All Extensions"
 			>
+			<File
+				RelativePath="..\..\Inc\EDStream.hpp"
+				>
+			</File>
 			<Filter
 				Name="Edif"
 				>
@@ -1473,10 +1468,6 @@
 				</File>
 				<File
 					RelativePath="..\..\Lib\Edif.Runtime.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Inc\EDStream.hpp"
 					>
 				</File>
 				<Filter
