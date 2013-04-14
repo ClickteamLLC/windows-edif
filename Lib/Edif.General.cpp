@@ -66,9 +66,9 @@ short WINAPI DLLExport GetRunObjectInfos(mv _far *mV, fpKpxRunInfos infoPtr)
 	infoPtr->editPrefs = Extension::OEPREFS;
 
 	memcpy(&infoPtr->identifier, SDK->json["About"]["Identifier"], 4);
-	
+
 	infoPtr->version = Extension::Version;
-	
+
 	return TRUE;
 }
 
