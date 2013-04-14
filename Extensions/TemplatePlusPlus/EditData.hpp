@@ -15,10 +15,10 @@ struct EditData
 	/* MyString, MyInt, MyArray_t, MyArray
 	 * Example data
 	 */
-	//stdtstring MyString;
-	//int MyInt;
-	//typedef std::vector<float> MyArray_t;
-	//MyArray_t MyArray;
+//	stdtstring MyString;
+//	int MyInt;
+//	typedef std::vector<float> MyArray_t;
+//	MyArray_t MyArray;
 
 	/* <default constructor>
 	 * This is where you provide default values for
@@ -26,7 +26,7 @@ struct EditData
 	 * when your extension is first created and
 	 * default values are needed.
 	 */
-	EditData() // : MyString("Hello, world!"), MyInt(1337)
+	EditData() // : MyString(_T("Hello, world!")), MyInt(1337)
 	{
 		//MyArray.push_back(3.1415926f);
 	}
@@ -50,9 +50,9 @@ struct EditData
 	 */
 	EditData &operator=(const EditData &from)
 	{
-		//MyString = from.MyString;
-		//MyInt = from.MyInt;
-		//MyArray = from.MyArray;
+//		MyString = from.MyString;
+//		MyInt = from.MyInt;
+//		MyArray = from.MyArray;
 	}
 
 #ifndef RUN_ONLY
@@ -64,42 +64,17 @@ struct EditData
 	 */
 	bool Serialize(mv *mV, SerializedED *&SED) const
 	{
-		//First, figure out how much space is needed
-		unsigned size = 0;
-		//size += (MyString.length()+1) * sizeof(stdtstring::value_type);
-		//size += sizeof(MyInt);
-		//size += sizeof(MyArray_t::size_type);
-		//size += MyArray.size() * sizeof(MyArray_t::value_type);
+		//Create an instance of EDOStream, a helper class
+		EDOStream os (mV, SED);
 
-		//Then, ask MMF2 to provide this space for us in the SerializedED
-		{
-			SerializedED *t = (SerializedED *)mvReAllocEditData(mV, SED, sizeof(SerializedED)+size);
-			if(t) //if it worked
-			{
-				SED = t;
-				//Since SED is a pointer passed by reference,
-				//it will update outside this function so that
-				//the calling code keeps a valid pointer to
-				//the SerializedED.
-			}
-			else return false; //could not allocate space
-		}
+		//Write the data you need to save in binary format
+		//(you can use text format, but binary is recommended)
+//		os.write_string(MyString); //works for c-strings too
+//		os.write_value(MyInt); //only works for primitives!
+//		os.write_value(MyArray.size()); //need to know how many to load later
+//		os.write_sequence(MyArray.begin(), MyArray.end()); //works for c-style arrays too
 
-		//Now, the crazy-looking part: serialize the data
-		char *p = (char *)(&SED->data); //put the pointer at the beginning of the space MMF2 gave us
-		//Perform the copy:												Advance the pointer:
-		//_tcscpy(p, MyString.c_str());									p += (MyString.length()+1) * sizeof(stdtstring::value_type);
-		//memcpy(p, &MyInt, sizeof(MyInt));								p += sizeof(MyInt);
-		//MyArray_t::size_type MyArray_size = MyArray.size();
-		//memcpy(p, &MyArray_size, sizeof(MyArray_size));				p += sizeof(MyArray_size);
-		//for(MyArray_t::size_type i = 0; i < MyArray_size; ++i)
-		//{
-			//memcpy(p, &MyArray[i], sizeof(MyArray_t::value_type));	p += sizeof(MyArray_t::value_type);
-		//}
-		//If you get tired of retyping the size stuff from above, you can always store
-		//the sizes in variables or make macros for them.
-
-		//Done!
+		//That's it! EDOStream automatically stores the data in your extension's editdata
 		return true; //return false in the event of an error
 	}
 #endif
@@ -116,22 +91,22 @@ struct EditData
 	 */
 	EditData(SerializedED *SED)
 	{
-		if(SED->Header.extVersion == 0)
+		if(SED->Header.extVersion == 0) //older version
 		{
 			//code to update from an older version
 		}
-		else if(SED->Header.extVersion == 1)
+		else if(SED->Header.extVersion == 1) //current version
 		{
-			//We have to do some crazy stuff again!
-			char *p = (char *)(&SED->data);
-			//Load the data:													Advance the pointer:
-			//MyString = p; /*std::string is smart enough for this*/			p += (MyString.length()+1) * sizeof(stdtstring::value_type);
-			//MyInt = *(int *)p;												p += sizeof(MyInt);
-			//MyArray_t::size_type MyArray_size = *(MyArray_t::size_type *)p;	p += sizeof(MyArray_size);
-			//for(MyArray_t::size_type i = 0; i < MyArray_size; ++i)
-			//{
-				//MyArray.push_back(*(MyArray_t::value_type *)p);				p += sizeof(MyArray_t::value_type);
-			//}
+			//Create an instance of EDIStream, a helper class
+			EDIStream is (SED);
+			//Read back the data in the same format that you stored it above
+//			MyString = is.read_string();
+//			MyInt = is.read_value<int>(); //need to specify the type here
+//			MyArray_t::size_type MyArray_size = is.read_value<MyArray_t::size_type>();
+//			for(MyArray_t::size_type i = 0; i < MyArray_size; ++i)
+//			{
+//				MyArray.push_back(is.read_value<MyArray_t::value_type>());
+//			}
 		}
 		else //the version is newer than current
 		{
@@ -139,9 +114,9 @@ struct EditData
 			//future self was smart enough to keep the data in
 			//the same format with new data at the end, or
 			//make an error dialog and load some default data.
-			//MessageBox(NULL, _T("The MFA you are trying to load was saved"
-			//					  "with a newer version of this extension."),
-			//				   _T("Error Loading My Extension"), MB_OK);
+//			MessageBox(NULL, _T("The MFA you are trying to load was saved")
+//			                 _T("with a newer version of this extension."),
+//			                 _T("Error Loading My Extension"), MB_OK);
 		}
 	}
 

@@ -9,6 +9,7 @@
 #include <ostream>
 #include <streambuf>
 #include <vector>
+#include <string>
 
 struct EDIStream : std::basic_istream<TCHAR>
 {
@@ -51,6 +52,20 @@ struct EDIStream : std::basic_istream<TCHAR>
 	{
 	}
 
+	template<typename T>
+	T read_value()
+	{
+		T t = T();
+		this->read(reinterpret_cast<TCHAR *>(&t), sizeof(T));
+		return t;
+	}
+	std::basic_string<TCHAR> read_string()
+	{
+		std::basic_string<TCHAR> s;
+		std::getline(*this, s, _T('\0'));
+		return s;
+	}
+
 private:
 	Buf b;
 
@@ -64,7 +79,7 @@ struct EDOStream : std::basic_ostream<TCHAR>
 	{
 		Buf(mv *mV, SerializedED *&SED) : mV(mV), SED(SED)
 		{
-			setp(&b.front(), &b.front());
+			setp(0, 0);
 		}
 		virtual ~Buf()
 		{
@@ -106,6 +121,27 @@ struct EDOStream : std::basic_ostream<TCHAR>
 	}
 	virtual ~EDOStream()
 	{
+	}
+
+	template<typename T>
+	EDOStream &write_value(T t)
+	{
+		this->write(reinterpret_cast<TCHAR const*>(&t), sizeof(T));
+		return *this;
+	}
+	EDOStream &write_string(std::basic_string<TCHAR> const&s)
+	{
+		*this << s << std::ends;
+		return *this;
+	}
+	template<typename ForwardIterator>
+	EDOStream &write_sequence(ForwardIterator first, ForwardIterator pastlast)
+	{
+		for(; first != pastlast; ++first)
+		{
+			this->write(reinterpret_cast<TCHAR const*>(&*first), sizeof(*first));
+		}
+		return *this;
 	}
 
 private:
