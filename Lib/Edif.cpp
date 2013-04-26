@@ -160,7 +160,7 @@ int Edif::Init(mv _far * mV)
 	settings.settings |= json_relaxed_commas;
 #endif
 
-	json_value * json = json_parse_ex (&settings, copy, json_error);
+	json_value * json = json_parse_ex (&settings, copy, JSON_Size, json_error);
 
 	if (!json)
 	{
