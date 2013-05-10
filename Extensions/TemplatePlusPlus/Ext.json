@@ -1,0 +1,74 @@
+{
+	"About":
+	{
+		"Name": "EDIF Template Object",
+		"Author": "Your Name",
+		"Copyright": "Copyright © 2013 Your Name",
+		"Comment": "A sentence or two to describe your extension,\nwith up to four lines of text.",
+		"URL": "http://www.example.com/",
+		"Help": "Help/My New EDIF Extension/Help.chm",
+		"Identifier": "X&pl"
+	},
+
+	"ActionMenu":
+	[
+		"Separator",
+		[0, "Action Example"],
+		"Separator",
+		["Sub Menu",
+			[1, "Second Action Example"]
+		],
+		"Separator",
+		[0, "A Disabled Menu Item", true],
+		"Separator"
+	],
+	"ConditionMenu":
+	[
+		"Separator",
+		[0, "Are two numbers equal?"]
+	],
+	"ExpressionMenu":
+	[
+		"Separator",
+		[0, "Add two numbers"],
+		[1, "Hello world"],
+		"Separator"
+	],
+
+	"Actions":
+	[
+		{	"Title": "Action Example with parameter %0",
+			"Parameters":
+			[
+				["Integer", "Example Parameter"]
+			]
+		},
+		{	"Title": "Second Action Example"
+		}
+	],
+	"Conditions":
+	[
+		{	"Title": "%o: Are %0 and %1 equal?",
+			"Parameters":
+			[
+				["Integer", "First number"],
+				["Integer", "Second number"]
+			],
+			"Triggered": false
+		}
+	],
+	"Expressions":
+	[
+		{	"Title": "Add(",
+			"Returns": "Integer",
+			"Parameters":
+			[
+				["Integer", "First number"],
+				["Integer", "Second number"]
+			]
+		},
+		{	"Title": "HelloWorld$(",
+			"Returns": "Text"
+		}
+	]
+}
