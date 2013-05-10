@@ -1,7 +1,9 @@
 # Only keep template projects
 /Extensions/
 !/Extensions/Template/
+!/Extensions/TemplatePlus/
 !/Extensions/TemplatePlusPlus/
+!/Extensions/AutoInstall.bat
 
 
 #################
