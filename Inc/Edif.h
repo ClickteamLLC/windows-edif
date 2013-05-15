@@ -227,6 +227,11 @@ struct RD
 		sizeof(rSpr)+
 		sizeof(rVal)
 	];
+
+#ifdef RunDataPreInject
+	PreInjectRD pre;
+#endif
+
 	//Pointers to the optional structures, null values mean that that OEFLAG was not specified.
 	rCom *rc; // Common structure for movements & animations
 	rMvt *rm; // Movements (OEFLAG_MOVEMENTS)
@@ -234,6 +239,12 @@ struct RD
 	rVal *rv; // Alterable values (OEFLAG_VALUES)
 
 	Extension * pExtension;
+
+	void *ReservedForFutureUseByTheEdifSdk;
+
+#ifdef RunDataPostInject
+	PostInjectRD post;
+#endif
 };
 
 /* SerializedED
