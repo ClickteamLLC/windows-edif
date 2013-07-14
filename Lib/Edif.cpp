@@ -390,6 +390,7 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 {
 	int * Parameters;
 	int ParameterCount;
+	bool Cast = true;
 
 	{   Info = GetEventInformations(Info, ID);
 
@@ -415,6 +416,12 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 			case PARAM_FILENAME:
 
 				Parameters[i] = CNC_GetStringParameter(rdPtr);
+				break;
+
+			case PARAM_COMPARAISON: //int must be returned
+			case PARAM_CMPSTRING: //char * must be returned
+
+				Cast = false;
 				break;
 
 			default:
@@ -466,7 +473,7 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 		popad
 	}
 
-	return Result;
+	return Cast ? (char)Result : Result;
 }
 
 HMENU Edif::LoadMenuJSON(int BaseID, const json_value &Source, HMENU Parent)
