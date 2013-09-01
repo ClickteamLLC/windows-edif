@@ -1,4 +1,3 @@
-
 /* vim: set et ts=3 sw=3 ft=c:
  *
  * Copyright (C) 2012 James McLaughlin et al.  All rights reserved.
@@ -51,16 +50,18 @@ typedef unsigned short json_uchar;
 
 static unsigned char hex_value (json_char c)
 {
-   if (c >= 'A' && c <= 'F')
-      return (c - 'A') + 10;
-
-   if (c >= 'a' && c <= 'f')
-      return (c - 'a') + 10;
-
-   if (c >= '0' && c <= '9')
+   if (isdigit(c))
       return c - '0';
 
-   return 0xFF;
+   switch (c) {
+      case 'a': case 'A': return 0x0A;
+      case 'b': case 'B': return 0x0B;
+      case 'c': case 'C': return 0x0C;
+      case 'd': case 'D': return 0x0D;
+      case 'e': case 'E': return 0x0E;
+      case 'f': case 'F': return 0x0F;
+      default: return 0xFF;
+   }
 }
 
 typedef struct
@@ -189,10 +190,19 @@ static int new_value
    do { if (!state.first_pass) string [string_length] = b;  ++ string_length; } while (0);
 
 const static long
-   flag_next = 1,  flag_reproc = 2,  flag_need_comma = 4,  flag_seek_value = 8, 
-   flag_escaped = 16,  flag_string = 32,  flag_need_colon = 64,  flag_done = 128,
-   flag_num_negative = 256,  flag_num_zero = 512,  flag_num_e = 1024,  
-   flag_num_e_got_sign = 2048,  flag_num_e_negative = 4096;
+   flag_next             = 1 << 0,
+   flag_reproc           = 1 << 1,
+   flag_need_comma       = 1 << 2,
+   flag_seek_value       = 1 << 3, 
+   flag_escaped          = 1 << 4,
+   flag_string           = 1 << 5,
+   flag_need_colon       = 1 << 6,
+   flag_done             = 1 << 7,
+   flag_num_negative     = 1 << 8,
+   flag_num_zero         = 1 << 9,
+   flag_num_e            = 1 << 10,
+   flag_num_e_got_sign   = 1 << 11,
+   flag_num_e_negative   = 1 << 12;
 
 json_value * json_parse_ex (json_settings * settings,
                             const json_char * json,
@@ -205,8 +215,18 @@ json_value * json_parse_ex (json_settings * settings,
    json_value * top, * root, * alloc = 0;
    json_state state = { 0 };
    long flags;
-   long num_digits, num_e;
-   json_int_t num_fraction;
+   long num_digits = 0, num_e = 0;
+   json_int_t num_fraction = 0;
+
+   /* Skip UTF-8 BOM
+    */
+   if (length >= 3 && json [0] == 0xEF
+                   && json [1] == 0xBB
+                   && json [2] == 0xBF)
+   {
+      json += 3;
+      length -= 3;
+   }
 
    error[0] = '\0';
    end = (json + length);
@@ -229,8 +249,8 @@ json_value * json_parse_ex (json_settings * settings,
    {
       json_uchar uchar;
       unsigned char uc_b1, uc_b2, uc_b3, uc_b4;
-      json_char * string;
-      unsigned int string_length;
+      json_char * string = 0;
+      unsigned int string_length = 0;
 
       top = root = 0;
       flags = flag_seek_value;
@@ -499,7 +519,13 @@ json_value * json_parse_ex (json_settings * settings,
                               while (isdigit (b) || b == '+' || b == '-'
                                         || b == 'e' || b == 'E' || b == '.')
                               {
-                                 b = *++ i;
+                                 if ( (++ i) == end)
+                                 {
+                                    b = 0;
+                                    break;
+                                 }
+
+                                 b = *i;
                               }
 
                               flags |= flag_next | flag_reproc;
