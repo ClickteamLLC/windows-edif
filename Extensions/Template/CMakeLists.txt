@@ -70,7 +70,7 @@ foreach(curr_mfx_t ${EXT_MFX_TYPE})
         else()
             set(curr_libs "${curr_libs} mmfs2.lib")
         endif()
-        
+
         set(curr_link "")
         if(MSVC)
             set(curr_link "/DLL /MANIFEST:NO /DEF:\"${CMAKE_SOURCE_DIR}/Ext.def\" /MACHINE:X86")
@@ -78,10 +78,10 @@ foreach(curr_mfx_t ${EXT_MFX_TYPE})
 
         target_link_libraries(${curr_name} ${curr_libs})
         SET_TARGET_PROPERTIES(${curr_mfx_t}${curr_build_t} PROPERTIES
-            LIBRARY_OUTPUT_NAME ${EXT_NAME}.mfx
-            LIBRARY_OUTPUT_DIRECTORY ${out_dir}
+            LIBRARY_OUTPUT_NAME "${EXT_NAME}.mfx"
+            LIBRARY_OUTPUT_DIRECTORY "${out_dir}"
             COMPILE_DEFINITIONS "${curr_defs}"
-            LINK_FLAGS ${curr_link}
+            LINK_FLAGS "${curr_link}"
         )
     endforeach()
 endforeach()
