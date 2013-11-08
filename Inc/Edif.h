@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MinGW.hpp"
+
 #include "json.h"
 
 #include "ccxhdr.h"

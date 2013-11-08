@@ -95,7 +95,8 @@ struct EDOStream : std::basic_ostream<TCHAR>
 			if(ch != traits_type::eof())
 			{
 				b.push_back(char_type(ch));
-				setp(&b.front(), &b.back()+1, &b.back()+1);
+				setp(&b.front(), /*&b.back()+1, */&b.back()+1);
+				pbump((&b.back()+1)-(&b.front()));
 			}
 			return traits_type::eof();
 		}

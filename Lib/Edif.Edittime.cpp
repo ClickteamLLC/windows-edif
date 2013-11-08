@@ -273,7 +273,7 @@ HMENU WINAPI DLLExport GetExpressionMenu(mv _far *mV, fpObjInfo oiPtr, LPEDATA e
 #define _tstring string
 #endif
 
-void AddDirectory(_tstring &From, _tstring &To)
+void AddDirectory(_tstring const &From, _tstring const &To)
 {
 	HANDLE FileHandle;
 	WIN32_FIND_DATA Filejson;
@@ -336,7 +336,7 @@ void WINAPI PrepareFlexBuild(LPMV pMV, LPEDATA edPtr, LPCWSTR wTempFolder)
 	TempFolder = (LPTSTR)wTempFolder;
 #else
 	{   size_t Length = WideCharToMultiByte(CP_ACP, 0, wTempFolder, -1, 0, 0, 0, 0);
-		TempFolder = (LPSTR) alloca(Length + 1);
+		TempFolder = (LPSTR) new char[Length + 1];
 
 		WideCharToMultiByte(CP_ACP, 0, wTempFolder, -1, TempFolder, Length, 0, 0);
 	}

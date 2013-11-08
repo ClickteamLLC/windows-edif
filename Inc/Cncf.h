@@ -3916,7 +3916,7 @@ typedef struct tagCallTables
 //#undef CValue
 #undef CRunApp
 #undef CRunFrame
-#endif;
+#endif
 
 // Restores structure alignment...
 #ifndef	  _H2INC 

@@ -395,7 +395,7 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 	{   Info = GetEventInformations(Info, ID);
 
 		ParameterCount = Info->infos.nParams;
-		Parameters = (int *) alloca(sizeof(int) * ParameterCount);
+		Parameters = new int[ParameterCount];
 
 		for(int i = 0; i < ParameterCount; ++ i)
 		{
@@ -436,6 +436,7 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 
 	int Result;
 
+#ifndef __MINGW32__
 	__asm
 	{
 		pushad
@@ -472,6 +473,44 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 
 		popad
 	}
+#else
+	__asm__
+	(
+		"pushad;"
+
+		"mov ecx, ParameterCount;"
+		
+		"cmp ecx, 0;"
+		"je CallNow;"
+
+		"mov edx, Parameters;"
+
+		"mov ebx, ecx;"
+		"shl ebx, 2;"
+
+		"add edx, ebx;"
+		"sub edx, 4;"
+
+		"PushLoop:"
+
+			"push [edx];"
+			"sub edx, 4;"
+
+			"dec ecx;"
+
+			"cmp ecx, 0;"
+			"jne PushLoop;"
+
+		"CallNow:"
+
+		"mov ecx, Extension;"
+		"call Function;"
+			
+		"mov Result, eax;"
+
+		"popad;"
+	);
+#endif
 
 	return Cast ? (char)Result : Result;
 }
@@ -582,7 +621,7 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 	{   LPEVENTINFOS2 Infos = GetEventInformations((LPEVENTINFOS2) &::SDK->ExpressionInfos[0], ID);
 
 		ParameterCount = Infos->infos.nParams;
-		Parameters = (int *) alloca(sizeof(int) * ParameterCount);
+		Parameters = new int[ParameterCount];
 
 		for(int i = 0; i < ParameterCount; ++ i)
 		{
@@ -619,7 +658,8 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 
 	int Result;
 	int ExpressionType = ::SDK->ExpressionTypes[ID];
-	
+
+#ifndef __MINGW32__
 	__asm
 	{
 		pushad
@@ -668,7 +708,57 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 
 		popad
 	}
-	
+#else
+	__asm__
+	(
+		"pushad;"
+
+		"mov ecx, ParameterCount;"
+		
+		"cmp ecx, 0;"
+		"je CallNow2;"
+
+		"mov edx, Parameters;"
+
+		"mov ebx, ecx;"
+		"shl ebx, 2;"
+
+		"add edx, ebx;"
+		"sub edx, 4;"
+
+	"PushLoop2:"
+
+		"push [edx];"
+		"sub edx, 4;"
+
+		"dec ecx;"
+
+		"cmp ecx, 0;"
+		"jne PushLoop2;"
+
+	"CallNow2:"
+
+		"mov ecx, Extension;"
+		"call Function;"
+
+		"mov ecx, ExpressionType;"
+
+		"cmp ecx, 1;"
+		"jne NotFloat;"
+
+		"fstp Result;"
+		"jmp End;"
+
+	"NotFloat:"
+		
+		"mov Result, eax;"
+		
+	"End:"
+
+		"popad;"
+	);
+#endif
+
 	switch(ExpressionType)
 	{
 		case 1: // Float
@@ -790,8 +880,8 @@ static void GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
 
 void Edif::GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)
 {
-	TCHAR * Extension = (TCHAR *)
-		alloca ((_tcslen (FileExtension) + _tcslen (LanguageCode) + 2) * sizeof(TCHAR));
+	TCHAR * Extension =
+		new TCHAR[(_tcslen (FileExtension) + _tcslen (LanguageCode) + 2) * sizeof(TCHAR)];
 
 	_tcscpy (Extension, LanguageCode);
 	_tcscat (Extension, _T ("."));

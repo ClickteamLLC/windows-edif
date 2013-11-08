@@ -88,7 +88,9 @@ struct  sMask;
 	#define	__near
 	#define	_far
 	#define	__far
+	#ifndef __MINGW32__
 	#define	_pascal	_stdcall
+	#endif
 	#define	__pascal __stdcall
 
 		// Export

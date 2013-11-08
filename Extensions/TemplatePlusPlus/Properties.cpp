@@ -103,7 +103,7 @@ LPARAM MMF2Func GetPropCreateParam(mv *mV, SerializedED *SED, UINT PropID)
 	//if you changed ed:
 	//ed.Serialize(mV, SED);
 #endif
-	return NULL;
+	return 0;
 }
 
 /* ReleasePropCreateParam

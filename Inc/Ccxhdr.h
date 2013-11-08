@@ -49,7 +49,7 @@
 #include	<ctype.h>
 #include	<math.h>
 #include	<limits.h>
-#ifndef _LINUX
+#if !defined(_LINUX) && !defined(__MINGW32__)
 #include	<crtdbg.h>
 #else
 #include	<assert.h>
