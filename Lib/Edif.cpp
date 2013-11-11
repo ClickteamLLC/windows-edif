@@ -386,6 +386,15 @@ Edif::SDK::~SDK()
 	delete Icon;
 }
 
+#ifdef __MINGW32__
+template<typename R = int, typename... Args>
+std::int32_t CallExtMFP(Extension &ext, void *f, Args... args)
+{
+	std::int32_t (Extension::*mfp)(Args...) = *reinterpret_cast<std::int32_t (Extension::**)(Args...)>(&f);
+	return (ext.*mfp)(args...);
+}
+#endif
+
 int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Function, int ID, LPRDATA rdPtr, long param1, long param2)
 {
 	int * Parameters;
@@ -474,42 +483,28 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 		popad
 	}
 #else
-	__asm__
-	(
-		"pushad;"
-
-		"mov ecx, ParameterCount;"
-		
-		"cmp ecx, 0;"
-		"je CallNow;"
-
-		"mov edx, Parameters;"
-
-		"mov ebx, ecx;"
-		"shl ebx, 2;"
-
-		"add edx, ebx;"
-		"sub edx, 4;"
-
-		"PushLoop:"
-
-			"push [edx];"
-			"sub edx, 4;"
-
-			"dec ecx;"
-
-			"cmp ecx, 0;"
-			"jne PushLoop;"
-
-		"CallNow:"
-
-		"mov ecx, Extension;"
-		"call Function;"
-			
-		"mov Result, eax;"
-
-		"popad;"
-	);
+	int *P = Parameters;
+	switch(ParameterCount)
+	{
+		case 0:  Result = CallExtMFP(*(rdPtr->pExtension), Function);
+		case 1:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0]);
+		case 2:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1]);
+		case 3:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2]);
+		case 4:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3]);
+		case 5:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4]);
+		case 6:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5]);
+		case 7:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6]);
+		case 8:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7]);
+		case 9:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8]);
+		case 10: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9]);
+		case 11: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10]);
+		case 12: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11]);
+		case 13: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12]);
+		case 14: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
+		case 15: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
+		case 16: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
+		//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+	}
 #endif
 
 	return Cast ? (char)Result : Result;
@@ -709,54 +704,55 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 		popad
 	}
 #else
-	__asm__
-	(
-		"pushad;"
-
-		"mov ecx, ParameterCount;"
-		
-		"cmp ecx, 0;"
-		"je CallNow2;"
-
-		"mov edx, Parameters;"
-
-		"mov ebx, ecx;"
-		"shl ebx, 2;"
-
-		"add edx, ebx;"
-		"sub edx, 4;"
-
-	"PushLoop2:"
-
-		"push [edx];"
-		"sub edx, 4;"
-
-		"dec ecx;"
-
-		"cmp ecx, 0;"
-		"jne PushLoop2;"
-
-	"CallNow2:"
-
-		"mov ecx, Extension;"
-		"call Function;"
-
-		"mov ecx, ExpressionType;"
-
-		"cmp ecx, 1;"
-		"jne NotFloat;"
-
-		"fstp Result;"
-		"jmp End;"
-
-	"NotFloat:"
-		
-		"mov Result, eax;"
-		
-	"End:"
-
-		"popad;"
-	);
+	int *P = Parameters;
+	if(ExpressionType == 1) //float
+	{
+		switch(ParameterCount)
+		{
+			case 0:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function);
+			case 1:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0]);
+			case 2:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1]);
+			case 3:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2]);
+			case 4:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3]);
+			case 5:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4]);
+			case 6:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5]);
+			case 7:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6]);
+			case 8:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7]);
+			case 9:  Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8]);
+			case 10: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9]);
+			case 11: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10]);
+			case 12: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11]);
+			case 13: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12]);
+			case 14: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
+			case 15: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
+			case 16: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
+			//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+		}
+	}
+	else
+	{
+		switch(ParameterCount)
+		{
+			case 0:  Result = CallExtMFP(*(rdPtr->pExtension), Function);
+			case 1:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0]);
+			case 2:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1]);
+			case 3:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2]);
+			case 4:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3]);
+			case 5:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4]);
+			case 6:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5]);
+			case 7:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6]);
+			case 8:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7]);
+			case 9:  Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8]);
+			case 10: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9]);
+			case 11: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10]);
+			case 12: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11]);
+			case 13: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12]);
+			case 14: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
+			case 15: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
+			case 16: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
+			//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+		}
+	}
 #endif
 
 	switch(ExpressionType)
