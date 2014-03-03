@@ -1,7 +1,7 @@
 #include "Common.h"
 using namespace std;
 
-Edif::SDK * SDK;
+Edif::SDK * SDK = 0;
 
 TCHAR Edif::LanguageCode[3];
 
@@ -168,7 +168,10 @@ int Edif::Init(mv _far * mV)
 		return -1;
 	}
 
-	::SDK = new Edif::SDK(mV, *json);
+	if(!::SDK)
+	{
+		::SDK = new Edif::SDK(mV, *json);
+	}
 	return 0;	// no error
 }
 
