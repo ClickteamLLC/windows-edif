@@ -1496,7 +1496,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="MMF2 SDK"
+				Name="Fusion SDK"
 				>
 				<File
 					RelativePath="..\..\Inc\Ccx.h"
