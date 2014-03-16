@@ -16,115 +16,13 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Edittime|Win32"
-			OutputDirectory=".\ReleaseEditor"
-			IntermediateDirectory=".\ReleaseEditor"
+			Name="F2.5 Debug Combined|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Release_Small/Template.tlb"
-				HeaderFileName=""
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="1"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\Inc;.\;"
-				PreprocessorDefinitions="COXSDK, IN_EXT_VERSION2, _CRT_SECURE_NO_WARNINGS, _CRT_SECURE_NO_DEPRECATE, _WINDOWS,EDITOR"
-				StringPooling="true"
-				MinimalRebuild="false"
-				ExceptionHandling="1"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
-				AssemblerListingLocation="$(IntDir)/"
-				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
-				WarningLevel="3"
-				SuppressStartupBanner="true"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG,EDITOR"
-				Culture="1033"
-				AdditionalIncludeDirectories="..\..\Inc"
-				ResourceOutputFileName="$(IntDir)\Ext.res"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.0.lib"
-				OutputFile="$(ProjectDir)\MFX\Extensions\$(ProjectName).mfx"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				GenerateManifest="false"
-				IgnoreAllDefaultLibraries="false"
-				ModuleDefinitionFile=".\Ext.def"
-				ProgramDatabaseFile="$(IntDir)/Template.pdb"
-				OptimizeForWindows98="0"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/Template.lib"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile="$(IntDir)/Template.bsc"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
-			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -151,7 +49,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Inc;.\;"
-				PreprocessorDefinitions="COXSDK, IN_EXT_VERSION2, _CRT_SECURE_NO_WARNINGS, _CRT_SECURE_NO_DEPRECATE, _WINDOWS,EDITOR"
+				PreprocessorDefinitions="HWABETA;UNICODE;_UNICODE;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;EDITOR"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -177,8 +75,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.0.lib"
-				OutputFile="$(ProjectDir)\MFX\Extensions\$(ProjectName).mfx"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.5.lib"
+				OutputFile="$(ProjectDir)\MFX\Extensions\Unicode\$(ProjectName).mfx"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -214,16 +112,17 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions\Unicode"
 			/>
 		</Configuration>
 		<Configuration
-			Name="Runtime|Win32"
-			OutputDirectory=".\ReleaseRuntime"
-			IntermediateDirectory=".\ReleaseRuntime"
+			Name="F2.5 Edittime Combined|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -239,11 +138,11 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG,RUN_ONLY"
+				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Run_Only_Small/Template.tlb"
+				TypeLibraryName=".\Release_Small/Template.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -251,7 +150,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\Inc;.\;"
-				PreprocessorDefinitions="HWABETA,COXSDK, IN_EXT_VERSION2, _CRT_SECURE_NO_WARNINGS, _CRT_SECURE_NO_DEPRECATE, _WINDOWS,RUN_ONLY"
+				PreprocessorDefinitions="HWABETA;UNICODE;_UNICODE;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;EDITOR"
 				StringPooling="true"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -269,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG,RUN_ONLY"
+				PreprocessorDefinitions="NDEBUG,EDITOR"
 				Culture="1033"
 				AdditionalIncludeDirectories="..\..\Inc"
 				ResourceOutputFileName="$(IntDir)\Ext.res"
@@ -279,8 +178,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.0.lib"
-				OutputFile="$(ProjectDir)\MFX\Data\Runtime\$(ProjectName).mfx"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.5.lib"
+				OutputFile="$(ProjectDir)\MFX\Extensions\Unicode\$(ProjectName).mfx"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -315,11 +214,113 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Data\Runtime"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Extensions\Unicode"
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug Unicode|Win32"
+			Name="F2.5 Runtime Combined|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG,RUN_ONLY"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Run_Only_Small/Template.tlb"
+				HeaderFileName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\Inc;.\;"
+				PreprocessorDefinitions="HWABETA;UNICODE;_UNICODE;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;RUN_ONLY"
+				StringPooling="true"
+				MinimalRebuild="false"
+				ExceptionHandling="1"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
+				AssemblerListingLocation="$(IntDir)/"
+				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
+				WarningLevel="3"
+				SuppressStartupBanner="true"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG,RUN_ONLY"
+				Culture="1033"
+				AdditionalIncludeDirectories="..\..\Inc"
+				ResourceOutputFileName="$(IntDir)\Ext.res"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib ..\..\lib\mmfs2.5.lib"
+				OutputFile="$(ProjectDir)\MFX\Data\Runtime\Unicode\$(ProjectName).mfx"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				GenerateManifest="false"
+				IgnoreAllDefaultLibraries="false"
+				ModuleDefinitionFile=".\Ext.def"
+				ProgramDatabaseFile="$(IntDir)/Template.pdb"
+				OptimizeForWindows98="0"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(IntDir)/Template.lib"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+				SuppressStartupBanner="true"
+				OutputFile="$(IntDir)/Template.bsc"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="..\AutoInstall.bat &quot;$(TargetPath)&quot; \Data\Runtime\Unicode"
+			/>
+		</Configuration>
+		<Configuration
+			Name="F2.0 Debug Unicode|Win32"
 			OutputDirectory=".\DebugUnicode"
 			IntermediateDirectory=".\DebugUnicode"
 			ConfigurationType="2"
@@ -352,7 +353,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Inc;.\;"
-				PreprocessorDefinitions="COXSDK, IN_EXT_VERSION2, _CRT_SECURE_NO_WARNINGS, _CRT_SECURE_NO_DEPRECATE, _WINDOWS,EDITOR"
+				PreprocessorDefinitions="UNICODE;_UNICODE;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;EDITOR"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -419,7 +420,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Edittime Unicode|Win32"
+			Name="F2.0 Edittime Unicode|Win32"
 			OutputDirectory=".\ReleaseEditorUnicode"
 			IntermediateDirectory=".\ReleaseEditorUnicode"
 			ConfigurationType="2"
@@ -453,7 +454,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\Inc;.\;"
-				PreprocessorDefinitions="COXSDK, IN_EXT_VERSION2, _CRT_SECURE_NO_WARNINGS, _CRT_SECURE_NO_DEPRECATE, _WINDOWS,EDITOR"
+				PreprocessorDefinitions="UNICODE;_UNICODE;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;EDITOR"
 				StringPooling="true"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -521,7 +522,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Runtime Unicode|Win32"
+			Name="F2.0 Runtime Unicode|Win32"
 			OutputDirectory=".\ReleaseRuntimeUnicode"
 			IntermediateDirectory=".\ReleaseRuntimeUnicode"
 			ConfigurationType="2"
@@ -555,7 +556,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\Inc;.\;"
-				PreprocessorDefinitions="COXSDK, IN_EXT_VERSION2, _CRT_SECURE_NO_WARNINGS, _CRT_SECURE_NO_DEPRECATE, _WINDOWS,RUN_ONLY"
+				PreprocessorDefinitions="UNICODE;_UNICODE;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;RUN_ONLY"
 				StringPooling="true"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -623,7 +624,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug HWA|Win32"
+			Name="F2.0 Debug HWA|Win32"
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
@@ -723,7 +724,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Edittime HWA|Win32"
+			Name="F2.0 Edittime HWA|Win32"
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
@@ -825,7 +826,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Runtime HWA|Win32"
+			Name="F2.0 Runtime HWA|Win32"
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
@@ -858,7 +859,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\Inc;.\;"
-				PreprocessorDefinitions="COXSDK, IN_EXT_VERSION2, _CRT_SECURE_NO_WARNINGS, _CRT_SECURE_NO_DEPRECATE, _WINDOWS,RUN_ONLY"
+				PreprocessorDefinitions="HWABETA;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;RUN_ONLY"
 				StringPooling="true"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -952,7 +953,7 @@
 					RelativePath="Edittime.cpp"
 					>
 					<FileConfiguration
-						Name="Edittime|Win32"
+						Name="F2.5 Debug Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -961,7 +962,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="F2.5 Edittime Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -970,7 +971,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime|Win32"
+						Name="F2.5 Runtime Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -979,7 +980,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug Unicode|Win32"
+						Name="F2.0 Debug Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -988,7 +989,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime Unicode|Win32"
+						Name="F2.0 Edittime Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -997,7 +998,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime Unicode|Win32"
+						Name="F2.0 Runtime Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1006,7 +1007,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug HWA|Win32"
+						Name="F2.0 Debug HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1015,7 +1016,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime HWA|Win32"
+						Name="F2.0 Edittime HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1024,7 +1025,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime HWA|Win32"
+						Name="F2.0 Runtime HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1053,7 +1054,7 @@
 					RelativePath="General.cpp"
 					>
 					<FileConfiguration
-						Name="Edittime|Win32"
+						Name="F2.5 Debug Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1062,7 +1063,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="F2.5 Edittime Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1071,7 +1072,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime|Win32"
+						Name="F2.5 Runtime Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1080,7 +1081,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug Unicode|Win32"
+						Name="F2.0 Debug Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1089,7 +1090,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime Unicode|Win32"
+						Name="F2.0 Edittime Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1098,7 +1099,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime Unicode|Win32"
+						Name="F2.0 Runtime Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1107,7 +1108,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug HWA|Win32"
+						Name="F2.0 Debug HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1116,7 +1117,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime HWA|Win32"
+						Name="F2.0 Edittime HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1125,7 +1126,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime HWA|Win32"
+						Name="F2.0 Runtime HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1146,7 +1147,7 @@
 					RelativePath="Runtime.cpp"
 					>
 					<FileConfiguration
-						Name="Edittime|Win32"
+						Name="F2.5 Debug Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1155,7 +1156,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="F2.5 Edittime Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1164,7 +1165,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime|Win32"
+						Name="F2.5 Runtime Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1173,7 +1174,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug Unicode|Win32"
+						Name="F2.0 Debug Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1182,7 +1183,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime Unicode|Win32"
+						Name="F2.0 Edittime Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1191,7 +1192,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime Unicode|Win32"
+						Name="F2.0 Runtime Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1200,7 +1201,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug HWA|Win32"
+						Name="F2.0 Debug HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1209,7 +1210,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime HWA|Win32"
+						Name="F2.0 Edittime HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1218,7 +1219,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime HWA|Win32"
+						Name="F2.0 Runtime HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1244,7 +1245,7 @@
 					RelativePath="Ext.rc"
 					>
 					<FileConfiguration
-						Name="Edittime|Win32"
+						Name="F2.5 Debug Combined|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1253,7 +1254,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="F2.5 Edittime Combined|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1262,7 +1263,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime|Win32"
+						Name="F2.5 Runtime Combined|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1271,7 +1272,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug Unicode|Win32"
+						Name="F2.0 Debug Unicode|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1280,7 +1281,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime Unicode|Win32"
+						Name="F2.0 Edittime Unicode|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1289,7 +1290,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime Unicode|Win32"
+						Name="F2.0 Runtime Unicode|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1298,7 +1299,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug HWA|Win32"
+						Name="F2.0 Debug HWA|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1307,7 +1308,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime HWA|Win32"
+						Name="F2.0 Edittime HWA|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1316,7 +1317,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime HWA|Win32"
+						Name="F2.0 Runtime HWA|Win32"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1353,7 +1354,7 @@
 					RelativePath=".\Extension.cpp"
 					>
 					<FileConfiguration
-						Name="Edittime|Win32"
+						Name="F2.5 Debug Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1362,7 +1363,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="F2.5 Edittime Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1371,7 +1372,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime|Win32"
+						Name="F2.5 Runtime Combined|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1380,7 +1381,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug Unicode|Win32"
+						Name="F2.0 Debug Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1389,7 +1390,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime Unicode|Win32"
+						Name="F2.0 Edittime Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1398,7 +1399,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime Unicode|Win32"
+						Name="F2.0 Runtime Unicode|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1407,7 +1408,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug HWA|Win32"
+						Name="F2.0 Debug HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1416,7 +1417,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Edittime HWA|Win32"
+						Name="F2.0 Edittime HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1425,7 +1426,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Runtime HWA|Win32"
+						Name="F2.0 Runtime HWA|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
