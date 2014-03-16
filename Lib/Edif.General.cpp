@@ -80,10 +80,10 @@ extern "C"
 		switch (info)
 		{
 			case KGI_VERSION:
-				return EXT_VERSION2;
+				return EXT_VERSION3;
 
 			case KGI_PLUGIN:
-				return EXT_PLUGIN_VERSION1;
+				return EXT_PLUGIN_VERSION2;
 
 			case KGI_PRODUCT:
 
