@@ -14,6 +14,7 @@ class CRunApp;
 class CEffectEx;
 class CPList;
 #endif
+class CPArray;
 #else
 #define cSurface void
 #define CTransition void
@@ -22,6 +23,7 @@ class CPList;
 #define CEffectEx void
 #define CPList void
 #endif
+#define CPArray void
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -175,17 +177,16 @@ typedef struct RunFrameLayer
 	LPARAM		dwEffectParam;	// CEffectEx si extended
 #endif // HWABETA
 
+	// LO index lists per zone
+	// /zone : offset 1st index, # indexes
+	CPArray*	m_loZones;
+
 	// Backup for restart
 	DWORD		backUp_dwOptions;
 	float		backUp_xCoef;
 	float		backUp_yCoef;
 	DWORD		backUp_nBkdLOs;
 	DWORD		backUp_nFirstLOIndex;
-
-#ifdef HWABETA
-//	DWORD		backUp_dwEffect;		// A voir
-//	LPARAM		backUp_dwEffectParam;
-#endif // HWABETA
 
 } RunFrameLayer;
 
@@ -217,17 +218,17 @@ typedef objTransInfo * LPOBJTRANSINFO;
 // Frame at runtime
 //
 
-#define	MAX_TEMPSTRING				16
-#define IPHONEOPT_JOYSTICK_FIRE1	0x0001
-#define IPHONEOPT_JOYSTICK_FIRE2	0x0002
-#define IPHONEOPT_JOYSTICK_LEFTHAND	0x0004
-#define	IPHONEFOPT_MULTITOUCH		0x0008
-#define	IPHONEFOPT_SCREENLOCKING	0x0010
-#define	IPHONEFOPT_IPHONEFRAMEIAD	0x0020
-#define JOYSTICK_NONE				0x0000
-#define JOYSTICK_TOUCH				0x0001
-#define JOYSTICK_ACCELEROMETER		0x0002
-#define JOYSTICK_EXT				0x0003
+#define	MAX_TEMPSTRING	16
+#define IPHONEOPT_JOYSTICK_FIRE1 0x0001
+#define IPHONEOPT_JOYSTICK_FIRE2 0x0002
+#define IPHONEOPT_JOYSTICK_LEFTHAND 0x0004
+#define	IPHONEFOPT_MULTITOUCH			0x0008
+#define	IPHONEFOPT_SCREENLOCKING		0x0010
+#define	IPHONEFOPT_IPHONEFRAMEIAD		0x0020
+#define JOYSTICK_NONE 0x0000
+#define JOYSTICK_TOUCH 0x0001
+#define JOYSTICK_ACCELEROMETER 0x0002
+#define JOYSTICK_EXT 0x0003
 
 
 #ifdef __cplusplus
@@ -328,7 +329,7 @@ typedef struct CRunFrame {
 	LPTSTR			m_pTempString[MAX_TEMPSTRING];	// not used
 
 	// Other
-	cSurface*		m_pSaveSurface;
+	LPVOID			m_pfree;	// cSurface*		m_pSaveSurface;
 	int				m_leEditWinWidth;
 	int				m_leEditWinHeight;
 	DWORD			m_dwColMaskBits;
@@ -351,6 +352,18 @@ typedef struct CRunFrame {
 
 	// List of sub-app surfaces to refresh at the end in D3D full screen mode
 	CPList*			m_pSurfacedSubApps;
+
+	// Scale & angle
+	float			m_xScale;
+	float			m_yScale;
+	float			m_scale;		// not used for display
+	float			m_angle;
+
+	// Hotspot
+	POINT			m_hotSpot;
+
+	// Destination point
+	POINT			m_destPoint;
 #endif
 
 #ifdef __cplusplus
@@ -437,7 +450,7 @@ typedef struct CRunApp {
 	// Extensions
 	int				m_nbKpx;					// Number of extensions
 	fpKpxFunc		m_kpxTab;					// Function table 1
-	fpkpdt		  m_kpxDataTable;				// Function table 2
+	fpkpdt          m_kpxDataTable;				// Function table 2
 
 	// Movement Extensions
 	int				m_nbMvx;					// Number of extensions
@@ -576,16 +589,14 @@ typedef struct CRunApp {
 	BOOL			m_bLoading;
 
 	// Bluray
-	LPVOID			m_pBROpt;
+	LPPLURAYAPPOPTIONS	m_pBROpt;
 
 	// Build info
 	AppHeader2*		m_pHdr2;
 
 	// Code page
-#ifdef _UNICODE
 	DWORD			m_dwCodePage;
 	bool			m_bUnicodeAppFile;
-#endif
 
 	// Effects
 #ifdef HWABETA
@@ -595,6 +606,10 @@ typedef struct CRunApp {
 	bool			m_bShowWindowedMenu;				// to show menu after switch from full screen to windowed mode
 	int				m_nSubAppShowCount;					// to show the child window otherwise it's not displayed...
 #endif // HWABETA
+
+	// Character encoding
+	DWORD			m_charEncodingInput;
+	DWORD			m_charEncodingOutput;
 
 #ifdef __cplusplus
 };

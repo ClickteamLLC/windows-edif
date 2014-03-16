@@ -27,23 +27,8 @@ typedef	struct DisplayMode {
 
 typedef	BOOL (CALLBACK * LPENUMSCREENMODESPROC)(DisplayMode*, LPVOID);
 
-#ifdef HWABETA
 // Lost device callback function
 typedef	void (CALLBACK * LOSTDEVICECALLBACKPROC)(cSurface*, LPARAM);
-#endif
-
-// Direct3D surface information (Call cSurface::GetDriverInfo)
-typedef struct D3DSURFINFO {
-	DWORD m_lSize;
-	int m_nD3DVersion; // 8 or 9
-	LPVOID m_pD3D; // LPDIRECT3D8 or LPDIRECT3D9
-	LPVOID m_pD3DDevice; // LPDIRECT3DDEVICE8 or LPDIRECT3DDEVICE9
-	LPVOID m_pD3DTexture; // LPDIRECT3DTEXTURE8 or LPDIRECT3DTEXTURE9
-	int m_dwPixelShaderVersion;
-	int m_dwVertexShaderVersion; // not used
-	int m_dwMaxTextureWidth;
-	int m_dwMaxTextureHeight;
- } D3DSURFINFO;
 
 // System colors
 #ifndef COLOR_GRADIENTINACTIVECAPTION
@@ -84,7 +69,7 @@ typedef enum {
 	BOP_EFFECTEX,
 	BOP_MAX,
 	BOP_MASK = 0xFFF,
-	BOP_RGBAFILTER = 0x1000,	// Same as RGB coefficient & Blend coefficient in MMF. BGRA format (highest byte is alpha)
+	BOP_RGBAFILTER = 0x1000,
 } BlitOp;
 
 #define ALPHATOSEMITRANSP(a) ((a==0) ? 128:(255-a)/2)
@@ -120,11 +105,11 @@ enum
 	ST_MEMORY,					// Buffer only
 	ST_MEMORYWITHDC,			// Buffer + DC (i.e. DIBSection, DDRAW surface, etc...
 	ST_MEMORYWITHPERMANENTDC,	// Buffer + permanent DC (i.e. DIBDC)
-	ST_DDRAW_SYSTEMMEMORY,		// Surface Direct Draw Surface in system memory
+	ST_DDRAW_SYSTEMMEMORY,		// Surface Direct Draw en mémoire systeme
 	ST_HWA_SCREEN,				// Screen surface in HWA mode
-	ST_HWA_RTTEXTURE,			// Render target texture in HWA mode. Fast writing, can be used as viewport surface
-	ST_HWA_ROUTEXTURE,			// HWA texture created in video memory, unmanaged (lost when device is lost). Slow writing, should be treated read-only
-	ST_HWA_ROMTEXTURE,			// HWA texture created in video memory, managed (automatically reloaded when the device is lost). Slow writing, should be treated read-only
+	ST_HWA_RTTEXTURE,			// Render target texture in HWA mode
+	ST_HWA_ROUTEXTURE,			// HWA texture created in video memory, unmanaged (lost when device is lost)
+	ST_HWA_ROMTEXTURE,			// HWA texture created in video memory, managed (automatically reloaded when the device is lost)
 	ST_MAX
 };
 
@@ -163,11 +148,9 @@ enum {
 // Blilt options
 enum {
 	BLTF_ANTIA				= 0x0001,		// Anti-aliasing
-	BLTF_COPYALPHA			= 0x0002,		// Copy alpha channel to destination alpha channel instead of applying it (Note: Do not use in HWA mode)
-#ifdef HWABETA
+	BLTF_COPYALPHA			= 0x0002,		// Copy alpha channel to destination alpha channel instead of applying it
 	BLTF_SAFESRC			= 0x0010,
 	BLTF_TILE				= 0x0020
-#endif
 };
 
 // Stretch & BlitEx options
@@ -175,10 +158,8 @@ enum {
 	STRF_RESAMPLE			= 0x0001,		// Resample bitmap
 	STRF_RESAMPLE_TRANSP	= 0x0002,		// Resample bitmap, but doesn't resample the transparent color
 	STRF_COPYALPHA			= 0x0004,		// Copy (stretch) alpha channel to destination alpha channel instead of applying it
-#ifdef HWABETA
 	STRF_SAFESRC			= 0x0010,
 	STRF_TILE				= 0x0020
-#endif
 };
 
 
@@ -200,7 +181,7 @@ typedef sMask *LPSMASK;
 #define SCMF_PLATFORM	0x0001
 
 #ifndef PI
-#define	 PI  ((double)3.141592653589)
+#define     PI  ((double)3.141592653589)
 #endif
 
 // Allocate/Free surface
@@ -229,9 +210,7 @@ class SURFACES_API cSurface
 		// Init
 		static void InitializeSurfaces();
 		static void FreeSurfaces();
-#ifdef HWABETA
 		static void FreeExternalModules();
-#endif
 
 		// Operators
 		cSurface FAR & operator= (const cSurface FAR & source);
@@ -269,7 +248,7 @@ class SURFACES_API cSurface
 		int		GetLastError(void);
 
 		// ======================
-		// Surface info
+	    // Surface info
 		// ======================
 		int		GetWidth(void) const;
 		int		GetHeight(void) const;
@@ -277,7 +256,7 @@ class SURFACES_API cSurface
 		BOOL	GetInfo(int FAR & width, int FAR & height, int FAR & depth) const;
 
 		// ======================
-		// Surface coordinate management
+	    // Surface coordinate management
 		// ======================
 
 		void	SetOrigin(int x, int y);
@@ -290,7 +269,7 @@ class SURFACES_API cSurface
 		void	OffsetOrigin(POINT delta);
 
 		// ======================
-		// Raster operations
+	    // Raster operations
 		// ======================
 		LPBYTE	LockBuffer();
 		void	UnlockBuffer(LPBYTE spBuffer);
@@ -303,22 +282,20 @@ class SURFACES_API cSurface
 		int		BeginRendering(BOOL bClear, RGBAREF dwRgba);
 		int		EndRendering();
 		BOOL	UpdateScreen();
-#ifdef HWABETA
 		cSurface* GetRenderTargetSurface();
 		void	ReleaseRenderTargetSurface(cSurface* psf);
 		void	Flush(BOOL bMax);
 		void	SetZBuffer(float z2D);
-#endif
 
 		// ======================
-		// Device context for graphic operations
+	    // Device context for graphic operations
 		// ======================
 		HDC		GetDC(void);
 		void	ReleaseDC(HDC dc);
 		void	AttachWindow (HWND hWnd);
 
 		// ======================
-		// Clipping
+	    // Clipping
 		// ======================
 		void	GetClipRect(int FAR & x, int FAR & y, int FAR & w, int FAR & h);
 		void	SetClipRect(int x, int y, int w, int h);
@@ -383,6 +360,8 @@ class SURFACES_API cSurface
 		// Blit surface to surface
 		BOOL	Blit(cSurface FAR & dest) const;
 
+		// New MMF 2.5 : HIBYTE(dwBlitFlags) = blend coefficient
+
 		BOOL	Blit(cSurface FAR & dest, int destX, int destY, 
 					  BlitMode bm = BMODE_OPAQUE, BlitOp bo = BOP_COPY, LPARAM param = 0,
 					  DWORD dwBlitFlags = 0) const;
@@ -395,11 +374,10 @@ class SURFACES_API cSurface
 
 		// Extended blit : can do stretch & rotate at the same time
 		// Only implemented in 3D mode
-#ifdef HWABETA
 		BOOL	BlitEx(cSurface FAR & dest, float dX, float dY, float fScaleX, float fScaleY,
 						int sX, int sY, int sW, int sH, LPPOINT pCenter, float fAngle, 
 						BlitMode bm = BMODE_OPAQUE, BlitOp bo = BOP_COPY, LPARAM param = 0, DWORD dwFlags = 0) const;
-#endif
+
 		// Scrolling
 		BOOL	Scroll (int xDest, int yDest, int xSrc, int ySrc, int width, int height);
 
@@ -467,9 +445,7 @@ class SURFACES_API cSurface
 		BOOL	Fill(int x, int y, int w, int h, CFillData FAR * fd);
 		BOOL	Fill(int x, int y, int w, int h, int index);
 		BOOL	Fill(int x, int y, int w, int h, int R, int G, int B);
-#ifdef HWABETA
 		BOOL	Fill(int x, int y, int w, int h, COLORREF* pColors, DWORD dwFlags);
-#endif
 
 		// ======================
 		// Geometric Primitives
@@ -548,11 +524,7 @@ class SURFACES_API cSurface
 		BOOL	CreateRotatedSurface (cSurface FAR& ps, double a, BOOL bAA, COLORREF clrFill = 0L, BOOL bTransp=TRUE);
 		BOOL	CreateRotatedSurface (cSurface FAR& ps, int a, BOOL bAA, COLORREF clrFill = 0L, BOOL bTransp=TRUE);
 
-#ifdef HWABETA
 		static void GetSizeOfRotatedRect (int FAR *pWidth, int FAR *pHeight, float angle);
-#else
-		static void GetSizeOfRotatedRect (int FAR *pWidth, int FAR *pHeight, int angle);
-#endif
 
 		// ======================
 		// Text
@@ -597,7 +569,7 @@ class SURFACES_API cSurface
 		// Create icon
 		HICON	CreateIcon(int iconWidth, int iconHeight, COLORREF transpColor,POINT *pHotSpot);
 
-		// Palette support
+	    // Palette support
 		BOOL	Indexed(void);
 
 		BOOL	SetPalette(LPLOGPALETTE palette, SetPaletteAction action=SPA_NONE);
@@ -623,9 +595,7 @@ class SURFACES_API cSurface
 		void	RestoreWindowedMode(HWND hWnd);
 		void	CopyScreenModeInfo(cSurface* pSrc);
 
-#ifdef HWABETA
 		BOOL	SetAutoVSync(int nAutoVSync);
-#endif
 		BOOL	WaitForVBlank();
 
 		// System colors
@@ -636,6 +606,7 @@ class SURFACES_API cSurface
 		void		SetTransparentColor(COLORREF rgb);
 		COLORREF	GetTransparentColor();
 		int			GetTransparentColorIndex();
+//		void		SetOpaque(BOOL bOpaque);
 
 		// Alpha channel
 		BOOL		HasAlpha();
@@ -650,14 +621,12 @@ class SURFACES_API cSurface
 		void		ReleaseAlphaSurface(cSurface* pAlphaSf);
 
 		// Transparent monochrome mask
-		DWORD	CreateMask(LPSMASK pMask, UINT dwFlags);
+		DWORD		CreateMask(LPSMASK pMask, UINT dwFlags);
 
 		// Lost device callback
-#ifdef HWABETA
 		void		OnLostDevice();
 		void		AddLostDeviceCallBack(LOSTDEVICECALLBACKPROC pCallback, LPARAM lUserParam);
 		void		RemoveLostDeviceCallBack(LOSTDEVICECALLBACKPROC pCallback, LPARAM lUserParam);
-#endif
 
 	// Friend functions
 	// ----------------

@@ -1,3 +1,4 @@
+
 #ifndef CNCY_H
 #define CNCY_H
 
@@ -36,12 +37,12 @@ struct PropData;
 struct RunHeader;
 
 // Force structure alignement
-#ifndef	  _H2INC
+#ifndef      _H2INC
 #pragma pack( push, _pack_cncy_ )
 #pragma pack(2)
 #endif
 
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 // Object instance parent types
 enum {
@@ -230,8 +231,8 @@ typedef struct AppHeader {
 
 // Other flags
 #define		GAOF_DEBUGGERSHORTCUTS		0x0001
-#define		GAOF_DDRAW					0x0002
-#define		GAOF_DDRAWVRAM				0x0004
+//#define		GAOF_DDRAW					0x0002
+//#define		GAOF_DDRAWVRAM				0x0004
 #define		GAOF_OBSOLETE				0x0008
 #define		GAOF_AUTOIMGFLT				0x0010
 #define		GAOF_AUTOSNDFLT				0x0020
@@ -254,7 +255,8 @@ typedef struct AppHeader2 {
 	DWORD	dwBuildFlags;
 	WORD	wScreenRatioTolerance;
 	WORD	wScreenAngle;			// 0 (no rotation/portrait), 1 (90 clockwise/landscape left), 2 (90 anticlockwise/landscape right), 3 (automatic portrait), 4 (automatic landscape), 5 (fully automatic)
-	DWORD	dwUnused2;
+	WORD	iPhoneDisplayOption;
+	WORD	wUnused;
 
 } AppHeader2;
 
@@ -272,6 +274,16 @@ typedef struct AppHeader2 {
 #define AH2OPT_DISABLEBACKBUTTON		0x0800		// (Android) Disable Back button behavior
 #define AH2OPT_ANTIALIASED				0x1000		// (iPhone) Smooth resizing on bigger screens
 #define AH2OPT_CRASHREPORTING			0x2000		// (Android) Enable online crash reporting
+#define AH2OPT_REQUIREGPU				0x4000		// (Android) Application requires a GPU
+#define	AH2OPT_KEEPRESOURCESBETWEENFRAMES	0x8000	// (HTML5) Keep resources between frames
+#define	AH2OPT_WEBGL					0x10000		// (HTML5) WebGL
+#define	AH2OPT_OPENGL1					0x10000		// (Android) Open GL 1.1
+#define	AH2OPT_RESERVED					0x20000		// (Android) for future use
+#define	AH2OPT_NOSCREENBORDERS			0x40000		// (Android) No screen borders when KeepScreenRatio is selected (note: will be implemented in other exporters later)
+#define AH2OPT_SYSTEMFONT				0x80000		// (Android) Use system font in text objects
+#define AH2OPT_RUNEVENIFNOTFOCUS		0x100000	// (HTML5) Run even if not focus
+#define AH2OPT_KEYBOVERAPPWINDOW		0x200000	// (Android) Display keyboard over app window
+#define AH2OPT_OUYA						0x400000	// (Android) OUYA application
 
 enum {
 	SCREENORIENTATION_PORTRAIT,
@@ -282,7 +294,7 @@ enum {
 	SCREENORIENTATION_PORTRAIT_AUTO,
 };
 
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 // Build type values
 enum {
@@ -309,7 +321,14 @@ enum {
 	BUILDTYPE_XNA_PHONE,
 	BUILDTYPE_XNA_XBOX_APP,
 	BUILDTYPE_XNA_PHONE_APP,
-	BUILDTYPE_STDMAX,			// end of standard build types
+	BUILDTYPE_HTML5,
+	BUILDTYPE_VITA,
+	BUILDTYPE_VITADEVEL,
+	BUILDTYPE_VITAFINAL,		// no longer used
+	BUILDTYPE_HTML5DEVEL,
+	BUILDTYPE_HTML5FINAL,
+	BUILDTYPE_OUYA,
+	BUILDTYPE_MAX,			// end of standard build types
 };
 
 // Build flag values
@@ -323,12 +342,38 @@ enum {
 #define	BUILDFLAG_TEST				0x0080
 #define	BUILDFLAG_NOWARNINGS		0x0100
 
+// Bluray options
+#define	BRFLAGS_DISPLAYLOADANIM		0x0001
+#define BRFLAGS_GRAPHICSNOTINJAR	0x0002
+#define BRFLAGS_BACKSURFACE			0x0004
+#define BRFLAGS_EXTERNALSOUNDS		0x0008
+
+#define	BRLOADANIM_NIMAGES_DEFAULT	4
+
+typedef struct BlurayAppOptions {
+
+	DWORD	dwOpacity;
+	DWORD	dwFlags;
+	DWORD	dwLoadAnimNImages;
+	WORD	wLoadAnimImage;
+	WORD	wReserved;
+
+} BlurayAppOptions;
+typedef BlurayAppOptions *LPPLURAYAPPOPTIONS;
+
+typedef struct BlurayFrameOptions {
+
+	DWORD	dwOpacity;
+	DWORD	dwKeyReleaseTimeOut;
+
+} BlurayFrameOptions;
+typedef BlurayFrameOptions *LPPLURAYFRAMEOPTIONS;
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
 // Element of chunk Extensions
 //
-#ifndef	  _H2INC
+#ifndef      _H2INC
 typedef struct ExtDesc {
 	WORD		extSize;
 	WORD		extIndex;
@@ -483,7 +528,7 @@ typedef struct ObjInfoHeader
 // LevObj/FrameItemInstance
 //
 
-#ifndef	  _H2INC
+#ifndef      _H2INC
 #ifdef __cplusplus
 class diskLO {
 public:
@@ -523,7 +568,7 @@ enum {
 ////////////////////////////////
 // Static object - ObjectsCommon
 //
-#ifndef	  _H2INC
+#ifndef      _H2INC
 typedef struct Static_OC {
 
 	// Size
@@ -544,7 +589,7 @@ typedef Static_OC * LPStatic_OC;
 // Fill Type & shapes - Definitions
 //
 
-#ifndef	  _H2INC
+#ifndef      _H2INC
 // Gradient
 typedef struct GradientData {
 	COLORREF		color1;
@@ -577,7 +622,7 @@ enum {
 ///////////////////////////////////////////////////////////////
 // Fill Type - Part of FilledShape
 //
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 #ifdef __cplusplus
 class FillType_Data {
@@ -613,7 +658,7 @@ typedef struct FillType_Data {
 ///////////////////////////////////////////////////////////////
 // Filled Shape - Part of QuickBackdrop / Counter ObjectsCommon
 //
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 #ifdef __cplusplus
 class FilledShape_Data {
@@ -637,7 +682,7 @@ typedef FilledShape_Data * LPFilledShape_Data;
 /////////////////////////////////
 // Quick backdrop - ObjectsCommon
 //
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 typedef struct QuickBackdrop_OC {
 
@@ -659,7 +704,7 @@ typedef QuickBackdrop_OC * LPQuickBackdrop_OC;
 /////////////////////////////////
 // Backdrop - ObjectsCommon
 //
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 typedef struct Backdrop_OC {
 
@@ -803,7 +848,7 @@ enum {
 //
 // Objet RTF - ocData
 //
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 typedef struct ocRTF {
 
@@ -827,7 +872,7 @@ typedef ocRTF * LPOCRTF;
 //
 // Objet CCA - ocData
 //
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 typedef struct ocCCA {
 
@@ -882,7 +927,7 @@ typedef ocCCA * LPOCCCA;
 // Transition
 //
 
-#ifndef	  _H2INC
+#ifndef      _H2INC
 
 // Transition header
 typedef struct TransitionHdr {
@@ -1028,11 +1073,12 @@ enum	{
 #define MMFVERFLAG_MASK		0x0000F000
 #define MMFVERFLAG_HOME		0x00008000		// TGF
 #define MMFVERFLAG_PRO		0x00004000		// MMF Pro
-#define MMFVERFLAG_DEMO		0x00002000		// Demo
+#define MMFVERFLAG_ATX		0x00002000		// Not used
 #define MMFVERFLAG_PLUGIN	0x00001000		// Plugin
 #define MMFVERSION_15		0x01050000		// MMF 1.5
 #define MMFVERSION_20		0x02000000		// MMF 2.0
-#define	MMF_CURRENTVERSION	MMFVERSION_20
+#define MMFVERSION_25		0x02050000		// MMF 2.5
+#define	MMF_CURRENTVERSION	MMFVERSION_25
 
 // Build numbers
 #define MMF_BUILD_NONAME			203
@@ -1087,19 +1133,20 @@ enum	{
 #define	MMF_BUILD_252				252
 #define	MMF_BUILD_253				253
 #define	MMF_BUILD_254				254
-#define	MMF_CURRENTBUILD			MMF_BUILD_254
+#define	MMF_BUILD_255				255
+#define	MMF_BUILD_256				256
+#define	MMF_BUILD_257				257
+#define	MMF_BUILD_MMF25				280
+#define	MMF_CURRENTBUILD			MMF_BUILD_MMF25
 
 // MFA file format versions
 #define MFA_BUILD_ALTSTR			1						// Alterable strings
 #define MFA_BUILD_COUNTERTEXT		2						// Text mode in counters
 #define MFA_BUILD_LASTFRAMEOFFSET	3						// Additional frame offset
 #define MFA_BUILD_FIXQUALIF			4						// Fix in qualifiers + prd version
-#ifdef _UNICODE
 #define MFA_BUILD_LANGID			5						// Language ID
-#define MFA_CURRENTBUILD			MFA_BUILD_LANGID
-#else
-#define MFA_CURRENTBUILD			MFA_BUILD_FIXQUALIF
-#endif
+#define MFA_BUILD_MMF25				6						// MMF 2.5
+#define MFA_CURRENTBUILD			MFA_BUILD_MMF25
 
 // Structures for picture editor
 typedef struct EditSurfaceParamsA {
@@ -1266,7 +1313,9 @@ typedef	struct	mv {
 	HHOOK				mvHMsgHook;
 	int					mvModalLoop;
 	int					mvModalSubAppCount;
-	LPVOID				mvFree[5];
+	UINT				mvLanguageID;
+	LPCWSTR				mvModuleTextsPathname;
+	LPVOID				mvFree[3];
 
 	// Functions
 	////////////
@@ -1309,11 +1358,11 @@ typedef	struct	mv {
 	DWORD				(CALLBACK * mvGetVersion) ();
 
 	// Editor & Runtime: callback function for properties or other functions
-//	#ifdef __cplusplus
-//		LRESULT			(CALLBACK * mvCallFunction) (LPVOID edPtr, int nFnc, LPARAM lParam1=0, LPARAM lParam2=0, LPARAM lParam3=0);
-//	#else
+	#ifdef _cplusplus
+		LRESULT			(CALLBACK * mvCallFunction) (LPVOID edPtr, int nFnc, LPARAM lParam1=0, LPARAM lParam2=0, LPARAM lParam3=0);
+	#else
 		LRESULT			(CALLBACK * mvCallFunction) (LPVOID edPtr, int nFnc, LPARAM lParam1, LPARAM lParam2, LPARAM lParam3);
-//	#endif
+	#endif
 
 	// Editor: Open Help file (UNICODE)
 	void				(CALLBACK * mvHelpW) (LPCWSTR pHelpFile, UINT nID, LPARAM lParam);
@@ -1420,6 +1469,8 @@ enum {
 	EF_ISUNICODEAPP,		// Returns TRUE if the application being loaded is a Unicode application
 	EF_GETAPPCODEPAGE,		// Returns the code page of the application
 	EF_CREATEIMAGEFROMFILEW,// Create image from file (runtime only)
+	EF_LOADTEXT,
+	EF_SAVETEXT,
 };
 
 // 3rd parameter of EF_CREATEIMAGEFROMFILE
@@ -1521,7 +1572,7 @@ __inline LPVOID mvGetNextItem(LPMV mV, LPVOID edPtr, LPVOID edPtr1, LPCSTR extNa
 
 #ifdef HWABETA
 
-__inline BOOL mvCreateEffect(LPMV mV, LPCSTR pEffectName, LPINT pEffect, LPARAM* pEffectParam) \
+__inline BOOL mvCreateEffect(LPMV mV, LPCTSTR pEffectName, LPINT pEffect, LPARAM* pEffectParam) \
 	{ return (BOOL)mV->mvCallFunction(NULL, EF_CREATEEFFECT, (LPARAM)pEffectName, (LPARAM)pEffect, (LPARAM)pEffectParam); }
 
 __inline void mvDeleteEffect(LPMV mV, int nEffect, LPARAM lEffectParam) \
@@ -1550,11 +1601,29 @@ __inline BOOL mvIsUnicodeApp(LPMV mV, LPVOID pApp) \
 __inline int mvGetAppCodePage(LPMV mV, LPVOID pApp) \
 	{ return mV->mvCallFunction(NULL, EF_GETAPPCODEPAGE, (LPARAM)pApp, (LPARAM)0, (LPARAM)0); }
 
+__inline LPWSTR mvLoadTextFile(LPMV mV, LPCWSTR fname, UINT encoding, BOOL bBinaryFile) \
+	{ return (LPWSTR)mV->mvCallFunction(NULL, EF_LOADTEXT, (LPARAM)fname, (LPARAM)encoding, (LPARAM)bBinaryFile); }
+
+__inline int mvSaveTextFile(LPMV mV, LPCWSTR fname, LPCWSTR text, UINT encoding) \
+	{ return (int)mV->mvCallFunction(NULL, EF_SAVETEXT, (LPARAM)fname, (LPARAM)text, (LPARAM)encoding); }
+
 #ifdef _UNICODE
 #define mvCreateImageFromFile	mvCreateImageFromFileW
 #else
 #define mvCreateImageFromFile	mvCreateImageFromFileA
 #endif
+
+enum {
+	CHARENC_ANSI,
+	CHARENC_UTF8_W_BOM,
+	CHARENC_UTF8_WO_BOM,
+	CHARENC_UTF16_W_BOM,
+	CHARENC_UTF16_WO_BOM,
+	CHARENC_UTF16B_W_BOM,
+	CHARENC_UTF16B_WO_BOM,
+	CHARENC_MAX,
+};
+#define CHARENC_DEFAULT ((UINT)-1)
 
 #endif // __cplusplus
 
@@ -1599,6 +1668,7 @@ typedef	struct	MvxFnc {
 	LPTSTR				mvxFileTitle;
 
 	CMvt* ( CALLBACK	* mvxCreateMvt) (DWORD);
+	void ( CALLBACK		* mvxGetMvtName)(int nMvt, LPTSTR pName, int cbSize);
 
 	#if defined(VITALIZE)
 		BOOL				bValidated;
@@ -1613,7 +1683,7 @@ typedef	struct	MvxFnc {
 #endif	// RUN_TIME
 
 // Restore structure alignement
-#ifndef	  _H2INC 
+#ifndef      _H2INC 
 #pragma pack( pop, _pack_cncy_ )
 #endif
 

@@ -1,12 +1,12 @@
 //----------------------------------------------//
-//		  Constantes et structures			//
+//          Constantes et structures            //
 //----------------------------------------------//
 
 #ifndef		_cnpdll_h		// Si deja inclus, ignorer
 #define		_cnpdll_h
 
 #ifndef PI
-#define	 PI  ((double)3.1415926535)
+#define     PI  ((double)3.1415926535)
 #endif
 
 #ifndef _H2INC
@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 // Include files for H2Inc
-#ifdef	  _H2INC
+#ifdef      _H2INC
 
 	#define NOATOM
 	#define NOMETAFILE		1
@@ -66,7 +66,7 @@ struct  sMask;
 
 
 // Current build
-#define	MMFS2_CURRENT_BUILD		250
+#define	MMFS2_CURRENT_BUILD		280
 #define MMFS2_BUILD_MASK			0x0000FFFF
 #define MMFS2_BUILD_FLAG_UNICODE	0x00010000		// Unicode support
 #define MMFS2_BUILD_FLAG_HWA		0x00020000		// HWA support
@@ -76,6 +76,9 @@ struct  sMask;
 #define	WORDSTR(c1,c2)			((WORD)((WORD)c2<<8|(WORD)c1))
 #define	DWORDSTR(c1,c2,c3,c4)	((DWORD)((DWORD)c4<<24|(DWORD)c3<<16|(DWORD)c2<<8|(DWORD)c1))
 #endif
+
+#define	ANGLEFLOAT
+#define ANGLETYPE	float	// int
 
 	// Definitions differentes si WIN32
 
@@ -88,9 +91,7 @@ struct  sMask;
 	#define	__near
 	#define	_far
 	#define	__far
-	#ifndef __MINGW32__
 	#define	_pascal	_stdcall
-	#endif
 	#define	__pascal __stdcall
 
 		// Export
@@ -114,9 +115,9 @@ struct  sMask;
 
 	// Flags boites de dialogues (obsolete)
 	// -------------------------
-#define DL_MODAL			1
-#define DL_CENTER_WINDOW	2
-#define DL_CENTER_SCREEN	4
+#define DL_MODAL            1
+#define DL_CENTER_WINDOW    2
+#define DL_CENTER_SCREEN    4
 
 	// Messages propres a KNP
 	// ----------------------
@@ -157,8 +158,8 @@ struct  sMask;
 
 	// Identifiants errones
 	// --------------------
-#define NPSPR_ERROR	 0
-#define HSPR_ERROR	 0
+#define NPSPR_ERROR     0
+#define HSPR_ERROR     0
 
 enum {
 	WIN_MEMERR,
@@ -196,18 +197,18 @@ enum {
 #define	MAX_MODE	SM_32
 
 #define	SM_D3D		0x10
-#define	SM_DDRAW	0x20		// Flag "Direct Draw"
-#define	SM_VRAM		0x40		// Flag "Video RAM"
+//#define	SM_DDRAW	0x20		// Flag "Direct Draw"
+//#define	SM_VRAM		0x40		// Flag "Video RAM"
 #define	SM_D3D8		0x80
 #define	SM_NOTDIB	(SM_DDRAW | SM_VRAM)
 #define	SM_MASK		0x0F		// Mask mode
 
 // Modes graphiques
 #define GROP_NORMAL R2_COPYPEN
-#define GROP_XOR	R2_XORPEN
+#define GROP_XOR    R2_XORPEN
 
 // Modes collisions
-#define CM_BOX	  		0
+#define CM_BOX      		0
 #define CM_BITMAP   		1
 
 // Test collisions
@@ -220,11 +221,13 @@ enum {
 
 // Hauteur des plateformes
 #define	HEIGHT_PLATFORM		6
-#define GCMF_OBSTACLE		0x0000
-#define GCMF_PLATFORM		0x0001
+#define GCMF_OBSTACLE			0x0000
+#define GCMF_PLATFORM			0x0001
+#define GCMF_TYPEMASK			0x0FFF
+#define GCMF_NOROTATEORSTRETCH	0x1000
 
 // Flags pour GetImageSize
-#define GIS_WITHMASK	0x8000
+#define GIS_WITHMASK    0x8000
 #define	GIS_EXACT		0x4000
 
 	// AddImage flags
@@ -286,7 +289,7 @@ enum {
 #define	PS_DSOUND			0x0100		// To play with Direct Sound
 
 	// AddFont flags
-#define AF_COMPARE		0x100	   // Compare to others
+#define AF_COMPARE		0x100       // Compare to others
 
 	// WinPasteText flags
 #define	WPTF_CALCRECT		0x8000
@@ -351,7 +354,7 @@ typedef struct  Sound
 typedef Sound* fpSound;
 
 	// Sound flags
-#define SP_WAVE				0x0001			   // Flags
+#define SP_WAVE				0x0001               // Flags
 #define SP_MIDI				0x0002
 #define SNDF_TYPEMASK		0x000F
 #define	SNDF_LOADONCALL		0x0010
@@ -369,9 +372,9 @@ typedef Sound* fpSound;
 // Structure Font
 typedef struct  FontW
 {
-	DWORD		fnCheckSum;	 // Checksum (des images)
-	DWORD		fnCount;		// Compteur d'utilisations
-	DWORD		fnSize;		 // Taille sans l'entete
+	DWORD		fnCheckSum;     // Checksum (des images)
+	DWORD		fnCount;        // Compteur d'utilisations
+	DWORD		fnSize;         // Taille sans l'entete
 	LOGFONTW	fnLf;			// Header font (pour CreateFont si Windows font)
 } FontW;
 typedef FontW *npFontW;
@@ -379,9 +382,9 @@ typedef FontW *fpFontW;
 
 typedef struct  FontA
 {
-	DWORD		fnCheckSum;	 // Checksum (des images)
-	DWORD		fnCount;		// Compteur d'utilisations
-	DWORD		fnSize;		 // Taille sans l'entete
+	DWORD		fnCheckSum;     // Checksum (des images)
+	DWORD		fnCount;        // Compteur d'utilisations
+	DWORD		fnSize;         // Taille sans l'entete
 	LOGFONTA	fnLf;			// Header font (pour CreateFont si Windows font)
 } FontA;
 typedef FontA *npFontA;
@@ -433,7 +436,7 @@ typedef Box *fpBox;
 typedef struct tagSMI {
 	UINT	totalBitCount;		// I.e. 16
 	UINT	usedBitCount;		// I.e. 15
-	UINT	mainMode;			// SM_4, SM_8, SM_etc... avec flags SM_DDRAW
+	UINT	mainMode;			// SM_4, SM_8, SM_etc... avec flags SM_D3D, etc
 	UINT	subMode;			// sous-mode
 	DWORD	rMask;
 	DWORD	gMask;
@@ -470,7 +473,7 @@ typedef struct tagSMI {
 #define	APPF_GLOBALSOUNDS			0x0004
 
 	// Objet sprite
-#define SF_RAMBO			0x00000001		// flag "rentre dans tout le monde"
+#define SF_RAMBO    		0x00000001		// flag "rentre dans tout le monde"
 #define SF_RECALCSURF		0x00000002		// Recalc surface (if rotation or stretch)
 #define SF_PRIVATE			0x00000004		// flag privé utilisé par le runtime pour la destruction des fade
 #define	SF_INACTIF			0x00000008		// flag "inactif" = reaffichage ssi intersection avec un autre
@@ -497,6 +500,7 @@ typedef struct tagSMI {
 #define SF_OWNERCOLMASK		0x00800000		// Owner-draw sprite supports collision masks
 
 #define SF_UPDATECOLLIST	0x10000000
+#define SF_HWA				0x20000000
 
 // SpriteCol_TestPoint / SpriteCol_TestSprite
 #define SCF_OBSTACLE		0x01
@@ -504,6 +508,7 @@ typedef struct tagSMI {
 #define SCF_EVENNOCOL		0x04			// Flag: returns even sprites that haven't the SF_RAMBO flag
 #define SCF_BACKGROUND		0x08			// Flag: if 0, returns active sprites, otherwise returns background sprites
 #define	SCF_TESTFEET		0x10			// Test only the bottom of the sprite
+#define SCF_TESTLIST		0x20
 
 #define LAYER_ALL			(-1)
 
@@ -536,11 +541,11 @@ enum	{
 #ifndef _dllpriv_h
 typedef struct  tagObj
 {
-	UINT	objSize;				   // Taille de l'objet: 0 = fin objets
-	UINT	objPrevSize;			   // Taille objet precedent (0 = 1er objet)
-	UINT	objType;				   // Type d'objet (1=vide,2=appli,3=fenetre,...)
-	UINT	objPrev;				   // Adresse objet precedent de meme type (0 = first)
-	UINT	objNext;				   // Adresse objet suivant de meme type (0 = last)
+	UINT	objSize;                   // Taille de l'objet: 0 = fin objets
+	UINT	objPrevSize;               // Taille objet precedent (0 = 1er objet)
+	UINT	objType;                   // Type d'objet (1=vide,2=appli,3=fenetre,...)
+	UINT	objPrev;                   // Adresse objet precedent de meme type (0 = first)
+	UINT	objNext;                   // Adresse objet suivant de meme type (0 = last)
 } Obj;
 typedef Obj *npObj;
 typedef Obj *fpObj;
@@ -562,17 +567,28 @@ public:
 typedef struct  Spr
 {
 #endif
-#ifndef SPRLIST
-	Obj			sprObj;
-#endif
+	#ifndef SPRLIST
+		Obj		sprObj;
+	#endif
 	DWORD		sprFlags;			// Flags
 	WORD		sprLayer;			// Sprite plane (layer)
-	short		sprAngle;			// Angle
+	WORD		sprUnused;			// Angle (Int format) ..
 	int			sprZOrder;			// Z-order value
 
 	// Coordinates
 	int			sprX;
 	int			sprY;
+
+	// Hot spot and dimensions
+	int			sprHotSpotX;		// TODO: mettre en commentaires ceux qui ne sont pas utilisés
+	int			sprHotSpotY;
+	int			sprWidth;
+	int			sprHeight;
+
+	// Scale & Angle
+	float		sprScaleX;
+	float		sprScaleY;
+	ANGLETYPE	sprAngle;
 
 	// Bounding box
 	int			sprX1;
@@ -583,6 +599,17 @@ typedef struct  Spr
 	// New coordinates
 	int			sprXnew;
 	int			sprYnew;
+
+	// New hot spot and dimensions
+	int			sprHotSpotXnew;
+	int			sprHotSpotYnew;
+	int			sprWidthNew;
+	int			sprHeightNew;
+
+	// New scale & angle
+	float		sprScaleXnew;
+	float		sprScaleYnew;
+	ANGLETYPE	sprAngleNew;
 
 	// New bounding box
 	int			sprX1new;
@@ -597,20 +624,20 @@ typedef struct  Spr
 	int			sprY2z;
 
 	// Scale & Angle
-	float		sprScaleX;
-	float		sprScaleY;
+//	float		sprScaleX;
+//	float		sprScaleY;
 
 	// Temporary values for collisions
-	WORD		sprTempImg;			// TODO: use DWORD later?
-	short		sprTempAngle;
-	float		sprTempScaleX;
-	float		sprTempScaleY;
+//	WORD		sprTempImg;			// TODO: use DWORD later?
+//	short		sprTempAngleInt;
+//	float		sprTempScaleX;
+//	float		sprTempScaleY;
 
 	// Image or owner-draw routine
 	union	{
 		struct	{
-	DWORD		sprImg;			 // Numero d'image
-	DWORD		sprImgNew;		  // Nouvelle image
+	DWORD		sprImg;             // Numero d'image
+	DWORD		sprImgNew;          // Nouvelle image
 				};
 	LPARAM		sprRout;			// Ownerdraw callback routine
 			};
@@ -626,10 +653,10 @@ typedef struct  Spr
 	cSurfaceImplementation*	sprBackSurf;	// Background surface, if no general background surface
 
 	cSurfaceImplementation*	sprSf;			// Surface (if stretched or rotated)
-	sMask*					sprColMask;		// Collision mask (if stretched or rotated)
+//	sMask*					sprColMask;		// Collision mask (if stretched or rotated)
 
-	cSurfaceImplementation*	sprTempSf;		// Temp surface (if stretched or rotated)
-	sMask*					sprTempColMask;	// Temp collision mask (if stretched or rotated)
+//	cSurfaceImplementation*	sprTempSf;		// Temp surface (if stretched or rotated)
+//	sMask*					sprTempColMask;	// Temp collision mask (if stretched or rotated)
 
 	// User data
 	LPARAM		sprExtraInfo;
@@ -650,6 +677,7 @@ typedef struct  Spr
 #endif
 typedef Spr *npSpr;
 typedef Spr *fpSpr;
+
 
 	// Structure "taille d'une appli"
 typedef	struct	tagAppSize {
@@ -798,14 +826,14 @@ DLLExport32 LRESULT CALLBACK DefMsgProcW	(HWND hWin, UINT uMsg, WPARAM wParam, L
 
 	// Menus
 	// -----
-DLLExport32 HMENU	WINAPI WinSetMenu	  (npWin, HMENU, HACCEL);
-//DLLExport32 void	WINAPI WinSetAccel	 (npWin, HACCEL);
+DLLExport32 HMENU	WINAPI WinSetMenu      (npWin, HMENU, HACCEL);
+//DLLExport32 void	WINAPI WinSetAccel     (npWin, HACCEL);
 
 	// Souris
 	// ------
-DLLExport32 HCURSOR	WINAPI WinSetMouse	 (npWin, HCURSOR);
-DLLExport32 void	WINAPI WinStartWait	(npWin);
-DLLExport32 void	WINAPI WinEndWait	  (npWin);
+DLLExport32 HCURSOR	WINAPI WinSetMouse     (npWin, HCURSOR);
+DLLExport32 void	WINAPI WinStartWait    (npWin);
+DLLExport32 void	WINAPI WinEndWait      (npWin);
 
 	// Events
 	// ------
@@ -912,18 +940,19 @@ DLLExport32 long		WINAPI DelImage			(npAppli, DWORD);
 DLLExport32 sMask*		WINAPI AddMask			(npAppli ptApp, DWORD iNum, UINT nFlags);
 DLLExport32 long		WINAPI DelMask			(npAppli, DWORD);
 DLLExport32 int			WINAPI GetImageInfos	(npAppli, DWORD, fpImg);
-DLLExport32 int			WINAPI GetImageInfoEx	(npAppli pApp, DWORD nImage, int nAngle, float fScaleX, float fScaleY, fpImg pIfo);
+DLLExport32 int			WINAPI GetImageInfoEx	(npAppli pApp, DWORD nImage, ANGLETYPE nAngle, float fScaleX, float fScaleY, fpImg pIfo);
 DLLExport32 DWORD		WINAPI GetImageSize		(WORD, WORD, WORD);
 DLLExport32 sMask*		WINAPI GetImageMask		(npAppli ptApp, DWORD dwImage, UINT nFlags);
 DLLExport32 sMask*		WINAPI CompleteSpriteColMask (npWin ptrWin, npSpr ptSpr, DWORD dwPSCFlags,	UINT nWidth, UINT nHeight);
-DLLExport32 DWORD		WINAPI PrepareSpriteColMask (npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, int newAngle, float newScaleX, float newScaleY, RECT* prc, sMask** ppMask);
+DLLExport32 DWORD		WINAPI PrepareSpriteColMask (npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, ANGLETYPE newAngle, float newScaleX, float newScaleY, RECT* prc, sMask** ppMask);
+DLLExport32 void		WINAPI DelImageTexture	(npAppli ptApp, DWORD iNum);
 
 	// Sprites
 	// -------
 DLLExport32 npSpr	WINAPI AddSprite		(npWin ptrWin, int xSpr, int ySpr, DWORD iSpr, WORD wLayer, int nZOrder, DWORD backSpr, DWORD sFlags, LPARAM extraInfo);
 DLLExport32 npSpr	WINAPI AddOwnerDrawSprite (npWin ptrWin, int x1, int y1, int x2, int y2, WORD wLayer, int nZOrder, DWORD backSpr, DWORD sFlags, LPARAM extraInfo, LPARAM sprProc);
 DLLExport32 npSpr	WINAPI ModifSprite		(npWin ptrWin, npSpr ptSpr, int xSpr, int ySpr, DWORD iSpr);
-DLLExport32 npSpr	WINAPI ModifSpriteEx	(npWin ptrWin, npSpr ptSpr, int xSpr, int ySpr, DWORD iSpr, float fScaleX, float fScaleY, BOOL bResample, int nAngle, BOOL bAntiA);
+DLLExport32 npSpr	WINAPI ModifSpriteEx	(npWin ptrWin, npSpr ptSpr, int xSpr, int ySpr, DWORD iSpr, float fScaleX, float fScaleY, BOOL bResample, ANGLETYPE nAngle, BOOL bAntiA);
 DLLExport32 npSpr	WINAPI ModifSpriteEffect (npWin ptrWin, npSpr ptSpr, DWORD effect, LPARAM effectParam);
 DLLExport32 npSpr	WINAPI ModifOwnerDrawSprite	(npWin ptrWin, npSpr ptSprModif, int x1, int y1, int x2, int y2);
 DLLExport32 void	WINAPI ShowSprite		(npWin, npSpr, int);
@@ -941,9 +970,10 @@ DLLExport32 void	WINAPI ScreenUpdate		(npWin);
 
 DLLExport32 void	WINAPI GetSpriteScale	(npWin ptrWin, npSpr ptSpr, float* pScaleX, float* pScaleY, BOOL* pResample);
 DLLExport32 void	WINAPI SetSpriteScale	(npWin ptrWin, npSpr ptSpr, float fScaleX, float fScaleY, BOOL bResample);
-DLLExport32 int		WINAPI GetSpriteAngle	(npWin ptrWin, npSpr ptSpr, BOOL* pAntiA);
-DLLExport32 void	WINAPI SetSpriteAngle	(npWin ptrWin, npSpr ptSpr, int nAngle, BOOL bAntiA);
+DLLExport32 ANGLETYPE		WINAPI GetSpriteAngle	(npWin ptrWin, npSpr ptSpr, BOOL* pAntiA);
+DLLExport32 void	WINAPI SetSpriteAngle	(npWin ptrWin, npSpr ptSpr, ANGLETYPE nAngle, BOOL bAntiA);
 DLLExport32 void	WINAPI GetSpriteRect	(npWin ptrWin, npSpr ptSpr, RECT* prc);
+DLLExport32 void	WINAPI GetSpriteRectNew	(npWin ptrWin, npSpr ptSpr, RECT* prc);
 DLLExport32 void	WINAPI MoveSpriteToFront(npWin ptrWin, npSpr pSpr);
 DLLExport32 void	WINAPI MoveSpriteToBack	(npWin ptrWin, npSpr pSpr);
 DLLExport32 void	WINAPI MoveSpriteBefore	(npWin ptrWin, npSpr pSprToMove, npSpr pSprDest);
@@ -976,17 +1006,17 @@ DLLExport32 void	WINAPI	WinEnableUpdate	(npWin, int);
 DLLExport32 DWORD	WINAPI SetSpriteColFlag			(npWin, npSpr, DWORD);				// UINT = SF_xxxx
 DLLExport32 npSpr   WINAPI SpriteCol_TestPoint		(npWin, npSpr, int, int, int, DWORD);		// Entre 1 pixel et les sprites sauf un
 DLLExport32 npSpr   WINAPI SpriteCol_TestRect		(npWin, npSpr, int, int, int, int, int, DWORD);		// Entre 1 rectangle et les sprites sauf un
-DLLExport32 npSpr	WINAPI SpriteCol_TestSprite		(npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, int newAngle, float newScaleX, float newScaleY, int subHt, DWORD dwFlags);
-DLLExport32 UINT	WINAPI SpriteCol_TestSprite_All	(npWin, npSpr, LPVOID*, DWORD, int, int, int, float, float, DWORD);
-DLLExport32 int	 WINAPI WinSetColMode			(npWin, WORD);						// Mode BOX ou BITMAP
+DLLExport32 npSpr	WINAPI SpriteCol_TestSprite		(npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, ANGLETYPE newAngle, float newScaleX, float newScaleY, int subHt, DWORD dwFlags);
+DLLExport32 UINT	WINAPI SpriteCol_TestSprite_All	(npWin, npSpr, LPVOID*, DWORD, int, int, ANGLETYPE, float, float, DWORD);
+DLLExport32 int     WINAPI WinSetColMode			(npWin, WORD);						// Mode BOX ou BITMAP
 
 DLLExport32 BOOL	WINAPI ColMask_Create			(npWin, UINT, UINT, DWORD);			// Creation bitmap masque fond
 DLLExport32 BOOL	WINAPI ColMask_CreateEx			(npWin, int, int, int, int, DWORD);
-DLLExport32 void	WINAPI ColMask_Kill				(npWin);							// Destruction masque fond
-DLLExport32 void	WINAPI ColMask_Fill				(npWin, DWORD);						// Init masque fond
-DLLExport32 int	 WINAPI ColMask_FillRectangle	(npWin, int, int, int, int, DWORD);
+DLLExport32 void    WINAPI ColMask_Kill				(npWin);							// Destruction masque fond
+DLLExport32 void    WINAPI ColMask_Fill				(npWin, DWORD);						// Init masque fond
+DLLExport32 int     WINAPI ColMask_FillRectangle	(npWin, int, int, int, int, DWORD);
 DLLExport32 void	WINAPI ColMask_OrImage			(npWin, DWORD, int, int, DWORD);
-DLLExport32 void	WINAPI ColMask_OrMask			(npWin, sMask*, int, int, DWORD, DWORD);
+DLLExport32 void    WINAPI ColMask_OrMask			(npWin, sMask*, int, int, DWORD, DWORD);
 DLLExport32 void	WINAPI ColMask_OrPlatform		(npWin, DWORD, int, int);
 DLLExport32 void	WINAPI ColMask_OrPlatformMask	(npWin, sMask*, int, int);
 DLLExport32 int		WINAPI ColMask_Scroll			(npWin, int, int, RECT   *, RECT   *);
@@ -995,8 +1025,8 @@ DLLExport32 void	WINAPI ColMask_ToLog			(npWin ptrWin, UINT nPlane);
 DLLExport32 void	WINAPI ColMask_SetClip			(npWin, RECT *);
 
 DLLExport32 BOOL	WINAPI ColMask_TestPoint		(npWin ptrWin, int x, int y, UINT nPlane);
-DLLExport32 BOOL	WINAPI ColMask_TestSprite		(npWin ptrWin, npSpr pSpr, int newImg, int newX, int newY, int newAngle, float newScaleX, float newScaleY, int subHt, UINT nPlane);
-DLLExport32 int	 WINAPI ColMask_TestRect			(npWin, int, int, int, int, UINT nPlane);
+DLLExport32 BOOL	WINAPI ColMask_TestSprite		(npWin ptrWin, npSpr pSpr, int newImg, int newX, int newY, ANGLETYPE newAngle, float newScaleX, float newScaleY, int subHt, UINT nPlane);
+DLLExport32 int     WINAPI ColMask_TestRect			(npWin, int, int, int, int, UINT nPlane);
 
 DLLExport32 BOOL	WINAPI Mask_TestPoint			(LPBYTE pMask, int x, int y, int nMaskWidth, int nMaskHeight);
 DLLExport32 BOOL	WINAPI Mask_TestMask			(LPBYTE pMaskBits1, LPBYTE pMaskBits2, int x1Spr1, int y1Spr1, int wSpr1, int hSpr1, int x1Spr2, int y1Spr2, int wSpr2, int hSpr2);
@@ -1028,6 +1058,9 @@ DLLExport32 HCSPALETTE	WINAPI AddPalette (LOGPALETTE* pLogPal);
 DLLExport32 void		WINAPI DelPalette (HCSPALETTE pCsPal);
 DLLExport32 void		WINAPI SetAppCSPalette (npAppli ptrApp, HPALETTE hpal, HCSPALETTE pCsPal);
 DLLExport32 HCSPALETTE	WINAPI GetAppCSPalette (npAppli ptrApp);
+
+	// HWA
+DLLExport32 void		WINAPI WinSizeChanged ( npWin ptrWin );
 
 // Sounds
 
@@ -1075,20 +1108,21 @@ DLLExport32 void WINAPI SetSndFreq (npAppli ptApp, UINT sType, UINT sNum, DWORD 
 DLLExport32 DWORD WINAPI GetSndChannelFreq (npAppli ptApp, UINT nChannel);
 DLLExport32 DWORD WINAPI GetSndFreq (npAppli ptApp, UINT sType, UINT sNum);
 
-DLLExport32 UINT	WINAPI AddSoundA		(npAppli, UINT, LPSTR, LPBYTE, DWORD);
+DLLExport32 UINT    WINAPI AddSoundA		(npAppli, UINT, LPSTR, LPBYTE, DWORD);
 DLLExport32 UINT	WINAPI ReplaceSoundA	(npAppli ptApp, UINT sFlags, UINT nSound, LPSTR fpName, LPBYTE lpData, DWORD dwDataSize);
 DLLExport32 BOOL	WINAPI SetSoundFlags	(npAppli ptApp, UINT nSound, UINT sFlags);
 DLLExport32 DWORD	WINAPI IncSoundCount	(npAppli, UINT);
-DLLExport32 int	 WINAPI GetSoundInfoA	(npAppli, UINT, fpSound);
+DLLExport32 int     WINAPI GetSoundInfoA	(npAppli, UINT, fpSound);
 DLLExport32 int		WINAPI GetSoundNameA	(npAppli, UINT, LPSTR, UINT);
 DLLExport32 long	WINAPI GetSoundData		(npAppli, UINT, LPBYTE);
 DLLExport32 LPBYTE	WINAPI GetSoundDataPtr	(npAppli, UINT);
 DLLExport32 long	WINAPI DelSound			(npAppli, UINT);
 
-DLLExport32 UINT	WINAPI AddSoundW		(npAppli, UINT, LPWSTR, LPBYTE, DWORD);
+DLLExport32 int		WINAPI WaveSetChannels	(npAppli ptApp, int nChannels);
+DLLExport32 UINT    WINAPI AddSoundW		(npAppli, UINT, LPWSTR, LPBYTE, DWORD);
 DLLExport32 UINT	WINAPI ReplaceSoundW	(npAppli ptApp, UINT sFlags, UINT nSound, LPWSTR fpName, LPBYTE lpData, DWORD dwDataSize);
 DLLExport32 int		WINAPI GetSoundNameW	(npAppli, UINT, LPWSTR, UINT);
-DLLExport32 int	 WINAPI GetSoundInfoW	(npAppli, UINT, fpSound);
+DLLExport32 int     WINAPI GetSoundInfoW	(npAppli, UINT, fpSound);
 
 #ifdef _UNICODE
 #define AddSound		AddSoundW
@@ -1106,7 +1140,50 @@ DLLExport32 int	 WINAPI GetSoundInfoW	(npAppli, UINT, fpSound);
 #define PlaySnd			PlaySndA
 #endif
 
-DLLExport32 int		WINAPI WaveSetChannels	(npAppli ptApp, int nChannels);
+// Layer functions
+// Layer
+#ifdef __cplusplus
+class WinLayer
+{
+public:
+#else
+typedef struct WinLayer
+{
+#endif
+	// Structure size
+	DWORD		layerSize;
+
+	// Effect
+	DWORD		layerEffect;
+	LPARAM		layerEffectParam;
+	
+	// Options
+	DWORD		dwLayerOptions;
+
+	// Scale & angle
+	float		xScale;
+	float		yScale;
+	float		scale;		// not used for display
+	float		angle;
+
+	// Hotspot
+	POINT		hotSpot;
+
+	// Destination point
+	POINT		destPoint;
+
+#ifdef __cplusplus
+};
+#else
+} WinLayer;
+#endif
+
+// Layer options
+#define	WLF_PREVIOUSEFFECT	1
+
+DLLExport32 void		WINAPI WinCreateLayers (npWin ptrWin, int nLayers);
+DLLExport32 void		WINAPI WinSetLayerEffect (npWin ptrWin, int nLayer, DWORD dwEffect, LPARAM dwEffectParam, DWORD dwOptions);
+DLLExport32 WinLayer*	WINAPI WinGetLayerAt (npWin ptrWin, int nLayer);
 
 #ifdef __cplusplus
 }
@@ -1132,6 +1209,7 @@ enum {
 	WSURF_BACKSAVE
 };
 DLLExport32 cSurface   * WINAPI WinGetSurface (int idWin, int surfID=WSURF_LOGSCREEN);
+DLLExport32 void WINAPI WinSetCurrent (int idWin);
 #endif	// __cplusplus
 #endif	// !defined(_H2INC)
 

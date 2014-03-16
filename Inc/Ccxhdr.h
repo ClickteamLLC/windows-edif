@@ -12,21 +12,13 @@
 
 #pragma comment(linker,"/RELEASE")
 
-#ifdef _MERGE_DATA_					// Not set by default
-#ifdef _MERGE_RDATA_
-#pragma comment(linker,"/merge:.rdata=.data")
-#endif // _MERGE_RDATA_
-#pragma comment(linker,"/merge:.text=.data")
-#pragma comment(linker,"/merge:.reloc=.data")
-#pragma comment(linker,"/ignore:4078")
-#endif // _MERGE_DATA_
-
 #if _MSC_VER >= 1000				// Slightly slower loading time under Windows 9x, but may save some Kb
 #pragma comment(linker,"/opt:nowin98")
 #endif // _MSC_VER >= 1000
 
 #endif // NDEBUG
 #endif // COMPILE_SMALL
+
 // end of z33z stuff
 
 // MAIN INCLUDES
@@ -47,14 +39,14 @@
 #include	<stdlib.h>
 #include	<stddef.h>
 #include	<ctype.h>
+#include	<tchar.h>
 #include	<math.h>
 #include	<limits.h>
-#if !defined(_LINUX) && !defined(__MINGW32__)
+#ifndef _LINUX
 #include	<crtdbg.h>
 #else
 #include	<assert.h>
 #endif
-#include	<tchar.h>
 
 #if !defined(ASSERT)
 	#ifdef _DEBUG

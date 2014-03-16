@@ -9,7 +9,7 @@
 #ifdef	WIN32
 
 	// Fonctions C
-#ifndef _fmemcpy
+#ifndef _fmalloc
 #define _fmemcpy(a, b, c)	memcpy(a, b, c)
 #define	_fmemccpy(a,b,c,d)	_memccpy(a,b,c,d);
 #define _fmemmove(a, b, c)	memmove(a, b, c)

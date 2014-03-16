@@ -17,8 +17,6 @@ class CInputFile;
 // Filter Manager base class
 //
 
-#define FILTERID_PNG	DWORDSTR('P','N','G',' ')
-
 // Filter Manager
 class STDDLL_API CFilterMgr
 {
