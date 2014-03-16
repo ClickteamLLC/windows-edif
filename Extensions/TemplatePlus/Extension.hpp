@@ -76,8 +76,8 @@ public:
 	 */
 	static const int WindowProcPriority = 100;
 
-	Extension(RD *rd, SerializedED *SED, createObjectInfo *COB);	//defined & documented in Extension.cpp
-	~Extension();													//defined & documented in Extension.cpp
+	Extension(RD *rd, SerializedED *SED, createObjectInfo *COB); //defined & documented in Extension.cpp
+	~Extension();                                                //defined & documented in Extension.cpp
 
 
 	/* Add any data you want to store in your
@@ -117,14 +117,14 @@ public:
 	const TCHAR * HelloWorld();
 
 
-	short Handle();			//defined & documented in Extension.cpp
-	short Display();		//defined & documented in Extension.cpp
+	short Handle();         //defined & documented in Extension.cpp
+	short Display();        //defined & documented in Extension.cpp
 
-	short Pause();			//defined & documented in Extension.cpp
-	short Continue();		//defined & documented in Extension.cpp
+	short Pause();          //defined & documented in Extension.cpp
+	short Continue();       //defined & documented in Extension.cpp
 
-	bool Save(HANDLE File);	//defined & documented in Extension.cpp
-	bool Load(HANDLE File);	//defined & documented in Extension.cpp
+	bool Save(HANDLE File); //defined & documented in Extension.cpp
+	bool Load(HANDLE File); //defined & documented in Extension.cpp
 
 	//defined & documented in Extension.cpp
 	void Action(int ID, RD *rd, long param1, long param2);

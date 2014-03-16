@@ -38,14 +38,22 @@ class Extension;
 
 extern HINSTANCE hInstLib;
 
-struct RD;				typedef			  RD RUNDATA;	typedef RUNDATA * LPRDATA;
-struct SerializedED;	typedef	SerializedED EDITDATA;	typedef EDITDATA * LPEDATA;
+struct RD;
+typedef RD RUNDATA;
+typedef RUNDATA * LPRDATA;
+#ifndef EDIF_PLAIN_EDITDATA
+struct SerializedED;
+typedef	SerializedED EDITDATA;
+#else
+struct EDITDATA;
+typedef EDITDATA SerializedED;
+#endif
+typedef EDITDATA * LPEDATA;
 
 LPEVENTINFOS2 GetEventInformations(LPEVENTINFOS2 eiPtr, short code);
 
 namespace Edif
 {
-
 	class SDK
 	{
 	public:
@@ -249,6 +257,7 @@ struct RD
 #endif
 };
 
+#ifndef EDIF_PLAIN_EDITDATA
 /* SerializedED
  * This is the editdata. The class
  * name is a reminder - any data in
@@ -281,7 +290,7 @@ struct SerializedED
 	 */
 	char data[1];
 };
-
 #include "EDStream.hpp"
+#endif
 
 #define MMF2Func WINAPI DLLExport

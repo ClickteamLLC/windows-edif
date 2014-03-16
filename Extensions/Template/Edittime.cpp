@@ -78,13 +78,13 @@ int WINAPI DLLExport MakeIconEx ( mv _far *mV, cSurface* pIconSf, LPTSTR lpName,
 {
 #ifndef RUN_ONLY
 
-    pIconSf->Delete();
-    pIconSf->Clone(*SDK->Icon);
+	pIconSf->Delete();
+	pIconSf->Clone(*SDK->Icon);
 
-    pIconSf->SetTransparentColor(RGB(255, 0, 255));
+	pIconSf->SetTransparentColor(RGB(255, 0, 255));
 
 #endif // !defined(RUN_ONLY)
-   return 0;
+	return 0;
 }
 
 
@@ -101,13 +101,13 @@ int WINAPI DLLExport CreateObject(mv _far *mV, fpLevObj loPtr, LPEDATA edPtr)
 	// Check compatibility
 	if ( IS_COMPATIBLE(mV) )
 	{
-        Edif::Init(mV, edPtr);
+		Edif::Init(mV, edPtr);
 
 		// Set default object settings
 //		edPtr->swidth = 48;
 //		edPtr->sheight = 48;
 
-        return 0;
+		return 0;
 	}
 #endif // !defined(RUN_ONLY)
 
@@ -169,9 +169,9 @@ void WINAPI	DLLExport RemoveObject(mv _far *mV, fpLevObj loPtr, LPEDATA edPtr, u
 {
 #ifndef RUN_ONLY
 	// Is the last object removed?
-    if (0 == cpt)
+	if (0 == cpt)
 	{
-        Edif::Free(edPtr);
+		Edif::Free(edPtr);
 
 		// Do whatever necessary to remove our data
 	}
@@ -217,9 +217,9 @@ void WINAPI DLLExport EditorDisplay(mv _far *mV, fpObjInfo oiPtr, fpLevObj loPtr
 	LPSURFACE Surface = WinGetSurface((int) mV->mvIdEditWin);
 
 	if(!Surface)
-        return;
+		return;
 
-    SDK->Icon->Blit(*Surface, rc->left, rc->top, BMODE_TRANSP, BOP_COPY, 0);
+	SDK->Icon->Blit(*Surface, rc->left, rc->top, BMODE_TRANSP, BOP_COPY, 0);
 
 #endif // !defined(RUN_ONLY)
 }

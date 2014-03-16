@@ -13,7 +13,7 @@ int Extension::Add(int First, int Second)
 	return First + Second;
 }
 
-const TCHAR *Extension::HelloWorld()
+TCHAR const * Extension::HelloWorld()
 {
 	return _T("Hello world!");
 	//return Runtime.CopyString(MyString.c_str()); //for stdtstrings

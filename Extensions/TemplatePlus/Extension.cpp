@@ -28,7 +28,10 @@
  * your A/C/Es, perform initialization steps, and
  * you're good to go.
  */
-Extension::Extension(RD *rd, SerializedED *SED, createObjectInfo *COB) : rd(rd), rh(rd->rHo.hoAdRunHeader), Runtime(rd)
+Extension::Extension(RD *rd, SerializedED *SED, createObjectInfo *COB)
+: rd(rd)
+, rh(rd->rHo.hoAdRunHeader)
+, Runtime(rd)
 {
 	//Link all your action/condition/expression functions
 	//to their IDs to match the IDs in the JSON here.
@@ -74,31 +77,30 @@ Extension::~Extension()
 short Extension::Handle()
 {
 	/*
-	   If your extension will draw to the MMF window you should first 
-	   check if anything about its display has changed :
+	If your extension will draw to the MMF window you should first 
+	check if anything about its display has changed :
 
-		   if (rd->roc.rcChanged) return REFLAG_DISPLAY;
-		   else return 0;
+		if (rd->roc.rcChanged) return REFLAG_DISPLAY;
+		else return 0;
 
-	   You will also need to make sure you change this flag yourself 
-	   to 1 whenever you want to redraw your object
-	 
-	   If your extension won't draw to the window, but it still needs 
-	   to do something every MMF2 loop use:
+	You will also need to make sure you change this flag yourself 
+	to 1 whenever you want to redraw your object
 
-			return 0;
+	If your extension won't draw to the window, but it still needs 
+	to do something every MMF2 loop use:
 
-	   If you don't need to do something every loop, use :
+		return 0;
 
-			return REFLAG_ONESHOT;
+	If you don't need to do something every loop, use :
 
-	   This doesn't mean this function can never run again. If you want MMF2
-	   to handle your object again (causing this code to run) use this function:
+		return REFLAG_ONESHOT;
 
-			Runtime.Rehandle();
+	This doesn't mean this function can never run again. If you want MMF2
+	to handle your object again (causing this code to run) use this function:
 
-	   At the end of the event loop this code will run.
+		Runtime.Rehandle();
 
+	At the end of the event loop this code will run.
 	*/
 
 	//Will not be called next loop	
@@ -187,4 +189,3 @@ long Extension::Expression(int ID, RD *rd, long param)
 {
 	return long(_T("")); //so that unlinked expressions that return strings won't crash
 }
-

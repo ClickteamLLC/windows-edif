@@ -173,8 +173,8 @@ void WINAPI DLLExport EndFrame(mv _far *mV, DWORD dwReserved, int nFrameIndex)
 // 
 /*
 
-  // Note: do not forget to enable the functions in the .def file 
-  // if you remove the comments below.
+	// Note: do not forget to enable the functions in the .def file 
+	// if you remove the comments below.
 
 void WINAPI GetRunObjectFont(LPRDATA rdPtr, LOGFONT* pLf)
 {

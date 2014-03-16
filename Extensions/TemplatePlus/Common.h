@@ -13,12 +13,9 @@
 #pragma once
 
 //Only define one of these at once:
-//	#define TGFEXT	//TGF2, MMF2, MMF2 Dev
-	#define MMFEXT	//MMF2, MMF2 Dev
-//	#define PROEXT	//MMF2 Dev only
-
-//Define this if you want legacy comma-less JSON support
-//	#define UsingJsonWithoutCommas
+//	#define TGFEXT	//TGF2.0, MMF2.0, CTF2.5, MMF2.0 Dev, CTF2.5 Dev
+	#define MMFEXT	//        MMF2.0, CTF2.5, MMF2.0 Dev, CTF2.5 Dev
+//	#define PROEXT	//                        MMF2.0 Dev, CTF2.5 Dev
 
 #include "Edif.h"
 #include "Resource.h"

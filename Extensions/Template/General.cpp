@@ -41,7 +41,7 @@ BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID lpReserved)
 			break;
 
 		// The calling process is detaching the DLL from its address space.
-	    case DLL_PROCESS_DETACH:
+		case DLL_PROCESS_DETACH:
 			break;
 	}
 	
@@ -58,7 +58,7 @@ BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID lpReserved)
 //
 extern "C" int WINAPI DLLExport Initialize(mv _far *mV, int quiet)
 {
-    return Edif::Init(mV);
+	return Edif::Init(mV);
 
 
 	// No error
@@ -73,7 +73,7 @@ extern "C" int WINAPI DLLExport Initialize(mv _far *mV, int quiet)
 // 
 extern "C" int WINAPI DLLExport Free(mv _far *mV)
 {
-    Edif::Free(mV);
+	Edif::Free(mV);
 
 	// No error
 	return 0;
@@ -95,7 +95,7 @@ extern "C" int WINAPI DLLExport Free(mv _far *mV)
 //
 int	WINAPI DLLExport LoadObject(mv _far *mV, LPCSTR fileName, LPEDATA edPtr, int reserved)
 {
-    Edif::Init(mV, edPtr);
+	Edif::Init(mV, edPtr);
 
 
 	return 0;
@@ -147,17 +147,17 @@ void WINAPI DLLExport UpdateFileNames(mv _far *mV, LPSTR appName, LPEDATA edPtr,
 //
 /*
 int WINAPI DLLExport EnumElts (mv __far *mV, LPEDATA edPtr, ENUMELTPROC enumProc, ENUMELTPROC undoProc, LPARAM lp1, LPARAM lp2)
-{  
+{	
 	int error = 0;
 
 	// Replace wImgIdx with the name of the WORD variable you create within the edit structure
-  
-	// Enum images  
+	
+	// Enum images	
 	if ( (error = enumProc(&edPtr->wImgIdx, IMG_TAB, lp1, lp2)) != 0 )
 	{
-		// Undo enum images      
-		undoProc (&edPtr->wImgIdx, IMG_TAB, lp1, lp2);    
-	}  
+		// Undo enum images		
+		undoProc (&edPtr->wImgIdx, IMG_TAB, lp1, lp2);	
+	}	
 
 	return error;
 }
