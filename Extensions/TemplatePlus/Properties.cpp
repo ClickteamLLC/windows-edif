@@ -40,9 +40,9 @@ namespace Prop
 
 PropData Properties[] = //See the MMF2SDK help file for information on PropData_ macros.
 {
-	PropData_StaticString(Prop::Version, (UINT_PTR)"Version #", (UINT_PTR)"This is the current version of the EDIF Template object."),
-	//PropData_EditMultiLine(Prop::MyString, (UINT_PTR)"My String", (UINT_PTR)"The contents of my string."),
-	//PropData_EditNumber(Prop::MyInt, (UINT_PTR)"My Integer", (UINT_PTR)"The value of my integer."),
+	PropData_StaticString(Prop::Version, (UINT_PTR)_T("Version #"), (UINT_PTR)_T("This is the current version of the EDIF Template object.")),
+	//PropData_EditMultiLine(Prop::MyString, (UINT_PTR)_T("My String"), (UINT_PTR)_T("The contents of my string.")),
+	//PropData_EditNumber(Prop::MyInt, (UINT_PTR)_T("My Integer"), (UINT_PTR)_T("The value of my integer.")),
 	PropData_End()
 };
 
@@ -137,11 +137,11 @@ void *MMF2Func GetPropValue(mv *mV, SerializedED *SED, UINT PropID)
 	{
 	case Prop::Version:
 		{
-			return new CPropDataValue("Default.EDIF.Template.0");
+			return new CPropStringValue(_T("Default.EDIF.Template.0"));
 		}
 	//case Prop::MyString:
 	//	{
-	//		return new CPropDataValue(ed.MyString.c_str());
+	//		return new CPropStringValue(ed.MyString.c_str());
 	//	}
 	//case Prop::MyInt:
 	//	{
@@ -168,7 +168,7 @@ void MMF2Func SetPropValue(mv *mV, SerializedED *SED, UINT PropID, CPropValue *P
 	//{
 	//case Prop::MyString:
 	//	{
-	//		ed.MyString = (LPSTR)((CPropDataValue*)PropVal)->m_pData;
+	//		ed.MyString = ((CPropStringValue*)PropVal)->GetString();
 	//		break;
 	//	}
 	//case Prop::MyInt:
