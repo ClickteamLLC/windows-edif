@@ -380,7 +380,9 @@ Edif::SDK::~SDK()
 	delete [] ConditionJumps;
 	delete [] ExpressionJumps;
 
+#ifndef RUN_ONLY
 	delete Icon;
+#endif
 }
 
 #ifdef __MINGW32__
