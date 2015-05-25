@@ -79,7 +79,9 @@ namespace Edif
         unsigned char * FunctionMemory;
 
 		mv* mV;
+#ifndef RUN_ONLY
         cSurface * Icon;
+#endif
     };
     
     class Runtime

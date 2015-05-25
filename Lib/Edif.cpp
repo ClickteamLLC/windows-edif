@@ -420,7 +420,9 @@ Edif::SDK::~SDK()
     delete [] ConditionJumps;
     delete [] ExpressionJumps;
 
+#ifndef RUN_ONLY
 	delete Icon;
+#endif
 }
 
 int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Function, int ID, LPRDATA rdPtr, long param1, long param2)
