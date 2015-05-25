@@ -1,6 +1,6 @@
 #include "Common.h"
 
-Edif::SDK * SDK;
+Edif::SDK * SDK = 0;
 
 TCHAR Edif::LanguageCode[3];
 
@@ -120,9 +120,7 @@ void Edif::Init(mv * _far mV, LPEDATA edPtr)
 }
 
 void Edif::Free(mv * _far mV)
-{   
-	delete ::SDK;
-	::SDK = NULL;
+{
 }
 
 void Edif::Free(LPEDATA edPtr)
@@ -206,7 +204,8 @@ int Edif::Init(mv _far * mV)
         return -1;
     }
 
-    ::SDK = new Edif::SDK(mV, *json);
+	static Edif::SDK gSDK (mV, *json);
+    ::SDK = &gSDK;
     return 0;	// no error
 }
 
