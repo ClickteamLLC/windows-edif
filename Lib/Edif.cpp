@@ -13,7 +13,7 @@ HMENU Edif::ActionMenu, Edif::ConditionMenu, Edif::ExpressionMenu;
 short ReadParameterType(const char * Text)
 {
 	if(!_stricmp(Text, "Text") || !_stricmp(Text, "String"))	return PARAM_EXPSTRING;
-	if(!_stricmp(Text, "Filename") || !_stricmp(Text, "File"))	return PARAM_FILENAME;
+	if(!_stricmp(Text, "Filename") || !_stricmp(Text, "File"))	return PARAM_FILENAME2;
 	if(!_stricmp(Text, "Float"))								return PARAM_EXPRESSION;
 	if(!_stricmp(Text, "Integer"))								return PARAM_EXPRESSION;
 	if(!_stricmp(Text, "Object"))								return PARAM_OBJECT;
