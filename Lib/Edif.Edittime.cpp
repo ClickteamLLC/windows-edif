@@ -165,11 +165,17 @@ LPINFOEVENTSV2 WINAPI DLLExport GetExpressionInfos(mv _far *mV, short code)
 	return NULL;
 }
 
+#ifndef RUN_ONLY
+short InterceptActionSelection(mv *mV, short selectedId);
+short InterceptConditionSelection(mv *mV, short selectedId);
+short InterceptExpressionSelection(mv *mV, short selectedId);
+#endif
+
 short WINAPI DLLExport GetConditionCodeFromMenu(mv _far *mV, short menuId)
 {
 #ifndef RUN_ONLY
 	
-	return menuId - Edif::ConditionID(0);
+	return InterceptConditionSelection(mV, menuId - Edif::ConditionID(0));
 
 #endif // !defined(RUN_ONLY)
 	return -1;
@@ -179,7 +185,7 @@ short WINAPI DLLExport GetActionCodeFromMenu(mv _far *mV, short menuId)
 {
 #ifndef RUN_ONLY
 
-	return menuId - Edif::ActionID(0);
+	return InterceptActionSelection(mV, menuId - Edif::ActionID(0));
 
 #endif // !defined(RUN_ONLY)
 	return -1;
@@ -189,7 +195,7 @@ short WINAPI DLLExport GetExpressionCodeFromMenu(mv _far *mV, short menuId)
 {
 #ifndef RUN_ONLY
 
-	return menuId - Edif::ExpressionID(0);
+	return InterceptExpressionSelection(mV, menuId - Edif::ExpressionID(0));
 
 #endif // !defined(RUN_ONLY)
 	return -1;

@@ -295,3 +295,43 @@ BOOL MMF2Func GetFilters(mv *mV, SerializedED *SED, DWORD Flags, void *)
 #endif
 	return FALSE;
 }
+
+#ifndef RUN_ONLY
+
+/* InterceptActionSelection
+ * This function is called after the user has selected a
+ * menu item from the actions popup menu. You can show
+ * a dialog or allow the user to make a choice, and
+ * return a different ID to Fusion. Be aware, there
+ * is no way to cancel this operation.
+ */
+short InterceptActionSelection(mv *mV, short selectedId)
+{
+	return selectedId;
+}
+
+/* InterceptActionSelection
+ * This function is called after the user has selected a
+ * menu item from the conditions popup menu. You can show
+ * a dialog or allow the user to make a choice, and
+ * return a different ID to Fusion. Be aware, there
+ * is no way to cancel this operation.
+ */
+short InterceptConditionSelection(mv *mV, short selectedId)
+{
+	return selectedId;
+}
+
+/* InterceptActionSelection
+ * This function is called after the user has selected a
+ * menu item from the expressions popup menu. You can show
+ * a dialog or allow the user to make a choice, and
+ * return a different ID to Fusion. Be aware, there
+ * is no way to cancel this operation.
+ */
+short InterceptExpressionSelection(mv *mV, short selectedId)
+{
+	return selectedId;
+}
+
+#endif
