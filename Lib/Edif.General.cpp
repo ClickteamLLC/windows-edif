@@ -65,7 +65,21 @@ short WINAPI DLLExport GetRunObjectInfos(mv _far *mV, fpKpxRunInfos infoPtr)
 	infoPtr->editFlags = Extension::OEFLAGS;
 	infoPtr->editPrefs = Extension::OEPREFS;
 
-	memcpy(&infoPtr->identifier, SDK->json["About"]["Identifier"], 4);
+	json_value const &identifier = SDK->json["About"]["Identifier"];
+	if(identifier.type == json_string)
+	{
+		memcpy(&infoPtr->identifier, identifier, 4);
+	}
+	else if(identifier.type == json_integer)
+	{
+		long id = static_cast<long>(identifier.u.integer);
+		memcpy(&infoPtr->identifier, reinterpret_cast<char const *>(&id), 4);
+	}
+	else
+	{
+		MessageBox(NULL, _T("Invalid Object Identifier!"), _T("EDIF Extension SDK"), MB_OK);
+		return FALSE;
+	}
 
 	infoPtr->version = Extension::Version;
 
