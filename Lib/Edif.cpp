@@ -271,7 +271,7 @@ Edif::SDK::SDK(mv * mV, json_value &_json) : json (_json)
 		ConditionInfos.push_back(ConditionID);
 		ConditionInfos.push_back(i);
 
-		ConditionInfos.push_back(((bool) Condition["Triggered"]) ? 0 : (EVFLAGS_ALWAYS | EVFLAGS_NOTABLE));
+		ConditionInfos.push_back(((bool) Condition["Triggered"]) ? (EVFLAGS_NOTABLE) : (EVFLAGS_ALWAYS | EVFLAGS_NOTABLE));
 
 		const json_value &Parameters = Condition["Parameters"];
 
