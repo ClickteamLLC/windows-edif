@@ -11,14 +11,15 @@
 #include <vector>
 #include <string>
 
-struct EDIStream : std::basic_istream<TCHAR>
+struct EDIStream : std::basic_istream<char>
 {
-	struct Buf : std::basic_streambuf<TCHAR>
+	struct Buf : std::basic_streambuf<char>
 	{
 		Buf(SerializedED const&SED, std::size_t putback = 8) : pb(putback), b(putback)
 		{
-			b.reserve(pb + SED.Header.extSize);
-			for(std::size_t i = 0; i < SED.Header.extSize; ++i)
+			std::size_t const edsize = SED.Header.extSize - sizeof(SerializedED);
+			b.reserve(pb + edsize);
+			for(std::size_t i = 0; i < edsize; ++i)
 			{
 				b.push_back(SED.data[i]);
 			}
@@ -45,7 +46,7 @@ struct EDIStream : std::basic_istream<TCHAR>
 		Buf &operator=(Buf const&);
 	};
 
-	EDIStream(SerializedED const*SED) : b(*SED), std::basic_istream<TCHAR>(&b)
+	EDIStream(SerializedED const*SED) : b(*SED), std::basic_istream<char>(&b)
 	{
 	}
 	virtual ~EDIStream()
@@ -56,13 +57,16 @@ struct EDIStream : std::basic_istream<TCHAR>
 	T read_value()
 	{
 		T t = T();
-		this->read(reinterpret_cast<TCHAR *>(&t), sizeof(T));
+		this->read(reinterpret_cast<char *>(&t), sizeof(T));
 		return t;
 	}
 	std::basic_string<TCHAR> read_string()
 	{
 		std::basic_string<TCHAR> s;
-		std::getline(*this, s, _T('\0'));
+		while(TCHAR c = read_value<TCHAR>())
+		{
+			s += c;
+		}
 		return s;
 	}
 
@@ -73,9 +77,9 @@ private:
 	EDIStream &operator=(EDIStream const&);
 };
 
-struct EDOStream : std::basic_ostream<TCHAR>
+struct EDOStream : std::basic_ostream<char>
 {
-	struct Buf : std::basic_streambuf<TCHAR>
+	struct Buf : std::basic_streambuf<char>
 	{
 		Buf(mv *mV, SerializedED *&SED) : mV(mV), SED(SED)
 		{
@@ -83,8 +87,22 @@ struct EDOStream : std::basic_ostream<TCHAR>
 		}
 		virtual ~Buf()
 		{
+			if(b.empty())
+			{
+				return;
+			}
+			std::size_t size = (&b.back() + 1) - &b.front();
+			SerializedED *t = (SerializedED *)mvReAllocEditData(mV, SED, sizeof(SerializedED)+size);
+			if(t)
+			{
+				SED = t;
+				memcpy(&(SED->data[0]), &b.front(), size);
+			}
+			else
+			{
+				MessageBox(NULL, _T("There isn't enough from to store the editdata!"), _T("EDIF Extension"), MB_ICONWARNING);
+			}
 		}
-
 	private:
 		mv *mV;
 		SerializedED *&SED;
@@ -95,29 +113,15 @@ struct EDOStream : std::basic_ostream<TCHAR>
 			if(ch != traits_type::eof())
 			{
 				b.push_back(char_type(ch));
-				setp(&b.front(), /*&b.back()+1, */&b.back()+1);
-				pbump((&b.back()+1)-(&b.front()));
 			}
-			return traits_type::eof();
-		}
-		virtual int sync()
-		{
-			std::size_t size = (&b.back() + 1) - &b.front();
-			SerializedED *t = (SerializedED *)mvReAllocEditData(mV, SED, sizeof(SerializedED)+size);
-			if(t)
-			{
-				SED = t;
-				memcpy(&SED->data, &b.front(), size);
-				return 0;
-			}
-			return -1;
+			return 0;
 		}
 
 		Buf(Buf const&);
 		Buf &operator=(Buf const&);
 	};
 
-	EDOStream(mv *mV, SerializedED *&SED) : b(mV, SED), std::basic_ostream<TCHAR>(&b)
+	EDOStream(mv *mV, SerializedED *&SED) : b(mV, SED), std::basic_ostream<char>(&b)
 	{
 	}
 	virtual ~EDOStream()
@@ -127,12 +131,16 @@ struct EDOStream : std::basic_ostream<TCHAR>
 	template<typename T>
 	EDOStream &write_value(T t)
 	{
-		this->write(reinterpret_cast<TCHAR const*>(&t), sizeof(T));
+		this->write(reinterpret_cast<char const*>(&t), sizeof(T));
 		return *this;
 	}
 	EDOStream &write_string(std::basic_string<TCHAR> const&s)
 	{
-		*this << s << std::ends;
+		for(std::basic_string<TCHAR>::const_iterator it = s.begin(); it != s.end(); ++it)
+		{
+			write_value(*it);
+		}
+		write_value(TCHAR());
 		return *this;
 	}
 	template<typename ForwardIterator>
@@ -140,7 +148,7 @@ struct EDOStream : std::basic_ostream<TCHAR>
 	{
 		for(; first != pastlast; ++first)
 		{
-			this->write(reinterpret_cast<TCHAR const*>(&*first), sizeof(*first));
+			this->write(reinterpret_cast<char const*>(&*first), sizeof(*first));
 		}
 		return *this;
 	}
