@@ -1,13 +1,14 @@
 # Template project built files
 MFX/
+Debug/
 Debug HWA/
-DebugUnicode/
+Debug UnicodeHWA/
+Edittime/
 Edittime HWA/
-ReleaseEditor/
-ReleaseEditorUnicode/
-ReleaseRuntime/
-ReleaseRuntimeUnicode/
+Edittime UnicodeHWA/
+Runtime/
 Runtime HWA/
+Runtime UnicodeHWA/
 
 
 #################
