@@ -1021,9 +1021,9 @@ enum {
 	PROPID_TAB_MAC,
 	PROPID_TAB_HTML5,
 	PROPID_TAB_VITA,
-	PROPID_TAB_CUSTOM1 = 18,
-	PROPID_TAB_CUSTOM2,
-	PROPTAB_MAX				// 20
+	PROPID_TAB_CUSTOM1 = 20, //TODO: keep updating this as Fusion updates
+	PROPID_TAB_CUSTOM2, //note: custom tabs are no longer supported in MMF2.0, only in CTF2.5
+	PROPTAB_MAX
 };
 
 ///////////////
