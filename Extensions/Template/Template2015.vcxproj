@@ -223,7 +223,6 @@
     <ClInclude Include="..\..\Inc\TigsExt.hpp" />
     <ClInclude Include="..\..\Inc\WinMacro.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="EditData.hpp" />
     <ClInclude Include="Extension.hpp" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
@@ -236,16 +235,11 @@
     <ClCompile Include="..\..\Lib\ObjectSelection.cpp" />
     <ClCompile Include="Actions.cpp" />
     <ClCompile Include="Conditions.cpp" />
-    <ClCompile Include="CustomParams.cpp" />
-    <ClCompile Include="Debugger.cpp" />
     <ClCompile Include="Edittime.cpp" />
     <ClCompile Include="Expressions.cpp" />
     <ClCompile Include="Extension.cpp" />
     <ClCompile Include="General.cpp" />
-    <ClCompile Include="Properties.cpp" />
     <ClCompile Include="Runtime.cpp" />
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="TextProps.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\Lib\mmfs2.5.lib" />
