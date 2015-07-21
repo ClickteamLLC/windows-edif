@@ -54,7 +54,7 @@ int MMF2Func CreateObject(mv *mV, LO *lo, SerializedED *SED)
  * current example just uses the
  * Icon.png from the resources.
  */
-int MMF2Func MakeIconEx(mv *mV, cSurface *Icon, LPTSTR Name, OI *oi, SerializedED *SED)
+extern "C" int MMF2Func MakeIconEx(mv *mV, cSurface *Icon, LPTSTR Name, OI *oi, SerializedED *SED)
 {
 #ifndef RUN_ONLY
 	Icon->Delete();
