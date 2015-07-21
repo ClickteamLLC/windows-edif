@@ -20,6 +20,6 @@ Global
 		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime UnicodeHWA|Fusion-2.5.Build.0 = Runtime UnicodeHWA|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = TRUE
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
