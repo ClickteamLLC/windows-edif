@@ -103,6 +103,9 @@
       <Command>..\AutoInstall.bat "$(TargetPath)" \Extensions\Unicode 2&gt; nul</Command>
       <Message>Automatically installs the extension to Fusion once it is built.</Message>
     </PostBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Edittime UnicodeHWA|Win32'">
     <ClCompile>
@@ -138,6 +141,9 @@
       <Command>..\AutoInstall.bat "$(TargetPath)" \Extensions\Unicode 2&gt; nul</Command>
       <Message>Automatically installs the extension to Fusion once it is built.</Message>
     </PostBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Runtime UnicodeHWA|Win32'">
     <ClCompile>
