@@ -9,7 +9,7 @@
  * access to everything included by it.
  */
 
-class Extension
+class Extension final
 {
 public:
 	/* rd

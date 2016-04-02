@@ -10,7 +10,7 @@
  * start of the runtime.
  */
 
-struct EditData
+struct EditData final
 {
 	/* MyString, MyInt, MyArray_t, MyArray
 	 * Example data

@@ -20,6 +20,7 @@
 #include "Edif.h"
 #include "Resource.h"
 
+#include <cstdint>
 //#include <someheader>
 //#include "YourHeader.hpp"
 

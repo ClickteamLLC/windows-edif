@@ -10,6 +10,8 @@ Runtime/
 Runtime HWA/
 Runtime UnicodeHWA/
 
+*.opendb
+*.VC.db
 
 #################
 ## Eclipse

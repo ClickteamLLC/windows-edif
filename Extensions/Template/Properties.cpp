@@ -227,7 +227,8 @@ void MMF2Func SetPropCheck(mv *mV, SerializedED *SED, UINT PropID, BOOL Ticked)
 	//{
 	//case Prop::MyCheckBoxPropertyOrPropertyThatHasTheCheckboxOptionSet:
 	//	{
-	//		ed.WhetherOrNotThatPropertyOfMineIsTicked = Ticked != FALSE ? true : false;
+	//		ed.WhetherOrNotThatPropertyOfMineIsTicked = (Ticked != FALSE ? true : false);
+	//		break;
 	//	}
 	//}
 	//since you changed ed:
@@ -277,7 +278,7 @@ BOOL MMF2Func IsPropEnabled(mv *mV, SerializedED *SED, UINT PropID)
 	{
 	case Prop::Version:
 		{
-			return FALSE; //Makes the version proeprty greyed out
+			return FALSE; //Makes the version property greyed out
 		}
 	//case Prop::MyString:	//intentional\\
 	//case Prop::MyInt:		//fallthrough\\
