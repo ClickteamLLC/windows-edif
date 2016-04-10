@@ -20,7 +20,7 @@
  * You can support ink effects in
  * DisplayRunObject too, but this is
  * done automatically if you implement
- * GetRunObjectSurface (MMF2 applies the
+ * GetRunObjectSurface (Fusion applies the
  * ink effects to the surface). Don't
  * forget to enable the function in the
  * .def file if you uncomment & implement
@@ -129,7 +129,7 @@ void MMF2Func StartFrame(mv *mV, CRunApp *App, int FrameIndex)
 }
 
 /* EndFrame
- * Called when the frame ends. MMF2
+ * Called when the frame ends. Fusion
  * does NOT call this function in the
  * event of a "Restart Frame" action.
  */

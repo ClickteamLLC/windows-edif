@@ -15,7 +15,7 @@ public:
 	/* rd
 	 * This is a pointer to the classic
 	 * RunData structure. Some things still
-	 * have to be stored there for MMF2's
+	 * have to be stored there for Fusion's
 	 * sake, so you need to have acces to
 	 * that data. You should not modify
 	 * the rundata structure, however,
@@ -42,9 +42,9 @@ public:
 
 	/* MinimumBuild
 	 * Always set this to the latest build
-	 * of MMF2 that has been released, unless
+	 * of Fusion that has been released, unless
 	 * you need to set it higher for a beta
-	 * version of MMF2 to get access to some
+	 * version of Fusion to get access to some
 	 * new SDK feature.
 	 */
 	static const int MinimumBuild = 257;
@@ -60,7 +60,7 @@ public:
 
 	/* OEFLAGS, OEPREFS
 	 * These are settings for your extension
-	 * that tell MMF2 how to treat your extension
+	 * that tell Fusion how to treat your extension
 	 * and what behaviors and responsibilities
 	 * to add. Check the MMF2SDK Help file for
 	 * more detailed information on the flags you

@@ -6,7 +6,7 @@
  * everywhere else. You shouldn't need to
  * change anything in this file except
  * to include headers that you want and
- * to change the edition of MMF2 you want
+ * to change the edition of Fusion you want
  * to support.
  */
 

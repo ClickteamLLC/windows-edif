@@ -91,7 +91,7 @@ void MMF2Func EditParameter(mv _far *mV, short code, paramExt* pExt)
 }
 
 /* GetParameterString
- * This is where you give MMF2 the display
+ * This is where you give Fusion the display
  * string for your custom parameter. Remember,
  * this is the display for ONE PARAMETER. It
  * will appear amongst all the other parameter

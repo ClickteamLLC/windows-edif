@@ -1,5 +1,5 @@
 /* TextProps.cpp
- * If you plan on allowing MMF2 to manage
+ * If you plan on allowing Fusion to manage
  * your extension's text display properties
  * for you, this is the file to look into.
  * Functions defined here:

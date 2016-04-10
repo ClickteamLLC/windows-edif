@@ -68,8 +68,8 @@ Extension::~Extension()
 }
 
 /* Handle
- * MMF2 calls this function to let your extension
- * "live" - if you want, you can have MMF2 call this
+ * Fusion calls this function to let your extension
+ * "live" - if you want, you can have Fusion call this
  * every frame. This is where you'd, for instance,
  * simulate physics or move an object. This is
  * the analagous function to the old HandleRunObject.
@@ -87,7 +87,7 @@ short Extension::Handle()
 	to 1 whenever you want to redraw your object
 
 	If your extension won't draw to the window, but it still needs 
-	to do something every MMF2 loop use:
+	to do something every Fusion loop use:
 
 		return 0;
 
@@ -95,7 +95,7 @@ short Extension::Handle()
 
 		return REFLAG_ONESHOT;
 
-	This doesn't mean this function can never run again. If you want MMF2
+	This doesn't mean this function can never run again. If you want Fusion
 	to handle your object again (causing this code to run) use this function:
 
 		Runtime.Rehandle();
@@ -111,7 +111,7 @@ short Extension::Handle()
  * This is the analagous function to
  * DisplayRunObject. If you return
  * REFLAG_DISPLAY in Handle() this
- * routine will run. If you want MMF2
+ * routine will run. If you want Fusion
  * to apply ink effects for you, then
  * implement GetRunObjectSurface in
  * Runtime.cpp instead.
@@ -123,7 +123,7 @@ short Extension::Display()
 
 /* Pause
  * If your extension plays sound, for
- * example, then MMF2 calls this to
+ * example, then Fusion calls this to
  * let you know to pause the music,
  * usually by another extension's request
  * or by the player pausing the applcation.
@@ -134,7 +134,7 @@ short Extension::Pause()
 }
 
 /* Continue
- * Opposite to the above, MMF2 lets
+ * Opposite to the above, Fusion lets
  * you know that the silence is over;
  * your extension may live again.
  */
@@ -149,7 +149,7 @@ short Extension::Continue()
  * so serialize your runtime data to
  * the File given. It is a Windows
  * file handle, but you can use some
- * of MMF2's built-in functions for
+ * of Fusion's built-in functions for
  * writing files. Check the MMF2SDK
  * Help file for more information.
  */

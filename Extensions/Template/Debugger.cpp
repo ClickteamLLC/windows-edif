@@ -1,8 +1,8 @@
 /* Debugger.cpp
  * Here you will be able to interact
- * with the MMF2 debugger (that thing
+ * with the Fusion debugger (that thing
  * in the top left when you run your
- * MFA from MMF2). You can add your own
+ * MFA from Fusion). You can add your own
  * fields of your choice to your object's
  * debugger tree.
  * Functions defined here:
@@ -13,7 +13,7 @@
 
 #include "Common.h"
 
-#ifndef RUN_ONLY //The debugger is only available when running from MMF2, which uses the Edittime MFX
+#ifndef RUN_ONLY //The debugger is only available when running from Fusion, which uses the Edittime MFX
 
 /* DB
  * This is the namespace the debugger identifiers
@@ -65,7 +65,7 @@ LPWORD MMF2Func GetDebugTree(RD *rd)
 
 /* GetDebugItem
  * With respect to DB_BUFFERSIZE, give
- * MMF2 the string to display in the
+ * Fusion the string to display in the
  * debugger. You must include both the
  * name and the value in the string,
  * or any format you want.
@@ -96,7 +96,7 @@ void MMF2Func GetDebugItem(LPSTR Buffer, RD *rd, int ID)
  * When the user chooses to edit an
  * editable debug item, this function
  * is called. You can use the RFUNCTIONs
- * provided by MMF2 to do simple text and
+ * provided by Fusion to do simple text and
  * number edits, or you can do whatever you
  * want, such as creating a dialog that lets
  * the user enter more sophisticated input to

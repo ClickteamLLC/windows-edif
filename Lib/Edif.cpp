@@ -91,7 +91,7 @@ int Edif::Init(mv _far * mV)
 {
 	_tcscpy (LanguageCode, _T ("EN"));
 
-	// Get pathname of MMF2
+	// Get pathname of Fusion
 	LPTSTR mmfname = (LPTSTR)calloc(_MAX_PATH, sizeof(TCHAR));
 	if ( mmfname != NULL )
 	{
@@ -502,7 +502,7 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 		case 14: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
 		case 15: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
 		case 16: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
-		//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+		//Since Fusion doesn't fully support >16 parameters, they aren't supported here either
 	}
 #endif
 
@@ -725,7 +725,7 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 			case 14: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
 			case 15: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
 			case 16: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
-			//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+			//Since Fusion doesn't fully support >16 parameters, they aren't supported here either
 		}
 	}
 	else
@@ -749,7 +749,7 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 			case 14: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
 			case 15: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
 			case 16: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
-			//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+			//Since Fusion doesn't fully support >16 parameters, they aren't supported here either
 		}
 	}
 #endif

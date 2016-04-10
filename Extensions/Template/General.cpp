@@ -58,7 +58,7 @@ BOOL WINAPI DllMain(HINSTANCE DLL, DWORD Reason, LPVOID)
 
 
 /* InitExtension
- * MMF2 calls this before anything else when it loads your
+ * Fusion calls this before anything else when it loads your
  * extension. This includes during the splash screen, in which
  * case "Quiet" is true. This is where you should initialize
  * global information for either edittime or runtime. Be aware,
@@ -66,7 +66,7 @@ BOOL WINAPI DllMain(HINSTANCE DLL, DWORD Reason, LPVOID)
  * extension will share the same global information. You can
  * use mV->mvEditApp to tell apart different MFAs from each
  * other. If an error occurs during this function, return
- * -1 and MMF2 will not load your extension.
+ * -1 and Fusion will not load your extension.
  */
 int MMF2Func InitExtension(mv *mV, int Quiet)
 {
@@ -74,7 +74,7 @@ int MMF2Func InitExtension(mv *mV, int Quiet)
 }
 
 /* FreeExtension
- * Called just before MMF2 unloads your extension. You
+ * Called just before Fusion unloads your extension. You
  * should release any memory you allocated above in
  * the InitializeExtension function. You should always
  * return a value of 0.
@@ -88,7 +88,7 @@ int MMF2Func FreeExtension(mv *mV)
 
 
 /* LoadObject
- * This is called at both edittime and runtime when MMF2
+ * This is called at both edittime and runtime when Fusion
  * loads each unique instance of your object. (Each one
  * with a different name, not each instance of the same
  * one). Not much needs to be done here.
@@ -109,7 +109,7 @@ void MMF2Func UnloadObject(mv *mV, SerializedED *SED, int)
 }
 
 /* UpdateEditStructure (DEPRECATED)
- * This is called when MMF2 notices that your
+ * This is called when Fusion notices that your
  * extension has a newer version number than
  * the one in the header of the SerializedED.
  * Thankfully, however, we don't need this
@@ -128,7 +128,7 @@ HGLOBAL MMF2Func UpdateEditStructure(mv *mV, SerializedED *OldSED)
 
 /* UpdateFileNames
  * When the application is moved to a new directory,
- * MMF2 asks your extension to ensure that its file
+ * Fusion asks your extension to ensure that its file
  * paths are moving with it. Just call Update for
  * each file path - you will need to create buffers
  * of size MAX_PATH if you use C++ strings for
@@ -140,8 +140,8 @@ void MMF2Func UpdateFileNames(mv *mV, LPSTR appName, SerializedED *SED, void (WI
 }
 
 /* EnumElts
- * That whacky function that MMF2 uses to enumerate all the
- * animation frames associated with your object, because MMF2
+ * That whacky function that Fusion uses to enumerate all the
+ * animation frames associated with your object, because Fusion
  * is nice enough to deal with them for you so you can't-er,
  * don't have to. Refer to the MMF2SDK Help file for
  * information on how not to misuse this function.

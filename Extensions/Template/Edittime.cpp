@@ -36,7 +36,7 @@
 int MMF2Func CreateObject(mv *mV, LO *lo, SerializedED *SED)
 {
 #ifndef RUN_ONLY
-	if(IS_COMPATIBLE(mV)) //Make sure MMF2 hasn't changed in a way that makes your extension incompatible
+	if(IS_COMPATIBLE(mV)) //Make sure Fusion hasn't changed in a way that makes your extension incompatible
 	{
 		Edif::Init(mV, SED);
 
@@ -67,7 +67,7 @@ int MMF2Func MakeIconEx(mv *mV, cSurface *Icon, LPTSTR Name, OI *oi, SerializedE
 
 /* UsesFile
  * When the user chooses "Create From
- * File", MMF2 asks each extension if
+ * File", Fusion asks each extension if
  * it supports being created from that
  * file. Here you should investigate
  * the file and see if your extension
@@ -122,7 +122,7 @@ void MMF2Func CreateFromFile(mv *mV, LPTSTR FileName, SerializedED *SED)
 
 /* PutObject
  * Each time a duplicate is made of your
- * object, MMF2 calls this function to
+ * object, Fusion calls this function to
  * let you know. You still share the same
  * editdata, the difference is the
  * LevelObject pointer and the number of
@@ -161,7 +161,7 @@ void MMF2Func RemoveObject(mv *mV, LO *lo, SerializedED *SED, ushort NDup)
 
 /* CloneObject
  * When the user makes a clone of your object
- * (not just another instance), MMF2 copies the
+ * (not just another instance), Fusion copies the
  * contents of the editdata and then lets you
  * know that the editdata in question is in
  * new hands. Here you can 'fix' anything that
@@ -194,14 +194,14 @@ BOOL MMF2Func EditObject (mv *mV, OI *oi, LO *lo, SerializedED *SED)
 }
 
 /* SetEditSize
- * If your object is resizeable, MMF2 calls this
+ * If your object is resizeable, Fusion calls this
  * to let you know that the user has just requested
  * a resize of the object. You can take the new
  * size as is, or if it reminds you too much of
  * 500 page essays you can limit the size to whatever
  * you want. If you uncomment this function, make
  * sure you also uncomment it in Ext.def. The
- * presence of this function tells MMF2 that your
+ * presence of this function tells Fusion that your
  * object can be resized; otherwise it can't.
  */
 /*BOOL MMF2Func SetEditSize(mv *mV, SerializedED *SED, int x, int y)
@@ -217,7 +217,7 @@ BOOL MMF2Func EditObject (mv *mV, OI *oi, LO *lo, SerializedED *SED)
 }*/
 
 /* GetObjectRect
- * MMF2 wants to know from time to time how much
+ * Fusion wants to know from time to time how much
  * space your object is taking up on the frame
  * editor. Currently this just gives the size of
  * your Icon.png, but you can change it to parallel
@@ -250,13 +250,13 @@ void MMF2Func EditorDisplay(mv *mV, OI *oi, LO *lo, SerializedED *SED, RECT *rec
 
 
 /* IsTransparent
- * MMF2 calls this to ask if the mouse pointer
+ * Fusion calls this to ask if the mouse pointer
  * is over a transparent part of your object.
  * Don't ask why this isn't called "IsOpaque",
  * just accept that it isn't and move on. If the
  * given coordinates are over an opaque part of
  * your object, return TRUE, otherwise return
- * FALSE. (Protip: MMF2 calls this function a
+ * FALSE. (Protip: Fusion calls this function a
  * LOT. Don't put a MessageBox function in here
  * or any other kind of debug function.)
  */
@@ -269,7 +269,7 @@ extern "C" BOOL MMF2Func IsTransparent(mv *mV, LO *lo, SerializedED *SED, int x,
 }
 
 /* PrepareToWriteObject (DEPRECATED)
- * Just before MMF2 writes the editdata to the MFA,
+ * Just before Fusion writes the editdata to the MFA,
  * it calls this function to let you clean up
  * a temporary copy of the editdata. Because you
  * intelligently designed your EditData::Serialize
@@ -279,7 +279,7 @@ extern "C" BOOL MMF2Func IsTransparent(mv *mV, LO *lo, SerializedED *SED, int x,
 void MMF2Func PrepareToWriteObject(mv *, SerializedED *, OI *){}
 
 /* GetFilters
- * When the MFA filters are set to Automatic, MMF2
+ * When the MFA filters are set to Automatic, Fusion
  * asks your extension if it uses filters or not.
  * If you use any of either kind of filters, return
  * TRUE for that kind.

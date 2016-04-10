@@ -279,7 +279,7 @@ struct SerializedED
 	/* Header
 	 * This required data member contains
 	 * information about your extension for
-	 * MMF2, such as the version number
+	 * Fusion, such as the version number
 	 * from Extension::Version.
 	 */
 	extHeader Header;
