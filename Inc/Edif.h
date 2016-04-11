@@ -165,7 +165,7 @@ namespace Edif
 	const int DependencyWasFile	  = 1;
 	const int DependencyWasResource  = 2;
 
-	int GetDependency (char *& Buffer, size_t &Size, const TCHAR * FileExtension, int Resource);
+	int GetDependency (std::vector<char> &Buffer, const TCHAR * FileExtension, int Resource);
 
 	TCHAR* ConvertString(const char* utf8String);
 	TCHAR* ConvertAndCopyString(TCHAR* tstr, const char* utf8String, int maxLength);
