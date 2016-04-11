@@ -143,20 +143,18 @@ int Edif::Init(mv _far * mV)
 
 	Edif::ExternalJSON = (result == Edif::DependencyWasFile);
 
-	char * copy = (char *) malloc (JSON_Size + 1);
-	memcpy (copy, JSON, JSON_Size);
-	copy [JSON_Size] = 0;
+	std::string const copy {JSON, JSON_Size};
 	if ( result != Edif::DependencyWasResource )
 		free(JSON);
 
-	char json_error [256];
+	char json_error [json_error_max+1];
 	
 	json_settings settings;
 	memset (&settings, 0, sizeof (settings));
 
 	settings.settings |= json_enable_comments;
 
-	json_value * json = json_parse_ex (&settings, copy, JSON_Size, json_error);
+	json_value * json = json_parse_ex (&settings, copy.c_str(), copy.size(), json_error);
 
 	if (!json)
 	{
