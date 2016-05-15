@@ -1,5 +1,7 @@
 # Template project built files
-MFX/
+MFX/*
+!MFX/Examples
+*.0*
 Debug/
 Debug HWA/
 Debug UnicodeHWA/
