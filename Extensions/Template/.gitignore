@@ -1,16 +1,10 @@
 # Template project built files
-MFX/*
-!MFX/Examples
+MFX/Data
+MFX/Extensions
 *.0*
-Debug/
-Debug HWA/
-Debug UnicodeHWA/
-Edittime/
-Edittime HWA/
-Edittime UnicodeHWA/
-Runtime/
-Runtime HWA/
-Runtime UnicodeHWA/
+Debug*/
+Edittime*/
+Runtime*/
 
 *.opendb
 *.VC.db

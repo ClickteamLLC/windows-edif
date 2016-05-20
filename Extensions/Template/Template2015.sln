@@ -1,23 +1,32 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Template", "Template2015.vcxproj", "{87325274-EF61-43D2-85A3-FF7CE13EDD69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug UnicodeHWA|Fusion-2.5 = Debug UnicodeHWA|Fusion-2.5
-		Edittime UnicodeHWA|Fusion-2.5 = Edittime UnicodeHWA|Fusion-2.5
-		Runtime UnicodeHWA|Fusion-2.5 = Runtime UnicodeHWA|Fusion-2.5
+		Debug|Fusion-2.x ANSI+HWA = Debug|Fusion-2.x ANSI+HWA
+		Debug|Fusion-2.x Unicode+HWA = Debug|Fusion-2.x Unicode+HWA
+		Edittime|Fusion-2.x ANSI+HWA = Edittime|Fusion-2.x ANSI+HWA
+		Edittime|Fusion-2.x Unicode+HWA = Edittime|Fusion-2.x Unicode+HWA
+		Runtime|Fusion-2.x ANSI+HWA = Runtime|Fusion-2.x ANSI+HWA
+		Runtime|Fusion-2.x Unicode+HWA = Runtime|Fusion-2.x Unicode+HWA
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug UnicodeHWA|Fusion-2.5.ActiveCfg = Debug UnicodeHWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug UnicodeHWA|Fusion-2.5.Build.0 = Debug UnicodeHWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime UnicodeHWA|Fusion-2.5.ActiveCfg = Edittime UnicodeHWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime UnicodeHWA|Fusion-2.5.Build.0 = Edittime UnicodeHWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime UnicodeHWA|Fusion-2.5.ActiveCfg = Runtime UnicodeHWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime UnicodeHWA|Fusion-2.5.Build.0 = Runtime UnicodeHWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.x ANSI+HWA.ActiveCfg = Debug ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.x ANSI+HWA.Build.0 = Debug ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.x Unicode+HWA.ActiveCfg = Debug Unicode+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.x Unicode+HWA.Build.0 = Debug Unicode+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.x ANSI+HWA.ActiveCfg = Edittime ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.x ANSI+HWA.Build.0 = Edittime ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.x Unicode+HWA.ActiveCfg = Edittime Unicode+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.x Unicode+HWA.Build.0 = Edittime Unicode+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.x ANSI+HWA.ActiveCfg = Runtime ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.x ANSI+HWA.Build.0 = Runtime ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.x Unicode+HWA.ActiveCfg = Runtime Unicode+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.x Unicode+HWA.Build.0 = Runtime Unicode+HWA|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
