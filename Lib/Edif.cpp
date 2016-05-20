@@ -91,7 +91,7 @@ int Edif::Init(mv _far * mV)
 {
 	_tcscpy (LanguageCode, _T ("EN"));
 
-	// Get pathname of MMF2
+	// Get pathname of Fusion
 	LPTSTR mmfname = (LPTSTR)calloc(_MAX_PATH, sizeof(TCHAR));
 	if ( mmfname != NULL )
 	{
@@ -121,10 +121,9 @@ int Edif::Init(mv _far * mV)
 	}
 
 	// Get JSON file
-	char * JSON;
-	size_t JSON_Size;
+	std::vector<char> JSON;
 
-	int result = Edif::GetDependency (JSON, JSON_Size, _T("json"), IDR_EDIF_JSON);
+	int result = Edif::GetDependency (JSON, _T("json"), IDR_EDIF_JSON);
 	
 	if (result == Edif::DependencyNotFound)
 	{
@@ -143,20 +142,14 @@ int Edif::Init(mv _far * mV)
 
 	Edif::ExternalJSON = (result == Edif::DependencyWasFile);
 
-	char * copy = (char *) malloc (JSON_Size + 1);
-	memcpy (copy, JSON, JSON_Size);
-	copy [JSON_Size] = 0;
-	if ( result != Edif::DependencyWasResource )
-		free(JSON);
-
-	char json_error [256];
+	char json_error [json_error_max+1];
 	
 	json_settings settings;
 	memset (&settings, 0, sizeof (settings));
 
 	settings.settings |= json_enable_comments;
 
-	json_value * json = json_parse_ex (&settings, copy, JSON_Size, json_error);
+	json_value * json = json_parse_ex (&settings, JSON.data(), JSON.size(), json_error);
 
 	if (!json)
 	{
@@ -177,14 +170,13 @@ Edif::SDK::SDK(mv * mV, json_value &_json) : json (_json)
 	Icon = new cSurface;
 	if(mV->mvImgFilterMgr)
 	{
-		char * IconData;
-		size_t IconSize;
+		std::vector<char> IconData;
 
-		int result = Edif::GetDependency (IconData, IconSize, _T("png"), IDR_EDIF_ICON);
+		int result = Edif::GetDependency (IconData, _T("png"), IDR_EDIF_ICON);
 		if (result != Edif::DependencyNotFound)
 		{
 			CInputMemFile * File = CInputMemFile::NewInstance ();
-			File->Create ((LPBYTE)IconData, IconSize);
+			File->Create ((LPBYTE)IconData.data(), IconData.size());
 
 			DWORD PNG = FILTERID_PNG;
 			ImportImageFromInputFile(mV->mvImgFilterMgr, File, Icon, &PNG, 0);
@@ -193,8 +185,6 @@ Edif::SDK::SDK(mv * mV, json_value &_json) : json (_json)
 
 			if(!Icon->HasAlpha())
 				Icon->SetTransparentColor(RGB(255, 0, 255));
-			if ( result != Edif::DependencyWasResource )
-				free(IconData);
 		}
 	}
 #endif // RUN_ONLY
@@ -502,7 +492,7 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
 		case 14: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
 		case 15: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
 		case 16: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
-		//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+		//Since Fusion doesn't fully support >16 parameters, they aren't supported here either
 	}
 #endif
 
@@ -725,7 +715,7 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 			case 14: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
 			case 15: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
 			case 16: Result = CallExtMFP<float>(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
-			//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+			//Since Fusion doesn't fully support >16 parameters, they aren't supported here either
 		}
 	}
 	else
@@ -749,7 +739,7 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 			case 14: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13]);
 			case 15: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14]);
 			case 16: Result = CallExtMFP(*(rdPtr->pExtension), Function, P[0], P[1], P[2], P[3], P[4], P[5], P[6], P[7], P[8], P[9], P[10], P[11], P[12], P[13], P[14], P[15]);
-			//Since MMF2 doesn't fully support >16 parameters, they aren't supported here either
+			//Since Fusion doesn't fully support >16 parameters, they aren't supported here either
 		}
 	}
 #endif
@@ -772,46 +762,49 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
 	return Result;
 }
 
-int Edif::GetDependency (char *& Buffer, size_t &Size, const TCHAR * FileExtension, int Resource)
+int Edif::GetDependency (std::vector<char> &Buffer, const TCHAR * FileExtension, int Resource)
 {
 	TCHAR Filename [MAX_PATH];
 	GetSiblingPath (Filename, FileExtension);
 
-	Buffer = NULL;
+	Buffer.clear();
 	if (*Filename)
 	{
 		FILE * File = NULL;
 		int error = _tfopen_s(&File, Filename, _T("rb"));
 
-		if (!File)
-			return DependencyNotFound;
+		if(File)
+		{
+			fseek(File, 0, SEEK_END);
+			Buffer.resize(ftell(File));
+			fseek(File, 0, SEEK_SET);
 
-		fseek (File, 0, SEEK_END);
-		Size = ftell (File);
-		fseek (File, 0, SEEK_SET);
+			fread(Buffer.data(), 1, Buffer.size(), File);
 
-		Buffer = (char *) malloc (Size + 1);
-		Buffer [Size] = 0;
+			fclose(File);
 
-		fread (Buffer, 1, Size, File);
-		
-		fclose (File);
-
-		return DependencyWasFile;
+			return DependencyWasFile;
+		}
 	}
 
-	if (!Resource)
-		return DependencyNotFound;
+	if(Resource)
+	{
+		if(HRSRC res_r = FindResource(hInstLib, MAKEINTRESOURCE(Resource), _T("EDIF")))
+		{
+			if(HGLOBAL res_g = LoadResource(hInstLib, res_r))
+			{
+				if(LPVOID res_p = LockResource(res_g))
+				{
+					Buffer.resize(SizeofResource(hInstLib, res_r));
+					memcpy(Buffer.data(), res_p, Buffer.size());
 
-	HRSRC res = FindResource (hInstLib, MAKEINTRESOURCE (Resource), _T("EDIF"));
+					return DependencyWasResource;
+				}
+			}
+		}
+	}
 
-	if (!res)
-		return DependencyNotFound;
-
-	Size = SizeofResource (hInstLib, res);
-	Buffer = (char *) LockResource (LoadResource (hInstLib, res));
-
-	return DependencyWasResource;
+	return DependencyNotFound;
 }
 
 static void GetSiblingPath (TCHAR * Buffer, const TCHAR * FileExtension)

@@ -25,7 +25,8 @@
 	"ConditionMenu":
 	[
 		"Separator",
-		[0, "Are two numbers equal?"]
+		[0, "Are two numbers equal?"],
+		"Separator"
 	],
 	"ExpressionMenu":
 	[

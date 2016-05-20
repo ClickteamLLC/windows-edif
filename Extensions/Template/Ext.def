@@ -17,24 +17,24 @@ EXPORTS
 	RemoveObject @9
 	MakeIconEx   @11
 
-	CreateObject         @14
-	GetHelpFileName      @16
-	EditObject           @18
-	GetObjectRect        @19
-	EditorDisplay        @20
-	IsTransparent        @21
-	PrepareToWriteObject @22
-	UpdateFileNames      @23
-;	EnumElts             @24
-	Initialize           @25
-	Free                 @26
-;	ExportTexts          @27
-;	ImportTexts          @28
-;	GetSubType           @29
-	UsesFile             @30
-	CreateFromFile       @31
-	DuplicateObject      @32
-	GetObjInfos          @36
+	CreateObject                @14
+	GetHelpFileName             @16
+	EditObject                  @18
+	GetObjectRect               @19
+	EditorDisplay               @20
+	IsTransparent               @21
+	PrepareToWriteObject        @22
+	UpdateFileNames             @23
+;	EnumElts                    @24
+	Initialize=InitExtension    @25
+	Free=FreeExtension          @26
+;	ExportTexts                 @27
+;	ImportTexts                 @28
+;	GetSubType                  @29
+	UsesFile                    @30
+	CreateFromFile              @31
+	DuplicateObject=CloneObject @32
+	GetObjInfos                 @36
 
 	GetTextCaps      @37
 	GetTextAlignment @38

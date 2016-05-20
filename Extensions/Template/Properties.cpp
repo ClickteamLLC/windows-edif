@@ -157,7 +157,7 @@ void *MMF2Func GetPropValue(mv *mV, SerializedED *SED, UINT PropID)
 /* SetPropValue
  * The user has just finished entering their
  * 500 page essay into your MyString field.
- * MMF2 isn't so kind as to save that for them,
+ * Fusion isn't so kind as to save that for them,
  * so it entrusts it with you. Store it!
  */
 void MMF2Func SetPropValue(mv *mV, SerializedED *SED, UINT PropID, CPropValue *PropVal)
@@ -191,7 +191,7 @@ void MMF2Func SetPropValue(mv *mV, SerializedED *SED, UINT PropID, CPropValue *P
  * There are checkbox properties, and
  * there are properties that have their
  * own checkbox as an option. This is
- * where you tell MMF2 whether those
+ * where you tell Fusion whether those
  * boxes are ticked or not.
  */
 BOOL MMF2Func GetPropCheck(mv *mV, SerializedED *SED, UINT PropID)
@@ -227,7 +227,8 @@ void MMF2Func SetPropCheck(mv *mV, SerializedED *SED, UINT PropID, BOOL Ticked)
 	//{
 	//case Prop::MyCheckBoxPropertyOrPropertyThatHasTheCheckboxOptionSet:
 	//	{
-	//		ed.WhetherOrNotThatPropertyOfMineIsTicked = Ticked != FALSE ? true : false;
+	//		ed.WhetherOrNotThatPropertyOfMineIsTicked = (Ticked != FALSE ? true : false);
+	//		break;
 	//	}
 	//}
 	//since you changed ed:
@@ -277,7 +278,7 @@ BOOL MMF2Func IsPropEnabled(mv *mV, SerializedED *SED, UINT PropID)
 	{
 	case Prop::Version:
 		{
-			return FALSE; //Makes the version proeprty greyed out
+			return FALSE; //Makes the version property greyed out
 		}
 	//case Prop::MyString:	//intentional\\
 	//case Prop::MyInt:		//fallthrough\\

@@ -14,7 +14,7 @@ LPCTSTR * WINAPI DLLExport GetDependencies()
 
 		if (Edif::ExternalJSON)
 		{
-			TCHAR * JSONFilename = (TCHAR *)malloc(MAX_PATH * sizeof(TCHAR));
+			TCHAR JSONFilename [MAX_PATH * sizeof(TCHAR)];
 
 			GetModuleFileName (hInstLib, JSONFilename, MAX_PATH);
 

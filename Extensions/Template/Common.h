@@ -6,7 +6,7 @@
  * everywhere else. You shouldn't need to
  * change anything in this file except
  * to include headers that you want and
- * to change the edition of MMF2 you want
+ * to change the edition of Fusion you want
  * to support.
  */
 
@@ -17,10 +17,10 @@
 	#define MMFEXT	//        MMF2.0, CTF2.5, MMF2.0 Dev, CTF2.5 Dev
 //	#define PROEXT	//                        MMF2.0 Dev, CTF2.5 Dev
 
-#define EDIF_PLAIN_EDITDATA
 #include "Edif.h"
 #include "Resource.h"
 
+#include <cstdint>
 //#include <someheader>
 //#include "YourHeader.hpp"
 
@@ -33,29 +33,5 @@
  */
 typedef std::basic_string<TCHAR> stdtstring;
 
-/* EDITDATA
- * This is the editdata. Be careful, any data
- * in here is fully serialized, ready to be
- * written to a file on disk, such as the
- * MFA or EXE file. It will also be this way
- * when you get access to it in other
- * runtimes, so it has to be a flat format.
- */
-struct EDITDATA
-{
-	/* Header
-	 * This required data member contains
-	 * information about your extension for
-	 * MMF2, such as the version number
-	 * from Extension::Version.
-	 */
-	extHeader Header;
-
-	/*
-	Here you put the flattened data members,
-	or you can use a dynamic approach like
-	TemplatePlus uses.
-	*/
-};
-
+#include "EditData.hpp"
 #include "Extension.hpp"
