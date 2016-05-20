@@ -7,24 +7,33 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Template", "Template2015.vc
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Fusion-2.x ANSI+HWA = Debug|Fusion-2.x ANSI+HWA
+		Debug|Fusion 2.0 ANSI = Debug|Fusion 2.0 ANSI
+		Debug|Fusion-2.0 ANSI+HWA = Debug|Fusion-2.0 ANSI+HWA
 		Debug|Fusion-2.x Unicode+HWA = Debug|Fusion-2.x Unicode+HWA
-		Edittime|Fusion-2.x ANSI+HWA = Edittime|Fusion-2.x ANSI+HWA
+		Edittime|Fusion 2.0 ANSI = Edittime|Fusion 2.0 ANSI
+		Edittime|Fusion-2.0 ANSI+HWA = Edittime|Fusion-2.0 ANSI+HWA
 		Edittime|Fusion-2.x Unicode+HWA = Edittime|Fusion-2.x Unicode+HWA
-		Runtime|Fusion-2.x ANSI+HWA = Runtime|Fusion-2.x ANSI+HWA
+		Runtime|Fusion 2.0 ANSI = Runtime|Fusion 2.0 ANSI
+		Runtime|Fusion-2.0 ANSI+HWA = Runtime|Fusion-2.0 ANSI+HWA
 		Runtime|Fusion-2.x Unicode+HWA = Runtime|Fusion-2.x Unicode+HWA
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.x ANSI+HWA.ActiveCfg = Debug ANSI+HWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.x ANSI+HWA.Build.0 = Debug ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion 2.0 ANSI.ActiveCfg = Debug ANSI|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion 2.0 ANSI.Build.0 = Debug ANSI|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.0 ANSI+HWA.ActiveCfg = Debug ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.0 ANSI+HWA.Build.0 = Debug ANSI+HWA|Win32
 		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.x Unicode+HWA.ActiveCfg = Debug Unicode+HWA|Win32
 		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Debug|Fusion-2.x Unicode+HWA.Build.0 = Debug Unicode+HWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.x ANSI+HWA.ActiveCfg = Edittime ANSI+HWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.x ANSI+HWA.Build.0 = Edittime ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion 2.0 ANSI.ActiveCfg = Edittime ANSI|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion 2.0 ANSI.Build.0 = Edittime ANSI|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.0 ANSI+HWA.ActiveCfg = Edittime ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.0 ANSI+HWA.Build.0 = Edittime ANSI+HWA|Win32
 		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.x Unicode+HWA.ActiveCfg = Edittime Unicode+HWA|Win32
 		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Edittime|Fusion-2.x Unicode+HWA.Build.0 = Edittime Unicode+HWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.x ANSI+HWA.ActiveCfg = Runtime ANSI+HWA|Win32
-		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.x ANSI+HWA.Build.0 = Runtime ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion 2.0 ANSI.ActiveCfg = Runtime ANSI|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion 2.0 ANSI.Build.0 = Runtime ANSI|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.0 ANSI+HWA.ActiveCfg = Runtime ANSI+HWA|Win32
+		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.0 ANSI+HWA.Build.0 = Runtime ANSI+HWA|Win32
 		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.x Unicode+HWA.ActiveCfg = Runtime Unicode+HWA|Win32
 		{87325274-EF61-43D2-85A3-FF7CE13EDD69}.Runtime|Fusion-2.x Unicode+HWA.Build.0 = Runtime Unicode+HWA|Win32
 	EndGlobalSection
