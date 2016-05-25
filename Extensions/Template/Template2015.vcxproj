@@ -1,0 +1,694 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug ANSI+HWA|Win32">
+      <Configuration>Debug ANSI+HWA</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug ANSI|Win32">
+      <Configuration>Debug ANSI</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug Unicode+HWA|Win32">
+      <Configuration>Debug Unicode+HWA</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Edittime ANSI+HWA|Win32">
+      <Configuration>Edittime ANSI+HWA</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Edittime ANSI|Win32">
+      <Configuration>Edittime ANSI</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Edittime Unicode+HWA|Win32">
+      <Configuration>Edittime Unicode+HWA</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Runtime ANSI+HWA|Win32">
+      <Configuration>Runtime ANSI+HWA</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Runtime ANSI|Win32">
+      <Configuration>Runtime ANSI</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Runtime Unicode+HWA|Win32">
+      <Configuration>Runtime Unicode+HWA</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{87325274-EF61-43D2-85A3-FF7CE13EDD69}</ProjectGuid>
+    <RootNamespace>Template2015</RootNamespace>
+    <ProjectName>Template</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode+HWA|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug ANSI+HWA|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Edittime Unicode+HWA|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>FastLTCG</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Edittime ANSI+HWA|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>FastLTCG</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Edittime ANSI|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>FastLTCG</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Runtime Unicode+HWA|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>FastLTCG</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Runtime ANSI+HWA|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>FastLTCG</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Runtime ANSI|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>FastLTCG</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug Unicode+HWA|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug ANSI+HWA|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Edittime Unicode+HWA|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Edittime ANSI+HWA|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Edittime ANSI|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Runtime Unicode+HWA|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Runtime ANSI+HWA|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Runtime ANSI|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode+HWA|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <OutDir>$(ProjectDir)\MFX\Extensions\Unicode\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug ANSI+HWA|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <OutDir>$(ProjectDir)\MFX\Extensions\Hwa\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <OutDir>$(ProjectDir)\MFX\Extensions\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Edittime Unicode+HWA|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(ProjectDir)\MFX\Extensions\Unicode\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Edittime ANSI+HWA|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(ProjectDir)\MFX\Extensions\Hwa\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Edittime ANSI|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(ProjectDir)\MFX\Extensions\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Runtime Unicode+HWA|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(ProjectDir)MFX\Data\Runtime\Unicode\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Runtime ANSI+HWA|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(ProjectDir)MFX\Data\Runtime\Hwa\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Runtime ANSI|Win32'">
+    <TargetExt>.mfx</TargetExt>
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(ProjectDir)MFX\Data\Runtime\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode+HWA|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;EDITOR;HWABETA;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnablePREfast>true</EnablePREfast>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(ProjectDir)\MFX\Extensions\Unicode\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.5.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Extensions\Unicode 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug ANSI+HWA|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;EDITOR;HWABETA;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnablePREfast>true</EnablePREfast>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(ProjectDir)\MFX\Extensions\Hwa\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.0hwa.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Extensions\Hwa 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;EDITOR;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnablePREfast>true</EnablePREfast>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(ProjectDir)\MFX\Extensions\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Extensions 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Edittime Unicode+HWA|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>EDITOR;HWABETA;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(ProjectDir)\MFX\Extensions\Unicode\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.5.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Extensions\Unicode 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Edittime ANSI+HWA|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>EDITOR;HWABETA;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(ProjectDir)\MFX\Extensions\Hwa\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.0hwa.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Extensions\Hwa 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Edittime ANSI|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>EDITOR;HWABETA;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(ProjectDir)\MFX\Extensions\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Extensions 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Runtime Unicode+HWA|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_NDEBUG;RUN_ONLY;HWABETA;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(ProjectDir)MFX\Data\Runtime\Unicode\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.5.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Data\Runtime\Unicode 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Runtime ANSI+HWA|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_NDEBUG;RUN_ONLY;HWABETA;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(ProjectDir)MFX\Data\Runtime\Hwa\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.0hwa.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Data\Runtime\Hwa 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Runtime ANSI|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Inc;.\;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_NDEBUG;RUN_ONLY;COXSDK;IN_EXT_VERSION2;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>min;max;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(ProjectDir)MFX\Data\Runtime\$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>..\..\lib\mmfs2.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>./Ext.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>..\AutoInstall.bat "$(TargetPath)" \Data\Runtime 2&gt; nul</Command>
+      <Message>Automatically installs the extension to Fusion once it is built.</Message>
+    </PostBuildEvent>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Inc\BlitMac.h" />
+    <ClInclude Include="..\..\Inc\Ccx.h" />
+    <ClInclude Include="..\..\Inc\Ccxhdr.h" />
+    <ClInclude Include="..\..\Inc\CfcError.h" />
+    <ClInclude Include="..\..\Inc\CfcFile.h" />
+    <ClInclude Include="..\..\Inc\CFCMacro.h" />
+    <ClInclude Include="..\..\Inc\Cncf.h" />
+    <ClInclude Include="..\..\Inc\cncr.h" />
+    <ClInclude Include="..\..\Inc\Cncy.h" />
+    <ClInclude Include="..\..\Inc\Cnpdll.h" />
+    <ClInclude Include="..\..\Inc\colors.h" />
+    <ClInclude Include="..\..\Inc\D3dSurfInfo.h" />
+    <ClInclude Include="..\..\Inc\Edif.h" />
+    <ClInclude Include="..\..\Inc\EDStream.hpp" />
+    <ClInclude Include="..\..\Inc\EVTCCX.H" />
+    <ClInclude Include="..\..\Inc\Fill.h" />
+    <ClInclude Include="..\..\Inc\FilterMgr.h" />
+    <ClInclude Include="..\..\Inc\GlobalPCH.h" />
+    <ClInclude Include="..\..\Inc\ImageFlt.h" />
+    <ClInclude Include="..\..\Inc\ImgFlt.h" />
+    <ClInclude Include="..\..\Inc\ImgFltDefs.h" />
+    <ClInclude Include="..\..\Inc\json.h" />
+    <ClInclude Include="..\..\Inc\Mvt.h" />
+    <ClInclude Include="..\..\Inc\ObjectSelection.h" />
+    <ClInclude Include="..\..\Inc\Palet.h" />
+    <ClInclude Include="..\..\Inc\PaletCpp.h" />
+    <ClInclude Include="..\..\Inc\Patch.h" />
+    <ClInclude Include="..\..\Inc\PictEdDefs.h" />
+    <ClInclude Include="..\..\Inc\Props.h" />
+    <ClInclude Include="..\..\Inc\PTYPE.H" />
+    <ClInclude Include="..\..\Inc\SndDefs.h" />
+    <ClInclude Include="..\..\Inc\SoundConverter.h" />
+    <ClInclude Include="..\..\Inc\SoundError.h" />
+    <ClInclude Include="..\..\Inc\SoundFilter.h" />
+    <ClInclude Include="..\..\Inc\SoundFilterMgr.h" />
+    <ClInclude Include="..\..\Inc\StdDefs.h" />
+    <ClInclude Include="..\..\Inc\Surface.h" />
+    <ClInclude Include="..\..\Inc\SurfaceDefs.h" />
+    <ClInclude Include="..\..\Inc\TigsExt.hpp" />
+    <ClInclude Include="..\..\Inc\WinMacro.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="EditData.hpp" />
+    <ClInclude Include="Extension.hpp" />
+    <ClInclude Include="Resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Lib\Edif.cpp" />
+    <ClCompile Include="..\..\Lib\Edif.Edittime.cpp" />
+    <ClCompile Include="..\..\Lib\Edif.General.cpp" />
+    <ClCompile Include="..\..\Lib\Edif.Runtime.cpp" />
+    <ClCompile Include="..\..\Lib\json.c" />
+    <ClCompile Include="..\..\Lib\ObjectSelection.cpp" />
+    <ClCompile Include="Actions.cpp" />
+    <ClCompile Include="Conditions.cpp" />
+    <ClCompile Include="CustomParams.cpp" />
+    <ClCompile Include="Debugger.cpp" />
+    <ClCompile Include="Edittime.cpp" />
+    <ClCompile Include="Expressions.cpp" />
+    <ClCompile Include="Extension.cpp" />
+    <ClCompile Include="General.cpp" />
+    <ClCompile Include="Properties.cpp" />
+    <ClCompile Include="Runtime.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextProps.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\Lib\mmfs2.5.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ext.def" />
+    <None Include="Ext.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Ext.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon.png" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -128,6 +128,7 @@ typedef	CMvt * LPMVT;
 //
 
 #define RUNMVT_VERSION_1	0x0001
+#define RUNMVT_VERSION_2	0x0002	// GetDir + Debugger functions
 
 /**
  *  Movement Data at runtime.
@@ -149,7 +150,7 @@ public:
     virtual void		Delete(void) { delete this; }
 
 	// Version
-	virtual int			GetVersion() { return RUNMVT_VERSION_1; }
+	virtual int			GetVersion() { return RUNMVT_VERSION_2; }
 
 	virtual BOOL		Move(LPHO pHo) { return FALSE; }
 	virtual void		SetPosition(LPHO pHo, int x, int y) {} 
@@ -174,6 +175,14 @@ public:
 	virtual int			GetAcceleration(LPHO hoPtr) {return 0;}
 	virtual int			GetDeceleration(LPHO hoPtr) {return 0;}
 	virtual int			GetGravity(LPHO hoPtr) {return 0;}
+
+	// Version 2
+	virtual int			GetDir(LPHO hoPtr) {return 0;}
+
+	// Debugger
+	virtual LPWORD		GetDebugTree() { return NULL; }
+	virtual void		GetDebugItem(LPTSTR pBuffer, int id) {}
+	virtual void		EditDebugItem(int id) {}
 
 // End of public interface
 //////////////////////////

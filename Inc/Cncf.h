@@ -791,11 +791,66 @@ typedef	eventInfosOffsets *		LPEVO;
 #define		OBJ_FIRST_C_OBJECT		8
 #define		OBJ_LAST				NB_SYSOBJ
 
+#ifndef COXSDK
 
+// FAST LOOP ACCELERATION
+///////////////////////////////////////////////////////////////
+class CPosStartLoop
+{
+public:
+	CPosStartLoop(LPEVP pEvp, LPTSTR pName)
+	{ 
+		m_pEvp = pEvp;
+		m_name = (LPTSTR)malloc((_tcslen(pName) + 1) * sizeof(TCHAR));
+		_tcscpy(m_name, pName);
+	}
+	~CPosStartLoop()
+	{
+		free(m_name);
+	}
+	LPEVP m_pEvp;
+	LPTSTR m_name;
+};
+class CPosOnLoop
+{
+public:
+	enum
+	{
+		POL_STEP = 4
+	};
+	LPDWORD m_deltas;
+	int m_length;
+	int m_position;
+	LPTSTR m_name;
+	BOOL m_bOR;
 
+	CPosOnLoop(LPTSTR pName)
+	{
+		m_name = pName;
+		m_length = 1;
+		m_deltas = (LPDWORD)malloc( (m_length * 2 + 1 )* sizeof(DWORD));
+		m_position = 0;
+		m_bOR = FALSE;
+	}
+	~CPosOnLoop()
+	{
+		free(m_deltas);
+	}
+	void AddOnLoop(DWORD delta1, BOOL delta2)
+	{
+		if (m_position == m_length)
+		{
+			m_length += POL_STEP;
+			m_deltas = (LPDWORD)realloc(m_deltas, (m_length *2 + 1) * sizeof(DWORD));
+		}
+		m_deltas[m_position * 2] = delta1;
+		m_deltas[m_position * 2 + 1] = delta2;
+		m_position++;
+		m_deltas[m_position * 2] = 0xFFFFFFFF;
+	}
+};
 
-
-
+#endif
 
 
 // ------------------------------------------------------------
@@ -819,6 +874,8 @@ typedef	eventInfosOffsets *		LPEVO;
 #define		OEFLAG_NEVERKILL			0x2000
 #define		OEFLAG_NEVERSLEEP			0x4000
 #define		OEFLAG_MANUALSLEEP			0x8000
+#define		OEFLAG_FAKESPRITE			0x40000
+#define		OEFLAG_FAKECOLLISIONS		0x80000
 #define		OEFLAG_TEXT					0x10000
 #define		OEFLAG_DONTCREATEATSTART	0x20000
 
@@ -861,6 +918,8 @@ typedef	eventInfosOffsets *		LPEVO;
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //#define		OBJ_SYSTEM				-1
 //-1&255=255
+#define CND_ELSEIF			((-27<<8)|255)
+#define CNDL_ELSEIF			((-27<<16)|65535)
 #define CND_CHANCE			((-26<<8)|255)
 #define CND_ORLOGICAL		((-25<<8)|255)
 #define CNDL_ORLOGICAL		((-25<<16)|65535)
@@ -931,6 +990,7 @@ typedef	eventInfosOffsets *		LPEVO;
 #define	ACTL_MENUSHOW		((12<<16)|65535)
 #define	ACT_MENUHIDE		((13<<8)|255)
 #define	ACTL_MENUHIDE		((13<<16)|65535)
+#define	ACTL_STARTLOOP		((14<<16)|65535)
 #define	ACT_STARTLOOP		((14<<8)|255)
 #define	ACT_STOPLOOP		((15<<8)|255)
 #define	ACT_SETLOOPINDEX	((16<<8)|255)
@@ -950,6 +1010,7 @@ typedef	eventInfosOffsets *		LPEVO;
 #define	EXPL_LONG			((0<<16)|65535)
 #define	EXP_RANDOM			((1<<8)|255)
 #define	EXPL_RANDOM			((1<<16)|65535)
+#define EXPNUM_RANDOM		1
 #define	EXP_VARGLO			((2<<8)|255)
 #define	EXPL_VARGLO			((2<<16)|65535)
 #define	EXP_STRING			((3<<8)|255)
@@ -1067,6 +1128,10 @@ typedef	eventInfosOffsets *		LPEVO;
 #define	EXPL_ZERO			((60<<16)|65535)
 #define	EXP_EMPTY			((61<<8)|255)
 #define	EXPL_EMPTY			((61<<16)|65535)
+#define	EXP_DISTANCE		((62<<8)|255)
+#define	EXP_ANGLE			((63<<8)|255)
+#define	EXP_RANGE			((64<<8)|255)
+#define EXP_RANDOMRANGE		((65<<8)|255)
 
 #define	EXP_PARENTH1		((-1<<8)|255)
 #define	EXPL_PARENTH1		((-1<<16)|65535)
@@ -1234,6 +1299,7 @@ typedef	eventInfosOffsets *		LPEVO;
 #define ACT_SETFRAMEEFFECT	((32<<8)|253)
 #define ACT_SETFRAMEEFFECTPARAM	((33<<8)|253)
 #define ACT_SETFRAMEEFFECTPARAMTEXTURE	((34<<8)|253)
+#define	ACTL_SETFRAMEEFFECTPARAMTEXTURE ((34<<16)|65533)
 #define ACT_SETFRAMEALPHACOEF	((35<<8)|253)
 #define ACT_SETFRAMERGBCOEF	((36<<8)|253)
 
@@ -1260,6 +1326,9 @@ typedef	eventInfosOffsets *		LPEVO;
 
 // TIMER Conditions / Actions 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#define	CND_EVERY2       	((-8<<8)|(OBJ_TIMER&255))
+#define CND_TIMEREQUALS		((-7<<8)|(OBJ_TIMER&255))
+#define CND_ONEVENT			((-6<<8)|(OBJ_TIMER&255))
 #define	CND_TIMEOUT       	((-5<<8)|(OBJ_TIMER&255))
 #define	CND_EVERY       	((-4<<8)|(OBJ_TIMER&255))
 #define	CNDL_EVERY       	((-4<<16)|(OBJ_TIMER&0xFFFF))
@@ -1270,11 +1339,16 @@ typedef	eventInfosOffsets *		LPEVO;
 #define	CND_TIMERSUP       	((-1<<8)|(OBJ_TIMER&255))
 #define	CNDL_TIMERSUP      	((-1<<16)|(OBJ_TIMER&0xFFFF))
 #define	ACT_SETTIMER        ((0<<8)|(OBJ_TIMER&255))
+#define	ACT_EVENTAFTER      ((1<<8)|(OBJ_TIMER&255))
+#define	ACT_NEVENTSAFTER	((2<<8)|(OBJ_TIMER&255))
+#define	ACT_SETTIMER        ((0<<8)|(OBJ_TIMER&255))
 #define	EXP_TIMVALUE		((0<<8)|(OBJ_TIMER&255))
 #define	EXP_TIMCENT			((1<<8)|(OBJ_TIMER&255))
 #define	EXP_TIMSECONDS		((2<<8)|(OBJ_TIMER&255))
 #define	EXP_TIMHOURS		((3<<8)|(OBJ_TIMER&255))
 #define	EXP_TIMMINITS		((4<<8)|(OBJ_TIMER&255))
+#define	EXP_EVENTAFTER		((5<<8)|(OBJ_TIMER&255))
+#define NUM_ONEVENT			-6
 #define	NUM_EVERY       	-4
 #define	NUM_TIMER       	-3
 #define	NUM_TIMERINF       	-2
@@ -1363,6 +1437,8 @@ typedef	eventInfosOffsets *		LPEVO;
 #define	CND_NUMOFALLOBJECT_OLD  ((-3<<8)|(OBJ_CREATE&255))
 #define	CND_NUMOFALLZONE_OLD    ((-2<<8)|(OBJ_CREATE&255))
 #define	CND_NOMOREALLZONE_OLD   ((-1<<8)|(OBJ_CREATE&255))
+#define	ACT_CREATEBYNAME		((1<<8)|(OBJ_CREATE&255))
+#define	ACTL_CREATEBYNAME		((1<<16)|(OBJ_CREATE&0xFFFF))
 #define	ACT_CREATE				((0<<8)|(OBJ_CREATE&255))
 #define	EXP_CRENUMBERALL		((0<<8)|(OBJ_CREATE&255))
 #define	NUM_END				-2
@@ -1546,12 +1622,13 @@ typedef struct 	tagMV {
 } Movement;
 typedef	Movement	*	LPMOVEMENT;
 
-#ifndef IN_KPX
            
 // COMMON CONDITIONS FOR NORMAL OBJECTS
 //////////////////////////////////////////
 #define	EVENTS_EXTBASE				80
 
+#define	CND_EXTONLOOP	     		(-41<<8)
+#define	CNDL_EXTONLOOP	     		(-41<<16)
 #define	CND_EXTISSTRIKEOUT			(-40<<8)
 #define CND_EXTISUNDERLINE			(-39<<8)
 #define CND_EXTISITALIC				(-38<<8)
@@ -1574,6 +1651,7 @@ typedef	Movement	*	LPMOVEMENT;
 #define	CND_EXTFLAGSET				(-25<<8)
 #define	CND_EXTFLAGRESET			(-24<<8)
 #define	CND_EXTISCOLBACK	        (-23<<8)
+#define	CNDL_EXTISCOLBACK	        (-23<<16)
 #define	CND_EXTNEARBORDERS	        (-22<<8)
 #define	CND_EXTENDPATH	  	        (-21<<8)
 #define	CNDL_EXTENDPATH	  	        (-21<<16)
@@ -1686,6 +1764,21 @@ typedef	Movement	*	LPMOVEMENT;
 #define ACT_EXTSETALPHACOEF			(65<<8)
 #define ACT_EXTSETRGBCOEF			(66<<8)
 #define ACT_EXTSETEFFECTPARAMTEXTURE (67<<8)
+#define	ACTL_EXTSETEFFECTPARAMTEXTURE (67<<16)
+#define ACT_EXTSETFRICTION			(68<<8)
+#define ACT_EXTSETELASTICITY		(69<<8)
+#define ACT_EXTAPPLYIMPULSE			(70<<8)
+#define ACT_EXTAPPLYANGULARIMPULSE	(71<<8)
+#define ACT_EXTAPPLYFORCE			(72<<8)
+#define ACT_EXTAPPLYTORQUE			(73<<8)
+#define ACT_EXTSETLINEARVELOCITY	(74<<8)
+#define ACT_EXTSETANGULARVELOCITY	(75<<8)
+#define ACT_EXTFOREACH				(76<<8)
+#define ACT_EXTFOREACH2				(77<<8)
+#define ACT_EXTSTOPFORCE			(78<<8)
+#define ACT_EXTSTOPTORQUE			(79<<8)
+#define ACT_EXTSETDENSITY			(80<<8)			// NOT USED IN PHYSCS ACTI0N MENU
+#define ACT_EXTSETGRAVITYSCALE		(81<<8)			// NOT USED IN PHYSCS ACTI0N MENU
 
 #define	EXP_EXTYSPR        		    ( 1<<8)
 #define	EXP_EXTISPR        		    ( 2<<8)
@@ -1720,6 +1813,18 @@ typedef	Movement	*	LPMOVEMENT;
 #define EXP_EXTEFFECTPARAM			(29<<8)
 #define EXP_EXTVARBYINDEX			(30<<8)
 #define EXP_EXTVARSTRINGBYINDEX		(31<<8)
+#define EXP_EXTDISTANCE				(32<<8)
+#define EXP_EXTANGLE				(33<<8)
+#define EXP_EXTLOOPINDEX			(34<<8)
+#define EXP_EXTGETFRICTION			(35<<8)
+#define EXP_EXTGETRESTITUTION		(36<<8)
+#define EXP_EXTGETDENSITY			(37<<8)
+#define EXP_EXTGETVELOCITY			(38<<8)
+#define EXP_EXTGETANGLE				(39<<8)
+#define EXP_EXTWIDTH				(40<<8)
+#define EXP_EXTHEIGHT				(41<<8)
+
+#ifndef IN_KPX
 
 // TEXT Conditions / Actions 
 ////////////////////////////////////////////
@@ -1875,6 +1980,8 @@ typedef	Movement	*	LPMOVEMENT;
 #define ACT_CCASETGLOBALSTRING			(((EVENTS_EXTBASE+10)<<8)|(OBJ_CCA&0x00FF))
 #define ACT_CCAPAUSEAPP					(((EVENTS_EXTBASE+11)<<8)|(OBJ_CCA&0x00FF))
 #define ACT_CCARESUMEAPP				(((EVENTS_EXTBASE+12)<<8)|(OBJ_CCA&0x00FF))
+#define ACT_CCASETWIDTH					(((EVENTS_EXTBASE+13)<<8)|(OBJ_CCA&0x00FF))
+#define ACT_CCASETHEIGHT				(((EVENTS_EXTBASE+14)<<8)|(OBJ_CCA&0x00FF))
 #define EXP_CCAGETFRAMENUMBER			(((EVENTS_EXTBASE+0)<<8)|(OBJ_CCA&0x00FF))
 #define EXP_CCAGETGLOBALVALUE			(((EVENTS_EXTBASE+1)<<8)|(OBJ_CCA&0x00FF))
 #define EXP_CCAGETGLOBALSTRING			(((EVENTS_EXTBASE+2)<<8)|(OBJ_CCA&0x00FF))
@@ -2373,6 +2480,18 @@ typedef		prgParam2 *			LPPRG2;
 #define		PS_EFFECT				2
 // B name of the effect
 
+// -------------------------------- Character encoding for reading text files
+#define		PARAM_CHAR_ENCODING_INPUT		65
+#define		PS_CHAR_ENCODING_INPUT			6
+typedef struct {
+	WORD	wCharEncoding;
+	DWORD	dwUnusedParam;
+} charEncodingParam;
+
+// -------------------------------- Character encoding for saving text files
+#define		PARAM_CHAR_ENCODING_OUTPUT		66
+#define		PS_CHAR_ENCODING_OUTPUT			6
+
 
 // STRUCTURE FOR FAST LOOPS
 ///////////////////////////////////////////////////////////////////////
@@ -2588,6 +2707,21 @@ typedef struct
 #define EditDebugInfo EditDebugInfoA
 #endif
 
+typedef struct tagTimerEvent
+{
+	void* next;
+	int type;
+	LPTSTR name;
+	UINT timer;
+	UINT timerNext;
+	UINT timerPosition;
+	int loops;
+	int index;
+}TimerEvent;
+typedef	TimerEvent* LPTIMEREVENT;
+#define TIMEREVENTTYPE_ONESHOT 0
+#define TIMEREVENTTYPE_REPEAT 1
+
 ///////////////////////////////////////////////////////////////////////
 //
 // RUNTIME BUFFER
@@ -2746,6 +2880,9 @@ typedef struct tagKPXLIB {
 #define RFUNCTION_CALLMOVEMENT				22
 #define RFUNCTION_SETPOSITION				23
 #define RFUNCTION_GETCALLTABLES				24
+#define RFUNCTION_GENERATECOMMONEVENT		25
+#define RFUNCTION_RANDOM					26
+#define RFUNCTION_ADDCURRENTOBJECT			27
 
 #define CNC_GetParameter(rdPtr)							callRunTimeFunction(rdPtr, RFUNCTION_GETPARAM, 0xFFFFFFFF, 0)
 #define CNC_GetIntParameter(rdPtr)						callRunTimeFunction(rdPtr, RFUNCTION_GETPARAM, 0, 0)
@@ -2828,8 +2965,15 @@ typedef struct tagRH4 {
 	double		rh4MvtTimerCoef;
 	CIPhoneJoystick* rh4IPhoneJoystick;
 	CIPhoneAd*	rh4IPhoneAd;
-	char		rh4QuitString[32];						// FREE!!!! GREAT!
-
+	void*		rh4Box2DBase;
+	short		rh4Box2DSearched;
+	void*		rh4ForEachs;
+	void*		rh4CurrentForEach;
+	void*		rh4CurrentForEach2;
+	void*		rh4TimerEvents;
+	void*		rh4PosOnLoop;
+	short		rh4ComplexOnLoop;
+	char		rh4QuitString[4];						// FREE!!!! GREAT!
 
 	DWORD		rh4PickFlags0;							// 00-31
 	DWORD		rh4PickFlags1;							// 31-63
@@ -3125,7 +3269,6 @@ typedef	headerObject*	LPHO;
 #define	HOF_FLOAT			0x4000
 #define	HOF_STRING			0x8000
 
-
 // --------------------------------------
 // Object's movement structure
 // --------------------------------------
@@ -3231,6 +3374,8 @@ typedef struct tagRM {
 		{
 		int	 	MBul_Wait;
 		LPHO	MBul_ShootObject;
+		void*	MBul_Body;
+		void*	MBul_MBase;
 		};
 	struct
 		{
@@ -3350,11 +3495,7 @@ typedef rVal *	LPRVAL;
 // Objects animation and movement structure
 // -----------------------------------------------
 #if !defined(ANGLETYPE)
-#if defined(HWABETA)
 #define ANGLETYPE float
-#else
-#define ANGLETYPE int
-#endif
 #endif
 typedef void (* RCROUTINE)(LPHO);
 typedef struct tagRCOM {
@@ -3882,6 +4023,7 @@ typedef struct tagCallTables
 	#undef pev
 	typedef struct pev {
 	#endif
+		pev*	pevNext;
 		long	pevCode;
 		PEV_ROUTINE	pevRoutine;
 		long	pevParam;
@@ -3902,6 +4044,22 @@ typedef struct tagCallTables
 		WORD		qList;
 	} qualifierLoad;
 	typedef qualifierLoad *	LPQLOAD;
+
+#define STEPFOREACH 10
+typedef struct tagForEach
+{
+	void* next;
+	int length;
+	OINUM oi;
+	int index;
+	LPTSTR name;
+	int number;
+	BOOL stop;
+	BOOL toDelete;
+	LPHO objects[STEPFOREACH];
+}ForEach;
+typedef	ForEach*	LPFOREACH;
+
 
 #endif	// RUN_TIME
 

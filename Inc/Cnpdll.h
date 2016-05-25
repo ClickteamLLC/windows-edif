@@ -66,7 +66,7 @@ struct  sMask;
 
 
 // Current build
-#define	MMFS2_CURRENT_BUILD		250
+#define	MMFS2_CURRENT_BUILD		280
 #define MMFS2_BUILD_MASK			0x0000FFFF
 #define MMFS2_BUILD_FLAG_UNICODE	0x00010000		// Unicode support
 #define MMFS2_BUILD_FLAG_HWA		0x00020000		// HWA support
@@ -76,6 +76,9 @@ struct  sMask;
 #define	WORDSTR(c1,c2)			((WORD)((WORD)c2<<8|(WORD)c1))
 #define	DWORDSTR(c1,c2,c3,c4)	((DWORD)((DWORD)c4<<24|(DWORD)c3<<16|(DWORD)c2<<8|(DWORD)c1))
 #endif
+
+#define	ANGLEFLOAT
+#define ANGLETYPE	float	// int
 
 	// Definitions differentes si WIN32
 
@@ -194,8 +197,8 @@ enum {
 #define	MAX_MODE	SM_32
 
 #define	SM_D3D		0x10
-#define	SM_DDRAW	0x20		// Flag "Direct Draw"
-#define	SM_VRAM		0x40		// Flag "Video RAM"
+//#define	SM_DDRAW	0x20		// Flag "Direct Draw"
+//#define	SM_VRAM		0x40		// Flag "Video RAM"
 #define	SM_D3D8		0x80
 #define	SM_NOTDIB	(SM_DDRAW | SM_VRAM)
 #define	SM_MASK		0x0F		// Mask mode
@@ -218,8 +221,10 @@ enum {
 
 // Hauteur des plateformes
 #define	HEIGHT_PLATFORM		6
-#define GCMF_OBSTACLE		0x0000
-#define GCMF_PLATFORM		0x0001
+#define GCMF_OBSTACLE			0x0000
+#define GCMF_PLATFORM			0x0001
+#define GCMF_TYPEMASK			0x0FFF
+#define GCMF_NOROTATEORSTRETCH	0x1000
 
 // Flags pour GetImageSize
 #define GIS_WITHMASK    0x8000
@@ -431,7 +436,7 @@ typedef Box *fpBox;
 typedef struct tagSMI {
 	UINT	totalBitCount;		// I.e. 16
 	UINT	usedBitCount;		// I.e. 15
-	UINT	mainMode;			// SM_4, SM_8, SM_etc... avec flags SM_DDRAW
+	UINT	mainMode;			// SM_4, SM_8, SM_etc... avec flags SM_D3D, etc
 	UINT	subMode;			// sous-mode
 	DWORD	rMask;
 	DWORD	gMask;
@@ -495,6 +500,7 @@ typedef struct tagSMI {
 #define SF_OWNERCOLMASK		0x00800000		// Owner-draw sprite supports collision masks
 
 #define SF_UPDATECOLLIST	0x10000000
+#define SF_HWA				0x20000000
 
 // SpriteCol_TestPoint / SpriteCol_TestSprite
 #define SCF_OBSTACLE		0x01
@@ -502,6 +508,7 @@ typedef struct tagSMI {
 #define SCF_EVENNOCOL		0x04			// Flag: returns even sprites that haven't the SF_RAMBO flag
 #define SCF_BACKGROUND		0x08			// Flag: if 0, returns active sprites, otherwise returns background sprites
 #define	SCF_TESTFEET		0x10			// Test only the bottom of the sprite
+#define SCF_TESTLIST		0x20
 
 #define LAYER_ALL			(-1)
 
@@ -560,17 +567,28 @@ public:
 typedef struct  Spr
 {
 #endif
-#ifndef SPRLIST
-	Obj			sprObj;
-#endif
+	#ifndef SPRLIST
+		Obj		sprObj;
+	#endif
 	DWORD		sprFlags;			// Flags
 	WORD		sprLayer;			// Sprite plane (layer)
-	short		sprAngle;			// Angle
+	WORD		sprUnused;			// Angle (Int format) ..
 	int			sprZOrder;			// Z-order value
 
 	// Coordinates
 	int			sprX;
 	int			sprY;
+
+	// Hot spot and dimensions
+	int			sprHotSpotX;		// TODO: mettre en commentaires ceux qui ne sont pas utilisés
+	int			sprHotSpotY;
+	int			sprWidth;
+	int			sprHeight;
+
+	// Scale & Angle
+	float		sprScaleX;
+	float		sprScaleY;
+	ANGLETYPE	sprAngle;
 
 	// Bounding box
 	int			sprX1;
@@ -581,6 +599,17 @@ typedef struct  Spr
 	// New coordinates
 	int			sprXnew;
 	int			sprYnew;
+
+	// New hot spot and dimensions
+	int			sprHotSpotXnew;
+	int			sprHotSpotYnew;
+	int			sprWidthNew;
+	int			sprHeightNew;
+
+	// New scale & angle
+	float		sprScaleXnew;
+	float		sprScaleYnew;
+	ANGLETYPE	sprAngleNew;
 
 	// New bounding box
 	int			sprX1new;
@@ -595,14 +624,14 @@ typedef struct  Spr
 	int			sprY2z;
 
 	// Scale & Angle
-	float		sprScaleX;
-	float		sprScaleY;
+//	float		sprScaleX;
+//	float		sprScaleY;
 
 	// Temporary values for collisions
-	WORD		sprTempImg;			// TODO: use DWORD later?
-	short		sprTempAngle;
-	float		sprTempScaleX;
-	float		sprTempScaleY;
+//	WORD		sprTempImg;			// TODO: use DWORD later?
+//	short		sprTempAngleInt;
+//	float		sprTempScaleX;
+//	float		sprTempScaleY;
 
 	// Image or owner-draw routine
 	union	{
@@ -624,10 +653,10 @@ typedef struct  Spr
 	cSurfaceImplementation*	sprBackSurf;	// Background surface, if no general background surface
 
 	cSurfaceImplementation*	sprSf;			// Surface (if stretched or rotated)
-	sMask*					sprColMask;		// Collision mask (if stretched or rotated)
+//	sMask*					sprColMask;		// Collision mask (if stretched or rotated)
 
-	cSurfaceImplementation*	sprTempSf;		// Temp surface (if stretched or rotated)
-	sMask*					sprTempColMask;	// Temp collision mask (if stretched or rotated)
+//	cSurfaceImplementation*	sprTempSf;		// Temp surface (if stretched or rotated)
+//	sMask*					sprTempColMask;	// Temp collision mask (if stretched or rotated)
 
 	// User data
 	LPARAM		sprExtraInfo;
@@ -648,6 +677,7 @@ typedef struct  Spr
 #endif
 typedef Spr *npSpr;
 typedef Spr *fpSpr;
+
 
 	// Structure "taille d'une appli"
 typedef	struct	tagAppSize {
@@ -910,18 +940,19 @@ DLLExport32 long		WINAPI DelImage			(npAppli, DWORD);
 DLLExport32 sMask*		WINAPI AddMask			(npAppli ptApp, DWORD iNum, UINT nFlags);
 DLLExport32 long		WINAPI DelMask			(npAppli, DWORD);
 DLLExport32 int			WINAPI GetImageInfos	(npAppli, DWORD, fpImg);
-DLLExport32 int			WINAPI GetImageInfoEx	(npAppli pApp, DWORD nImage, int nAngle, float fScaleX, float fScaleY, fpImg pIfo);
+DLLExport32 int			WINAPI GetImageInfoEx	(npAppli pApp, DWORD nImage, ANGLETYPE nAngle, float fScaleX, float fScaleY, fpImg pIfo);
 DLLExport32 DWORD		WINAPI GetImageSize		(WORD, WORD, WORD);
 DLLExport32 sMask*		WINAPI GetImageMask		(npAppli ptApp, DWORD dwImage, UINT nFlags);
 DLLExport32 sMask*		WINAPI CompleteSpriteColMask (npWin ptrWin, npSpr ptSpr, DWORD dwPSCFlags,	UINT nWidth, UINT nHeight);
-DLLExport32 DWORD		WINAPI PrepareSpriteColMask (npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, int newAngle, float newScaleX, float newScaleY, RECT* prc, sMask** ppMask);
+DLLExport32 DWORD		WINAPI PrepareSpriteColMask (npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, ANGLETYPE newAngle, float newScaleX, float newScaleY, RECT* prc, sMask** ppMask);
+DLLExport32 void		WINAPI DelImageTexture	(npAppli ptApp, DWORD iNum);
 
 	// Sprites
 	// -------
 DLLExport32 npSpr	WINAPI AddSprite		(npWin ptrWin, int xSpr, int ySpr, DWORD iSpr, WORD wLayer, int nZOrder, DWORD backSpr, DWORD sFlags, LPARAM extraInfo);
 DLLExport32 npSpr	WINAPI AddOwnerDrawSprite (npWin ptrWin, int x1, int y1, int x2, int y2, WORD wLayer, int nZOrder, DWORD backSpr, DWORD sFlags, LPARAM extraInfo, LPARAM sprProc);
 DLLExport32 npSpr	WINAPI ModifSprite		(npWin ptrWin, npSpr ptSpr, int xSpr, int ySpr, DWORD iSpr);
-DLLExport32 npSpr	WINAPI ModifSpriteEx	(npWin ptrWin, npSpr ptSpr, int xSpr, int ySpr, DWORD iSpr, float fScaleX, float fScaleY, BOOL bResample, int nAngle, BOOL bAntiA);
+DLLExport32 npSpr	WINAPI ModifSpriteEx	(npWin ptrWin, npSpr ptSpr, int xSpr, int ySpr, DWORD iSpr, float fScaleX, float fScaleY, BOOL bResample, ANGLETYPE nAngle, BOOL bAntiA);
 DLLExport32 npSpr	WINAPI ModifSpriteEffect (npWin ptrWin, npSpr ptSpr, DWORD effect, LPARAM effectParam);
 DLLExport32 npSpr	WINAPI ModifOwnerDrawSprite	(npWin ptrWin, npSpr ptSprModif, int x1, int y1, int x2, int y2);
 DLLExport32 void	WINAPI ShowSprite		(npWin, npSpr, int);
@@ -939,9 +970,10 @@ DLLExport32 void	WINAPI ScreenUpdate		(npWin);
 
 DLLExport32 void	WINAPI GetSpriteScale	(npWin ptrWin, npSpr ptSpr, float* pScaleX, float* pScaleY, BOOL* pResample);
 DLLExport32 void	WINAPI SetSpriteScale	(npWin ptrWin, npSpr ptSpr, float fScaleX, float fScaleY, BOOL bResample);
-DLLExport32 int		WINAPI GetSpriteAngle	(npWin ptrWin, npSpr ptSpr, BOOL* pAntiA);
-DLLExport32 void	WINAPI SetSpriteAngle	(npWin ptrWin, npSpr ptSpr, int nAngle, BOOL bAntiA);
+DLLExport32 ANGLETYPE		WINAPI GetSpriteAngle	(npWin ptrWin, npSpr ptSpr, BOOL* pAntiA);
+DLLExport32 void	WINAPI SetSpriteAngle	(npWin ptrWin, npSpr ptSpr, ANGLETYPE nAngle, BOOL bAntiA);
 DLLExport32 void	WINAPI GetSpriteRect	(npWin ptrWin, npSpr ptSpr, RECT* prc);
+DLLExport32 void	WINAPI GetSpriteRectNew	(npWin ptrWin, npSpr ptSpr, RECT* prc);
 DLLExport32 void	WINAPI MoveSpriteToFront(npWin ptrWin, npSpr pSpr);
 DLLExport32 void	WINAPI MoveSpriteToBack	(npWin ptrWin, npSpr pSpr);
 DLLExport32 void	WINAPI MoveSpriteBefore	(npWin ptrWin, npSpr pSprToMove, npSpr pSprDest);
@@ -974,8 +1006,8 @@ DLLExport32 void	WINAPI	WinEnableUpdate	(npWin, int);
 DLLExport32 DWORD	WINAPI SetSpriteColFlag			(npWin, npSpr, DWORD);				// UINT = SF_xxxx
 DLLExport32 npSpr   WINAPI SpriteCol_TestPoint		(npWin, npSpr, int, int, int, DWORD);		// Entre 1 pixel et les sprites sauf un
 DLLExport32 npSpr   WINAPI SpriteCol_TestRect		(npWin, npSpr, int, int, int, int, int, DWORD);		// Entre 1 rectangle et les sprites sauf un
-DLLExport32 npSpr	WINAPI SpriteCol_TestSprite		(npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, int newAngle, float newScaleX, float newScaleY, int subHt, DWORD dwFlags);
-DLLExport32 UINT	WINAPI SpriteCol_TestSprite_All	(npWin, npSpr, LPVOID*, DWORD, int, int, int, float, float, DWORD);
+DLLExport32 npSpr	WINAPI SpriteCol_TestSprite		(npWin ptrWin, npSpr ptSpr, DWORD newImg, int newX, int newY, ANGLETYPE newAngle, float newScaleX, float newScaleY, int subHt, DWORD dwFlags);
+DLLExport32 UINT	WINAPI SpriteCol_TestSprite_All	(npWin, npSpr, LPVOID*, DWORD, int, int, ANGLETYPE, float, float, DWORD);
 DLLExport32 int     WINAPI WinSetColMode			(npWin, WORD);						// Mode BOX ou BITMAP
 
 DLLExport32 BOOL	WINAPI ColMask_Create			(npWin, UINT, UINT, DWORD);			// Creation bitmap masque fond
@@ -993,7 +1025,7 @@ DLLExport32 void	WINAPI ColMask_ToLog			(npWin ptrWin, UINT nPlane);
 DLLExport32 void	WINAPI ColMask_SetClip			(npWin, RECT *);
 
 DLLExport32 BOOL	WINAPI ColMask_TestPoint		(npWin ptrWin, int x, int y, UINT nPlane);
-DLLExport32 BOOL	WINAPI ColMask_TestSprite		(npWin ptrWin, npSpr pSpr, int newImg, int newX, int newY, int newAngle, float newScaleX, float newScaleY, int subHt, UINT nPlane);
+DLLExport32 BOOL	WINAPI ColMask_TestSprite		(npWin ptrWin, npSpr pSpr, int newImg, int newX, int newY, ANGLETYPE newAngle, float newScaleX, float newScaleY, int subHt, UINT nPlane);
 DLLExport32 int     WINAPI ColMask_TestRect			(npWin, int, int, int, int, UINT nPlane);
 
 DLLExport32 BOOL	WINAPI Mask_TestPoint			(LPBYTE pMask, int x, int y, int nMaskWidth, int nMaskHeight);
@@ -1026,6 +1058,9 @@ DLLExport32 HCSPALETTE	WINAPI AddPalette (LOGPALETTE* pLogPal);
 DLLExport32 void		WINAPI DelPalette (HCSPALETTE pCsPal);
 DLLExport32 void		WINAPI SetAppCSPalette (npAppli ptrApp, HPALETTE hpal, HCSPALETTE pCsPal);
 DLLExport32 HCSPALETTE	WINAPI GetAppCSPalette (npAppli ptrApp);
+
+	// HWA
+DLLExport32 void		WINAPI WinSizeChanged ( npWin ptrWin );
 
 // Sounds
 
@@ -1083,6 +1118,7 @@ DLLExport32 long	WINAPI GetSoundData		(npAppli, UINT, LPBYTE);
 DLLExport32 LPBYTE	WINAPI GetSoundDataPtr	(npAppli, UINT);
 DLLExport32 long	WINAPI DelSound			(npAppli, UINT);
 
+DLLExport32 int		WINAPI WaveSetChannels	(npAppli ptApp, int nChannels);
 DLLExport32 UINT    WINAPI AddSoundW		(npAppli, UINT, LPWSTR, LPBYTE, DWORD);
 DLLExport32 UINT	WINAPI ReplaceSoundW	(npAppli ptApp, UINT sFlags, UINT nSound, LPWSTR fpName, LPBYTE lpData, DWORD dwDataSize);
 DLLExport32 int		WINAPI GetSoundNameW	(npAppli, UINT, LPWSTR, UINT);
@@ -1104,7 +1140,50 @@ DLLExport32 int     WINAPI GetSoundInfoW	(npAppli, UINT, fpSound);
 #define PlaySnd			PlaySndA
 #endif
 
-DLLExport32 int		WINAPI WaveSetChannels	(npAppli ptApp, int nChannels);
+// Layer functions
+// Layer
+#ifdef __cplusplus
+class WinLayer
+{
+public:
+#else
+typedef struct WinLayer
+{
+#endif
+	// Structure size
+	DWORD		layerSize;
+
+	// Effect
+	DWORD		layerEffect;
+	LPARAM		layerEffectParam;
+	
+	// Options
+	DWORD		dwLayerOptions;
+
+	// Scale & angle
+	float		xScale;
+	float		yScale;
+	float		scale;		// not used for display
+	float		angle;
+
+	// Hotspot
+	POINT		hotSpot;
+
+	// Destination point
+	POINT		destPoint;
+
+#ifdef __cplusplus
+};
+#else
+} WinLayer;
+#endif
+
+// Layer options
+#define	WLF_PREVIOUSEFFECT	1
+
+DLLExport32 void		WINAPI WinCreateLayers (npWin ptrWin, int nLayers);
+DLLExport32 void		WINAPI WinSetLayerEffect (npWin ptrWin, int nLayer, DWORD dwEffect, LPARAM dwEffectParam, DWORD dwOptions);
+DLLExport32 WinLayer*	WINAPI WinGetLayerAt (npWin ptrWin, int nLayer);
 
 #ifdef __cplusplus
 }
@@ -1130,6 +1209,7 @@ enum {
 	WSURF_BACKSAVE
 };
 DLLExport32 cSurface   * WINAPI WinGetSurface (int idWin, int surfID=WSURF_LOGSCREEN);
+DLLExport32 void WINAPI WinSetCurrent (int idWin);
 #endif	// __cplusplus
 #endif	// !defined(_H2INC)
 

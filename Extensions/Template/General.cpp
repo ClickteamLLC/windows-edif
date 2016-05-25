@@ -1,165 +1,165 @@
-
-// ============================================================================
-//
-// The following routines are used internally by MMF, and should not need to
-// be modified.
-//
-// 
-// ============================================================================
+/* General.cpp
+ * Contains functions common to both edittime and runtime.
+ * Functions defined here:
+ * DllMain
+ * InitExtension
+ * FreeExtension
+ * LoadObject
+ * UnloadObject
+ * UpdateEditStrucrure
+ * UpdateFileNames
+ * EnumElts
+ */
 
 #include "Common.h"
 
+/* hInstLib
+ * This is the HINSTANCE for your extension's DLL.
+ * It is set by DllMain and used later for anything
+ * that requires it, such as some Windows API
+ * functions and some internal EDIF code. You
+ * shouldn't change its value, ever.
+ */
 HINSTANCE hInstLib;
 
-// ============================================================================
-//
-// LIBRARY ENTRY & QUIT POINTS
-// 
-// ============================================================================
-
-// -----------------
-// Entry points
-// -----------------
-// Usually you do not need to do any initialization here: you will prefer to 
-// do them in "Initialize" found in Edittime.cpp
-BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID lpReserved)
+/* DllMain
+ * This is a required function for Windows DLLs. You
+ * should not need to edit this function - if you do,
+ * refer to MSDN for information.
+ */
+BOOL WINAPI DllMain(HINSTANCE DLL, DWORD Reason, LPVOID)
 {
-	switch (dwReason)
+	switch (Reason)
 	{
-		// DLL is attaching to the address space of the current process.
-		case DLL_PROCESS_ATTACH:
-			
-			hInstLib = hDLL; // Store HINSTANCE
+	case DLL_PROCESS_ATTACH: //DLL is attaching to the address space of the current process.
+		{
+			hInstLib = DLL; //Store HINSTANCE
 			break;
-
-		// A new thread is being created in the current process.
-		case DLL_THREAD_ATTACH:
+		}
+	case DLL_THREAD_ATTACH: //A new thread is being created in the current process.
+		{
+			//
 			break;
-
-		// A thread is exiting cleanly.
-		case DLL_THREAD_DETACH:
+		}
+	case DLL_THREAD_DETACH: //A thread is exiting cleanly.
+		{
+			//
 			break;
-
-		// The calling process is detaching the DLL from its address space.
-	    case DLL_PROCESS_DETACH:
+		}
+	case DLL_PROCESS_DETACH: //The calling process is detaching the DLL from its address space.
+		{
+			//
 			break;
+		}
 	}
-	
 	return TRUE;
 }
 
 
 
-// -----------------
-// Initialize
-// -----------------
-// Where you want to do COLD-START initialization.
-// Called when the extension is loaded into memory.
-//
-extern "C" int WINAPI DLLExport Initialize(mv _far *mV, int quiet)
+/* InitExtension
+ * Fusion calls this before anything else when it loads your
+ * extension. This includes during the splash screen, in which
+ * case "Quiet" is true. This is where you should initialize
+ * global information for either edittime or runtime. Be aware,
+ * though, that at edittime, multiple open MFAs with your
+ * extension will share the same global information. You can
+ * use mV->mvEditApp to tell apart different MFAs from each
+ * other. If an error occurs during this function, return
+ * -1 and Fusion will not load your extension.
+ */
+int MMF2Func InitExtension(mv *mV, int Quiet)
 {
-    return Edif::Init(mV);
+	return Edif::Init(mV);
+}
 
-
-	// No error
+/* FreeExtension
+ * Called just before Fusion unloads your extension. You
+ * should release any memory you allocated above in
+ * the InitializeExtension function. You should always
+ * return a value of 0.
+ */
+int MMF2Func FreeExtension(mv *mV)
+{
+	//
+	Edif::Free(mV);
 	return 0;
 }
 
-// -----------------
-// Free
-// -----------------
-// Where you want to kill and initialized data opened in the above routine
-// Called just before freeing the DLL.
-// 
-extern "C" int WINAPI DLLExport Free(mv _far *mV)
-{
-    Edif::Free(mV);
 
-	// No error
+/* LoadObject
+ * This is called at both edittime and runtime when Fusion
+ * loads each unique instance of your object. (Each one
+ * with a different name, not each instance of the same
+ * one). Not much needs to be done here.
+ */
+int	MMF2Func LoadObject(mv *mV, LPCSTR FileName, SerializedED *SED, int)
+{
+	Edif::Init(mV, SED);
 	return 0;
 }
 
-// ============================================================================
-//
-// GENERAL INFO
-// 
-// ============================================================================
-
-
-// -----------------
-// LoadObject
-// -----------------
-// Routine called for each object when the object is read from the MFA file (edit time)
-// or from the CCN or EXE file (run time).
-// You can load data here, reserve memory etc...
-//
-int	WINAPI DLLExport LoadObject(mv _far *mV, LPCSTR fileName, LPEDATA edPtr, int reserved)
+/* UnloadObject
+ * new is to delete as LoadObject is to this functon.
+ * If you initialized stuff above, deinitialize it here.
+ */
+void MMF2Func UnloadObject(mv *mV, SerializedED *SED, int)
 {
-    Edif::Init(mV, edPtr);
+	//
+}
 
-
+/* UpdateEditStructure (DEPRECATED)
+ * This is called when Fusion notices that your
+ * extension has a newer version number than
+ * the one in the header of the SerializedED.
+ * Thankfully, however, we don't need this
+ * function at all - the EditData class is
+ * as smart as you programmed it to be and
+ * it changes the size dynamically rather
+ * than statically. So, you can safely
+ * ignore this function all together.
+ * (It would be a pain to write anyway -
+ * see the MMF2SDK help for an example)
+ */
+HGLOBAL MMF2Func UpdateEditStructure(mv *mV, SerializedED *OldSED)
+{
 	return 0;
 }
 
-// -----------------
-// UnloadObject
-// -----------------
-// The counterpart of the above routine: called just before the object is
-// deleted from the frame.
-//
-void WINAPI DLLExport UnloadObject(mv _far *mV, LPEDATA edPtr, int reserved)
+/* UpdateFileNames
+ * When the application is moved to a new directory,
+ * Fusion asks your extension to ensure that its file
+ * paths are moving with it. Just call Update for
+ * each file path - you will need to create buffers
+ * of size MAX_PATH if you use C++ strings for
+ * the paths.
+ */
+void MMF2Func UpdateFileNames(mv *mV, LPSTR appName, SerializedED *SED, void (WINAPI *Update)(LPSTR, LPSTR))
 {
+	//
 }
 
-// --------------------
-// UpdateEditStructure
-// --------------------
-// For you to update your object structure to newer versions
-// Called at both edit time and run time
-// 
-HGLOBAL WINAPI DLLExport UpdateEditStructure(mv __far *mV, void __far * OldEdPtr)
-{
-	// We do nothing here
-	return 0;
-}
-
-// --------------------
-// UpdateFileNames
-// --------------------
-// If you store file names in your datazone, they have to be relocated when the
-// application is moved to a different directory: this routine does it.
-// Called at edit time and run time.
-//
-// Call lpfnUpdate to update your file pathname (refer to the documentation)
-// 
-void WINAPI DLLExport UpdateFileNames(mv _far *mV, LPSTR appName, LPEDATA edPtr, void (WINAPI * lpfnUpdate)(LPSTR, LPSTR))
-{
-}
-
-// ---------------------
-// EnumElts
-// ---------------------
-//
-// Uncomment this function if you need to store an image in the image bank.
-//
-// Note: do not forget to enable the function in the .def file 
-// if you remove the comments below.
-//
-/*
-int WINAPI DLLExport EnumElts (mv __far *mV, LPEDATA edPtr, ENUMELTPROC enumProc, ENUMELTPROC undoProc, LPARAM lp1, LPARAM lp2)
+/* EnumElts
+ * That whacky function that Fusion uses to enumerate all the
+ * animation frames associated with your object, because Fusion
+ * is nice enough to deal with them for you so you can't-er,
+ * don't have to. Refer to the MMF2SDK Help file for
+ * information on how not to misuse this function.
+ * You must also uncomment the entry in the Ext.def
+ * file if you uncomment this function.
+ */
+/*int MMF2Func EnumElts (mv *mV, SerializedED *SED, ENUMELTPROC enumProc, ENUMELTPROC undoProc, LPARAM lp1, LPARAM lp2)
 {  
 	int error = 0;
 
-	// Replace wImgIdx with the name of the WORD variable you create within the edit structure
+	//Replace wImgIdx with the name of the WORD variable you create within the edit structure
   
-	// Enum images  
-	if ( (error = enumProc(&edPtr->wImgIdx, IMG_TAB, lp1, lp2)) != 0 )
+	//Enum images  
+	if((error = enumProc(&edPtr->wImgIdx, IMG_TAB, lp1, lp2)) != 0)
 	{
-		// Undo enum images      
-		undoProc (&edPtr->wImgIdx, IMG_TAB, lp1, lp2);    
+		//Undo enum images	  
+		undoProc(&edPtr->wImgIdx, IMG_TAB, lp1, lp2);
 	}  
 
 	return error;
-}
-*/
-
+}*/
