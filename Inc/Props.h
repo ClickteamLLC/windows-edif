@@ -10,8 +10,8 @@
 typedef struct PropData
 {
 	int			dwID;				// Identifier
-	UINT_PTR	sName;				// Name = ID of the property name in the resources, or LPCSTR
-	UINT_PTR	sInfo;				// Info = ID of the property description in the resources, or LPCSTR
+	UINT_PTR	sName;				// Name = ID of the property name in the resources, or LPCSTR / LPCTSTR
+	UINT_PTR	sInfo;				// Info = ID of the property description in the resources, or LPCSTR / LPCTSTR
 	UINT_PTR	lType;				// Property type, or pointer to CPropItem (custom properties)
 	DWORD		dwOptions;			// Options (check box, bold, etc)
 	LPARAM		lCreateParam;		// Parameter
@@ -293,16 +293,14 @@ public:
 			m_pStr = _strdup(pStr);
 		m_unused = 0;
 	}
-	CPropAStringValue(LPCWSTR pWStr) {
+	CPropAStringValue(LPCWSTR pWStr, UINT codePage = CP_ACP) {
 		if ( pWStr == NULL )
 			m_pStr = _strdup("");
 		else
 		{
-			// m_pStr = _strdup(pStr);
-			int lg = wcslen(pWStr);
-			m_pStr = (LPSTR)calloc(lg+1, 1);		// TODO : change that if we use something else than CP_ACP
-			WideCharToMultiByte(CP_ACP, 0, pWStr, lg, m_pStr, lg, NULL, NULL);
-			m_pStr[lg] = 0;
+			int lg = WideCharToMultiByte(codePage, 0, pWStr, -1, 0, 0, NULL, NULL);
+			m_pStr = (LPSTR)calloc(lg+1, 1);	// +1 = security if lg = 0 for some reason
+			WideCharToMultiByte(codePage, 0, pWStr, -1, m_pStr, lg, NULL, NULL);
 		}
 		m_unused = 0;
 	}
@@ -349,16 +347,14 @@ public:
 			m_pWStr = _wcsdup(pWStr);
 		m_unused = 0;
 	}
-	CPropWStringValue(LPCSTR pStr) {
+	CPropWStringValue(LPCSTR pStr, UINT codePage = CP_ACP) {
 		if ( pStr == NULL )
 			m_pWStr = _wcsdup(L"");
 		else
 		{
-			// m_pStr = _strdup(pStr);
-			int lg = strlen(pStr);
-			m_pWStr = (LPWSTR)calloc(lg+1, sizeof(wchar_t));
-			MultiByteToWideChar(CP_ACP, 0, pStr, lg, m_pWStr, lg);
-			m_pWStr[lg] = 0;
+			int lg = MultiByteToWideChar(codePage, 0, pStr, -1, 0, 0);
+			m_pWStr = (LPWSTR)calloc(lg+1, sizeof(wchar_t));	// +1 = security if lg = 0 for some reason
+			MultiByteToWideChar(codePage, 0, pStr, -1, m_pWStr, lg);
 		}
 		m_unused = 0;
 	}
@@ -480,34 +476,124 @@ typedef struct _NMPROPWND
  *  List of property types.
  */
 enum {
-	PROPTYPE_STATIC = 1,		//! Simple static text
-	PROPTYPE_FOLDER,			//! Folder
-	PROPTYPE_FOLDER_END,		//! Folder End
-	PROPTYPE_EDITBUTTON,		//! Edit button, param1 = button text, or NULL if Edit
-	PROPTYPE_EDIT_STRING,		//! Edit box for strings, parameter = max length
-	PROPTYPE_EDIT_NUMBER,		//! Edit box for numbers, parameters = min value, max value
-	PROPTYPE_COMBOBOX,			//! Combo box, parameters = list of strings, options (sorted, etc)
-	PROPTYPE_SIZE,				//! Size
-	PROPTYPE_COLOR,				//! Color
-	PROPTYPE_LEFTCHECKBOX,		//! Checkbox
-	PROPTYPE_SLIDEREDIT,		//! Edit + Slider
-	PROPTYPE_SPINEDIT,			//! Edit + Spin
-	PROPTYPE_DIRCTRL,			//! Direction Selector
-	PROPTYPE_GROUP,				//! Group
-	PROPTYPE_LISTBTN,			//! Internal, do not use
-	PROPTYPE_FILENAME,			//! Edit box + browse file button, parameter = FilenameCreateParam
-	PROPTYPE_FONT,				//! Font dialog box
-	PROPTYPE_CUSTOM,			//! Custom property
-	PROPTYPE_PICTUREFILENAME,	//! Edit box + browse image file button
-	PROPTYPE_COMBOBOXBTN,		//! Combo box, parameters = list of strings, options (sorted, etc)
-	PROPTYPE_EDIT_FLOAT,		//! Edit box for floating point numbers, parameters = min value, max value, options (signed, float, spin)
-	PROPTYPE_EDIT_MULTILINE,	//! Edit box for multiline texts, no parameter
-	PROPTYPE_IMAGELIST,			//! Image list
-	PROPTYPE_ICONCOMBOBOX,		//! Combo box with icons
-	PROPTYPE_URLBUTTON,			//! URL button
-	PROPTYPE_DIRECTORYNAME,		//! Directory pathname
-	PROPTYPE_SPINEDITFLOAT,		//! Edit + Spin, value = floating point number
+	PROPTYPE_STATIC_A = 1,		//! Simple static text
+	PROPTYPE_FOLDER_A,			//! Folder
+	PROPTYPE_FOLDER_END_A,		//! Folder End
+	PROPTYPE_EDITBUTTON_A,		//! Edit button, param1 = button text, or NULL if Edit
+	PROPTYPE_EDIT_STRING_A,		//! Edit box for strings, parameter = max length
+	PROPTYPE_EDIT_NUMBER_A,		//! Edit box for numbers, parameters = min value, max value
+	PROPTYPE_COMBOBOX_A,		//! Combo box, parameters = list of strings, options (sorted, etc)
+	PROPTYPE_SIZE_A,			//! Size
+	PROPTYPE_COLOR_A,			//! Color
+	PROPTYPE_LEFTCHECKBOX_A,	//! Checkbox
+	PROPTYPE_SLIDEREDIT_A,		//! Edit + Slider
+	PROPTYPE_SPINEDIT_A,		//! Edit + Spin
+	PROPTYPE_DIRCTRL_A,			//! Direction Selector
+	PROPTYPE_GROUP_A,			//! Group
+	PROPTYPE_LISTBTN_A,			//! Internal, do not use
+	PROPTYPE_FILENAME_A,			//! Edit box + browse file button, parameter = FilenameCreateParam
+	PROPTYPE_FONT_A,				//! Font dialog box
+	PROPTYPE_CUSTOM_A,				//! Custom property
+	PROPTYPE_PICTUREFILENAME_A,		//! Edit box + browse image file button
+	PROPTYPE_COMBOBOXBTN_A,			//! Combo box, parameters = list of strings, options (sorted, etc)
+	PROPTYPE_EDIT_FLOAT_A,			//! Edit box for floating point numbers, parameters = min value, max value, options (signed, float, spin)
+	PROPTYPE_EDIT_MULTILINE_A,		//! Edit box for multiline texts, no parameter
+	PROPTYPE_IMAGELIST_A,			//! Image list
+	PROPTYPE_ICONCOMBOBOX_A,		//! Combo box with icons
+	PROPTYPE_URLBUTTON_A,			//! URL button
+	PROPTYPE_DIRECTORYNAME_A,		//! Directory pathname
+	PROPTYPE_SPINEDITFLOAT_A,		//! Edit + Spin, value = floating point number
+
+	PROPTYPE_STATIC_W = 1001,	//! Simple static text
+	PROPTYPE_FOLDER_W,			//! Folder
+	PROPTYPE_FOLDER_END_W,		//! Folder End
+	PROPTYPE_EDITBUTTON_W,		//! Edit button, param1 = button text, or NULL if Edit
+	PROPTYPE_EDIT_STRING_W,		//! Edit box for strings, parameter = max length
+	PROPTYPE_EDIT_NUMBER_W,		//! Edit box for numbers, parameters = min value, max value
+	PROPTYPE_COMBOBOX_W,		//! Combo box, parameters = list of strings, options (sorted, etc)
+	PROPTYPE_SIZE_W,			//! Size
+	PROPTYPE_COLOR_W,			//! Color
+	PROPTYPE_LEFTCHECKBOX_W,	//! Checkbox
+	PROPTYPE_SLIDEREDIT_W,		//! Edit + Slider
+	PROPTYPE_SPINEDIT_W,		//! Edit + Spin
+	PROPTYPE_DIRCTRL_W,			//! Direction Selector
+	PROPTYPE_GROUP_W,			//! Group
+	PROPTYPE_LISTBTN_W,			//! Internal, do not use
+	PROPTYPE_FILENAME_W,			//! Edit box + browse file button, parameter = FilenameCreateParam
+	PROPTYPE_FONT_W,				//! Font dialog box
+	PROPTYPE_CUSTOM_W,				//! Custom property
+	PROPTYPE_PICTUREFILENAME_W,		//! Edit box + browse image file button
+	PROPTYPE_COMBOBOXBTN_W,			//! Combo box, parameters = list of strings, options (sorted, etc)
+	PROPTYPE_EDIT_FLOAT_W,			//! Edit box for floating point numbers, parameters = min value, max value, options (signed, float, spin)
+	PROPTYPE_EDIT_MULTILINE_W,		//! Edit box for multiline texts, no parameter
+	PROPTYPE_IMAGELIST_W,			//! Image list
+	PROPTYPE_ICONCOMBOBOX_W,		//! Combo box with icons
+	PROPTYPE_URLBUTTON_W,			//! URL button
+	PROPTYPE_DIRECTORYNAME_W,		//! Directory pathname
+	PROPTYPE_SPINEDITFLOAT_W,		//! Edit + Spin, value = floating point number
 };
+
+#ifdef _UNICODE
+
+#define PROPTYPE_STATIC	PROPTYPE_STATIC_W
+#define PROPTYPE_FOLDER PROPTYPE_FOLDER_W
+#define PROPTYPE_FOLDER_END PROPTYPE_FOLDER_END_W
+#define PROPTYPE_EDITBUTTON PROPTYPE_EDITBUTTON_W
+#define PROPTYPE_EDIT_STRING PROPTYPE_EDIT_STRING_W
+#define PROPTYPE_EDIT_NUMBER PROPTYPE_EDIT_NUMBER_W
+#define PROPTYPE_COMBOBOX PROPTYPE_COMBOBOX_W
+#define PROPTYPE_SIZE PROPTYPE_SIZE_W
+#define PROPTYPE_COLOR PROPTYPE_COLOR_W
+#define PROPTYPE_LEFTCHECKBOX PROPTYPE_LEFTCHECKBOX_W
+#define PROPTYPE_SLIDEREDIT PROPTYPE_SLIDEREDIT_W
+#define PROPTYPE_SPINEDIT PROPTYPE_SPINEDIT_W
+#define PROPTYPE_DIRCTRL PROPTYPE_DIRCTRL_W
+#define PROPTYPE_GROUP PROPTYPE_GROUP_W
+#define PROPTYPE_LISTBTN PROPTYPE_LISTBTN_W
+#define PROPTYPE_FILENAME PROPTYPE_FILENAME_W
+#define PROPTYPE_FONT PROPTYPE_FONT_W
+#define PROPTYPE_CUSTOM PROPTYPE_CUSTOM_W
+#define PROPTYPE_PICTUREFILENAME PROPTYPE_PICTUREFILENAME_W
+#define PROPTYPE_COMBOBOXBTN PROPTYPE_COMBOBOXBTN_W
+#define PROPTYPE_EDIT_FLOAT PROPTYPE_EDIT_FLOAT_W
+#define PROPTYPE_EDIT_MULTILINE PROPTYPE_EDIT_MULTILINE_W
+#define PROPTYPE_IMAGELIST PROPTYPE_IMAGELIST_W
+#define PROPTYPE_ICONCOMBOBOX PROPTYPE_ICONCOMBOBOX_W
+#define PROPTYPE_URLBUTTON PROPTYPE_URLBUTTON_W
+#define PROPTYPE_DIRECTORYNAME PROPTYPE_DIRECTORYNAME_W
+#define PROPTYPE_SPINEDITFLOAT PROPTYPE_SPINEDITFLOAT_W
+
+#else
+
+#define PROPTYPE_STATIC	PROPTYPE_STATIC_A
+#define PROPTYPE_FOLDER PROPTYPE_FOLDER_A
+#define PROPTYPE_FOLDER_END PROPTYPE_FOLDER_END_A
+#define PROPTYPE_EDITBUTTON PROPTYPE_EDITBUTTON_A
+#define PROPTYPE_EDIT_STRING PROPTYPE_EDIT_STRING_A
+#define PROPTYPE_EDIT_NUMBER PROPTYPE_EDIT_NUMBER_A
+#define PROPTYPE_COMBOBOX PROPTYPE_COMBOBOX_A
+#define PROPTYPE_SIZE PROPTYPE_SIZE_A
+#define PROPTYPE_COLOR PROPTYPE_COLOR_A
+#define PROPTYPE_LEFTCHECKBOX PROPTYPE_LEFTCHECKBOX_A
+#define PROPTYPE_SLIDEREDIT PROPTYPE_SLIDEREDIT_A
+#define PROPTYPE_SPINEDIT PROPTYPE_SPINEDIT_A
+#define PROPTYPE_DIRCTRL PROPTYPE_DIRCTRL_A
+#define PROPTYPE_GROUP PROPTYPE_GROUP_A
+#define PROPTYPE_LISTBTN PROPTYPE_LISTBTN_A
+#define PROPTYPE_FILENAME PROPTYPE_FILENAME_A
+#define PROPTYPE_FONT PROPTYPE_FONT_A
+#define PROPTYPE_CUSTOM PROPTYPE_CUSTOM_A
+#define PROPTYPE_PICTUREFILENAME PROPTYPE_PICTUREFILENAME_A
+#define PROPTYPE_COMBOBOXBTN PROPTYPE_COMBOBOXBTN_A
+#define PROPTYPE_EDIT_FLOAT PROPTYPE_EDIT_FLOAT_A
+#define PROPTYPE_EDIT_MULTILINE PROPTYPE_EDIT_MULTILINE_A
+#define PROPTYPE_IMAGELIST PROPTYPE_IMAGELIST_A
+#define PROPTYPE_ICONCOMBOBOX PROPTYPE_ICONCOMBOBOX_A
+#define PROPTYPE_URLBUTTON PROPTYPE_URLBUTTON_A
+#define PROPTYPE_DIRECTORYNAME PROPTYPE_DIRECTORYNAME_A
+#define PROPTYPE_SPINEDITFLOAT PROPTYPE_SPINEDITFLOAT_A
+
+#endif
 
 ///////////////////
 // Property options
@@ -528,6 +614,8 @@ enum {
 #define PROPOPT_EDIT_LOWERCASE	0x00020000		// For Edit String property
 #define PROPOPT_EDIT_UPPERCASE	0x00040000		// For Edit String property
 
+#define PROPOPT_COMBO_SORT		0x00010000		// For Combo / Icon Combo properties
+
 // Internal, not used by extensions
 #define PROPID_ROOT				0
 
@@ -535,81 +623,314 @@ enum {
 // Property definition macros
 /////////////////////////////
 //
-#define PropData_Folder(id,name,info) {id,name,info,PROPTYPE_FOLDER,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_Folder_End() {-1,0,0,PROPTYPE_FOLDER_END,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_Group(id,name,info) {id,name,info,PROPTYPE_GROUP,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_StaticString(id,name,info) {id,name,info,PROPTYPE_STATIC,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_StaticString_Opt(id,name,info,opt) {id,name,info,PROPTYPE_STATIC,opt,(LPARAM)NULL}
-#define PropData_StaticString_List(id,name,info) {id,name,info,PROPTYPE_STATIC,PROPOPT_LIST,(LPARAM)NULL}
-#define PropData_EditString(id,name,info) {id,name,info,PROPTYPE_EDIT_STRING,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_EditString_Check(id,name,info) {id,name,info,PROPTYPE_EDIT_STRING,PROPOPT_CHECKBOX,(LPARAM)NULL}
-#define PropData_EditString_Opt(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_STRING,opt,(LPARAM)NULL}
-#define PropData_EditNumber(id,name,info) {id,name,info,PROPTYPE_EDIT_NUMBER,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_EditNumber_Check(id,name,info) {id,name,info,PROPTYPE_EDIT_NUMBER,PROPOPT_CHECKBOX,(LPARAM)NULL}
-#define PropData_EditNumber_Opt(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_NUMBER,opt,(LPARAM)NULL}
-#define PropData_EditFloat(id,name,info) {id,name,info,PROPTYPE_EDIT_FLOAT,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_EditFloat_Check(id,name,info) {id,name,info,PROPTYPE_EDIT_FLOAT,PROPOPT_CHECKBOX,(LPARAM)NULL}
-#define PropData_EditFloat_Opt(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_FLOAT,opt,(LPARAM)NULL}
-#define PropData_EditMultiLine(id,name,info) {id,name,info,PROPTYPE_EDIT_MULTILINE,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_EditMultiLine_Check(id,name,info) {id,name,info,PROPTYPE_EDIT_MULTILINE,PROPOPT_CHECKBOX,(LPARAM)NULL}
-#define PropData_EditMultiLine_Opt(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_MULTILINE,opt,(LPARAM)NULL}
-#define PropData_SliderEdit(id,name,info,minmax) {id,name,info,PROPTYPE_SLIDEREDIT,PROPOPT_PARAMREQUIRED,(LPARAM)minmax}
-#define PropData_SliderEdit_Check(id,name,info,minmax) {id,name,info,PROPTYPE_SLIDEREDIT,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmax}
-#define PropData_SliderEdit_Opt(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SLIDEREDIT,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmax}
-#define PropData_SpinEdit(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDIT,PROPOPT_PARAMREQUIRED,(LPARAM)minmax}
-#define PropData_SpinEdit_Check(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDIT,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmax}
-#define PropData_SpinEdit_Opt(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SPINEDIT,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmax}
-#define PropData_Button(id,name,info,text) {id,name,info,PROPTYPE_EDITBUTTON,PROPOPT_NIL, (LPARAM)text}
-#define PropData_Button_Check(id,name,info,text) {id,name,info,PROPTYPE_EDITBUTTON,PROPOPT_CHECKBOX,(LPARAM)text}
-#define PropData_Button_Opt(id,name,info,opt,text) {id,name,info,PROPTYPE_EDITBUTTON,opt,(LPARAM)text}
-#define PropData_EditButton(id,name,info) {id,name,info,PROPTYPE_EDITBUTTON,PROPOPT_NIL, (LPARAM)NULL}
-#define PropData_EditButton_Check(id,name,info) {id,name,info,PROPTYPE_EDITBUTTON,PROPOPT_CHECKBOX,(LPARAM)NULL}
-#define PropData_EditButton_Opt(id,name,info,opt) {id,name,info,PROPTYPE_EDITBUTTON,opt,(LPARAM)NULL}
-#define PropData_Size(id,name,info,tab) {id,name,info,PROPTYPE_SIZE,PROPOPT_PARAMREQUIRED,(LPARAM)tab}
-#define PropData_Size_Check(id,name,info,tab) {id,name,info,PROPTYPE_SIZE,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)tab}
-#define PropData_Size_Opt(id,name,info,opt,tab) {id,name,info,PROPTYPE_SIZE,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)tab}
-#define PropData_Color(id,name,info) {id,name,info,PROPTYPE_COLOR,PROPOPT_NIL,(LPARAM)NULL}
-#define PropData_Color_Check(id,name,info) {id,name,info,PROPTYPE_COLOR,PROPOPT_CHECKBOX,(LPARAM)NULL}
-#define PropData_Color_Opt(id,name,info,opt) {id,name,info,PROPTYPE_COLOR,opt,(LPARAM)NULL}
-#define PropData_ComboBox(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOX,PROPOPT_PARAMREQUIRED,(LPARAM)list}
-#define PropData_ComboBox_Check(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOX,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
-#define PropData_ComboBox_Opt(id,name,info,opt,list) {id,name,info,PROPTYPE_COMBOBOX,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
-#define PropData_CheckBox(id,name,info) {id,name,info,PROPTYPE_LEFTCHECKBOX,PROPOPT_CHECKBOX,(LPARAM)NULL}
-#define PropData_CheckBox_Opt(id,name,info,opt) {id,name,info,PROPTYPE_LEFTCHECKBOX,(PROPOPT_CHECKBOX|opt),(LPARAM)NULL}
-#define PropData_DirCtrl(id,name,info,param) {id,name,info,PROPTYPE_DIRCTRL,PROPOPT_PARAMREQUIRED,(LPARAM)param}
-#define PropData_DirCtrl_Check(id,name,info,param) {id,name,info,PROPTYPE_DIRCTRL,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
-#define PropData_DirCtrl_Opt(id,name,info,opt,param) {id,name,info,PROPTYPE_DIRCTRL,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
-#define PropData_Filename(id,name,info,param) {id,name,info,PROPTYPE_FILENAME,PROPOPT_PARAMREQUIRED,(LPARAM)param}
-#define PropData_Filename_Check(id,name,info,param) {id,name,info,PROPTYPE_FILENAME,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
-#define PropData_Filename_Opt(id,name,info,opt,param) {id,name,info,PROPTYPE_FILENAME,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
-#define PropData_PictureFilename(id,name,info,param) {id,name,info,PROPTYPE_PICTUREFILENAME,PROPOPT_PARAMREQUIRED,(LPARAM)param}
-#define PropData_PictureFilename_Check(id,name,info,param) {id,name,info,PROPTYPE_PICTUREFILENAME,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
-#define PropData_PictureFilename_Opt(id,name,info,opt,param) {id,name,info,PROPTYPE_PICTUREFILENAME,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
-#define PropData_Font(id,name,info,param) {id,name,info,PROPTYPE_FONT,PROPOPT_PARAMREQUIRED,(LPARAM)param}
-#define PropData_Font_Check(id,name,info,param) {id,name,info,PROPTYPE_FONT,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
-#define PropData_Font_Opt(id,name,info,opt,param) {id,name,info,PROPTYPE_FONT,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
-#define PropData_Custom(id,name,info,param) {id,name,info,PROPTYPE_CUSTOM,PROPOPT_PARAMREQUIRED,(LPARAM)param}
-#define PropData_Custom_Check(id,name,info,param) {id,name,info,PROPTYPE_CUSTOM,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
-#define PropData_Custom_Opt(id,name,info,opt,param) {id,name,info,PROPTYPE_CUSTOM,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
-#define PropData_ComboBoxBtn(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOXBTN,PROPOPT_PARAMREQUIRED,(LPARAM)list}
-#define PropData_ComboBoxBtn_Check(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOXBTN,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
-#define PropData_ComboBoxBtn_Opt(id,name,info,opt,list) {id,name,info,PROPTYPE_COMBOBOXBTN,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
-#define PropData_ImageList(id,name,info) {id,name,info,PROPTYPE_IMAGELIST,0,NULL}
-#define PropData_ImageList_Check(id,name,info) {id,name,info,PROPTYPE_IMAGELIST,PROPOPT_CHECKBOX,NULL}
-#define PropData_ImageList_Opt(id,name,info,opt) {id,name,info,PROPTYPE_IMAGELIST,opt,NULL}
-#define PropData_IconComboBox(id,name,info,list) {id,name,info,PROPTYPE_ICONCOMBOBOX,PROPOPT_PARAMREQUIRED,(LPARAM)list}
-#define PropData_IconComboBox_Check(id,name,info,list) {id,name,info,PROPTYPE_ICONCOMBOBOX,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
-#define PropData_IconComboBox_Opt(id,name,info,opt,list) {id,name,info,PROPTYPE_ICONCOMBOBOX,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
-#define PropData_URLButton(id,name,info,url) {id,name,info,PROPTYPE_URLBUTTON,PROPOPT_PARAMREQUIRED, (LPARAM)url}
-#define PropData_URLButton_Check(id,name,info,url) {id,name,info,PROPTYPE_URLBUTTON,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)url}
-#define PropData_URLButton_Opt(id,name,info,opt,url) {id,name,info,PROPTYPE_URLBUTTON,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)url}
-#define PropData_DirectoryName(id,name,info,param) {id,name,info,PROPTYPE_DIRECTORYNAME,PROPOPT_PARAMREQUIRED,(LPARAM)param}
-#define PropData_DirectoryName_Check(id,name,info,param) {id,name,info,PROPTYPE_DIRECTORYNAME,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
-#define PropData_DirectoryName_Opt(id,name,info,opt,param) {id,name,info,PROPTYPE_DIRECTORYNAME,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
-#define PropData_SpinEditFloat(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT,PROPOPT_PARAMREQUIRED,(LPARAM)minmaxdelta}
-#define PropData_SpinEditFloat_Check(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmaxdelta}
-#define PropData_SpinEditFloat_Opt(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmaxdelta}
 #define PropData_End() {0}
+
+#define PropData_Folder_A(id,name,info) {id,name,info,PROPTYPE_FOLDER_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_Folder_End_A() {-1,0,0,PROPTYPE_FOLDER_END_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_Group_A(id,name,info) {id,name,info,PROPTYPE_GROUP_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_StaticString_A(id,name,info) {id,name,info,PROPTYPE_STATIC_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_StaticString_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_STATIC_A,opt,(LPARAM)NULL}
+#define PropData_StaticString_List_A(id,name,info) {id,name,info,PROPTYPE_STATIC_A,PROPOPT_LIST,(LPARAM)NULL}
+#define PropData_EditString_A(id,name,info) {id,name,info,PROPTYPE_EDIT_STRING_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_EditString_Check_A(id,name,info) {id,name,info,PROPTYPE_EDIT_STRING_A,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditString_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_STRING_A,opt,(LPARAM)NULL}
+#define PropData_EditNumber_A(id,name,info) {id,name,info,PROPTYPE_EDIT_NUMBER_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_EditNumber_Check_A(id,name,info) {id,name,info,PROPTYPE_EDIT_NUMBER_A,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditNumber_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_NUMBER_A,opt,(LPARAM)NULL}
+#define PropData_EditFloat_A(id,name,info) {id,name,info,PROPTYPE_EDIT_FLOAT_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_EditFloat_Check_A(id,name,info) {id,name,info,PROPTYPE_EDIT_FLOAT_A,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditFloat_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_FLOAT_A,opt,(LPARAM)NULL}
+#define PropData_EditMultiLine_A(id,name,info) {id,name,info,PROPTYPE_EDIT_MULTILINE_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_EditMultiLine_Check_A(id,name,info) {id,name,info,PROPTYPE_EDIT_MULTILINE_A,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditMultiLine_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_MULTILINE_A,opt,(LPARAM)NULL}
+#define PropData_SliderEdit_A(id,name,info,minmax) {id,name,info,PROPTYPE_SLIDEREDIT_A,PROPOPT_PARAMREQUIRED,(LPARAM)minmax}
+#define PropData_SliderEdit_Check_A(id,name,info,minmax) {id,name,info,PROPTYPE_SLIDEREDIT_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmax}
+#define PropData_SliderEdit_Opt_A(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SLIDEREDIT_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmax}
+#define PropData_SpinEdit_A(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDIT_A,PROPOPT_PARAMREQUIRED,(LPARAM)minmax}
+#define PropData_SpinEdit_Check_A(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDIT_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmax}
+#define PropData_SpinEdit_Opt_A(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SPINEDIT_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmax}
+#define PropData_Button_A(id,name,info,text) {id,name,info,PROPTYPE_EDITBUTTON_A,PROPOPT_NIL, (LPARAM)text}
+#define PropData_Button_Check_A(id,name,info,text) {id,name,info,PROPTYPE_EDITBUTTON_A,PROPOPT_CHECKBOX,(LPARAM)text}
+#define PropData_Button_Opt_A(id,name,info,opt,text) {id,name,info,PROPTYPE_EDITBUTTON_A,opt,(LPARAM)text}
+#define PropData_EditButton_A(id,name,info) {id,name,info,PROPTYPE_EDITBUTTON_A,PROPOPT_NIL, (LPARAM)NULL}
+#define PropData_EditButton_Check_A(id,name,info) {id,name,info,PROPTYPE_EDITBUTTON_A,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditButton_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_EDITBUTTON_A,opt,(LPARAM)NULL}
+#define PropData_Size_A(id,name,info,tab) {id,name,info,PROPTYPE_SIZE_A,PROPOPT_PARAMREQUIRED,(LPARAM)tab}
+#define PropData_Size_Check_A(id,name,info,tab) {id,name,info,PROPTYPE_SIZE_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)tab}
+#define PropData_Size_Opt_A(id,name,info,opt,tab) {id,name,info,PROPTYPE_SIZE_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)tab}
+#define PropData_Color_A(id,name,info) {id,name,info,PROPTYPE_COLOR_A,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_Color_Check_A(id,name,info) {id,name,info,PROPTYPE_COLOR_A,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_Color_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_COLOR_A,opt,(LPARAM)NULL}
+#define PropData_ComboBox_A(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOX_A,PROPOPT_PARAMREQUIRED,(LPARAM)list}
+#define PropData_ComboBox_Check_A(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOX_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
+#define PropData_ComboBox_Opt_A(id,name,info,opt,list) {id,name,info,PROPTYPE_COMBOBOX_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
+#define PropData_CheckBox_A(id,name,info) {id,name,info,PROPTYPE_LEFTCHECKBOX_A,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_CheckBox_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_LEFTCHECKBOX_A,(PROPOPT_CHECKBOX|opt),(LPARAM)NULL}
+#define PropData_DirCtrl_A(id,name,info,param) {id,name,info,PROPTYPE_DIRCTRL_A,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_DirCtrl_Check_A(id,name,info,param) {id,name,info,PROPTYPE_DIRCTRL_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_DirCtrl_Opt_A(id,name,info,opt,param) {id,name,info,PROPTYPE_DIRCTRL_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_Filename_A(id,name,info,param) {id,name,info,PROPTYPE_FILENAME_A,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_Filename_Check_A(id,name,info,param) {id,name,info,PROPTYPE_FILENAME_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_Filename_Opt_A(id,name,info,opt,param) {id,name,info,PROPTYPE_FILENAME_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_PictureFilename_A(id,name,info,param) {id,name,info,PROPTYPE_PICTUREFILENAME_A,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_PictureFilename_Check_A(id,name,info,param) {id,name,info,PROPTYPE_PICTUREFILENAME_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_PictureFilename_Opt_A(id,name,info,opt,param) {id,name,info,PROPTYPE_PICTUREFILENAME_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_Font_A(id,name,info,param) {id,name,info,PROPTYPE_FONT_A,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_Font_Check_A(id,name,info,param) {id,name,info,PROPTYPE_FONT_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_Font_Opt_A(id,name,info,opt,param) {id,name,info,PROPTYPE_FONT_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_Custom_A(id,name,info,param) {id,name,info,PROPTYPE_CUSTOM_A,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_Custom_Check_A(id,name,info,param) {id,name,info,PROPTYPE_CUSTOM_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_Custom_Opt_A(id,name,info,opt,param) {id,name,info,PROPTYPE_CUSTOM_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_ComboBoxBtn_A(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOXBTN_A,PROPOPT_PARAMREQUIRED,(LPARAM)list}
+#define PropData_ComboBoxBtn_Check_A(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOXBTN_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
+#define PropData_ComboBoxBtn_Opt_A(id,name,info,opt,list) {id,name,info,PROPTYPE_COMBOBOXBTN_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
+#define PropData_ImageList_A(id,name,info) {id,name,info,PROPTYPE_IMAGELIST_A,0,NULL}
+#define PropData_ImageList_Check_A(id,name,info) {id,name,info,PROPTYPE_IMAGELIST_A,PROPOPT_CHECKBOX,NULL}
+#define PropData_ImageList_Opt_A(id,name,info,opt) {id,name,info,PROPTYPE_IMAGELIST_A,opt,NULL}
+#define PropData_IconComboBox_A(id,name,info,list) {id,name,info,PROPTYPE_ICONCOMBOBOX_A,PROPOPT_PARAMREQUIRED,(LPARAM)list}
+#define PropData_IconComboBox_Check_A(id,name,info,list) {id,name,info,PROPTYPE_ICONCOMBOBOX_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
+#define PropData_IconComboBox_Opt_A(id,name,info,opt,list) {id,name,info,PROPTYPE_ICONCOMBOBOX_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
+#define PropData_URLButton_A(id,name,info,url) {id,name,info,PROPTYPE_URLBUTTON_A,PROPOPT_PARAMREQUIRED, (LPARAM)url}
+#define PropData_URLButton_Check_A(id,name,info,url) {id,name,info,PROPTYPE_URLBUTTON_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)url}
+#define PropData_URLButton_Opt_A(id,name,info,opt,url) {id,name,info,PROPTYPE_URLBUTTON_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)url}
+#define PropData_DirectoryName_A(id,name,info,param) {id,name,info,PROPTYPE_DIRECTORYNAME_A,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_DirectoryName_Check_A(id,name,info,param) {id,name,info,PROPTYPE_DIRECTORYNAME_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_DirectoryName_Opt_A(id,name,info,opt,param) {id,name,info,PROPTYPE_DIRECTORYNAME_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_SpinEditFloat_A(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT_A,PROPOPT_PARAMREQUIRED,(LPARAM)minmax}
+#define PropData_SpinEditFloat_Check_A(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT_A,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmax}
+#define PropData_SpinEditFloat_Opt_A(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT_A,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmax}
+
+
+#define PropData_Folder_W(id,name,info) {id,name,info,PROPTYPE_FOLDER_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_Folder_End_W() {-1,0,0,PROPTYPE_FOLDER_END_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_Group_W(id,name,info) {id,name,info,PROPTYPE_GROUP_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_StaticString_W(id,name,info) {id,name,info,PROPTYPE_STATIC_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_StaticString_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_STATIC_W,opt,(LPARAM)NULL}
+#define PropData_StaticString_List_W(id,name,info) {id,name,info,PROPTYPE_STATIC_W,PROPOPT_LIST,(LPARAM)NULL}
+#define PropData_EditString_W(id,name,info) {id,name,info,PROPTYPE_EDIT_STRING_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_EditString_Check_W(id,name,info) {id,name,info,PROPTYPE_EDIT_STRING_W,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditString_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_STRING_W,opt,(LPARAM)NULL}
+#define PropData_EditNumber_W(id,name,info) {id,name,info,PROPTYPE_EDIT_NUMBER_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_EditNumber_Check_W(id,name,info) {id,name,info,PROPTYPE_EDIT_NUMBER_W,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditNumber_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_NUMBER_W,opt,(LPARAM)NULL}
+#define PropData_EditFloat_W(id,name,info) {id,name,info,PROPTYPE_EDIT_FLOAT_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_EditFloat_Check_W(id,name,info) {id,name,info,PROPTYPE_EDIT_FLOAT_W,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditFloat_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_FLOAT_W,opt,(LPARAM)NULL}
+#define PropData_EditMultiLine_W(id,name,info) {id,name,info,PROPTYPE_EDIT_MULTILINE_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_EditMultiLine_Check_W(id,name,info) {id,name,info,PROPTYPE_EDIT_MULTILINE_W,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditMultiLine_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_EDIT_MULTILINE_W,opt,(LPARAM)NULL}
+#define PropData_SliderEdit_W(id,name,info,minmax) {id,name,info,PROPTYPE_SLIDEREDIT_W,PROPOPT_PARAMREQUIRED,(LPARAM)minmax}
+#define PropData_SliderEdit_Check_W(id,name,info,minmax) {id,name,info,PROPTYPE_SLIDEREDIT_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmax}
+#define PropData_SliderEdit_Opt_W(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SLIDEREDIT_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmax}
+#define PropData_SpinEdit_W(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDIT_W,PROPOPT_PARAMREQUIRED,(LPARAM)minmax}
+#define PropData_SpinEdit_Check_W(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDIT_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmax}
+#define PropData_SpinEdit_Opt_W(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SPINEDIT_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmax}
+#define PropData_Button_W(id,name,info,text) {id,name,info,PROPTYPE_EDITBUTTON_W,PROPOPT_NIL, (LPARAM)text}
+#define PropData_Button_Check_W(id,name,info,text) {id,name,info,PROPTYPE_EDITBUTTON_W,PROPOPT_CHECKBOX,(LPARAM)text}
+#define PropData_Button_Opt_W(id,name,info,opt,text) {id,name,info,PROPTYPE_EDITBUTTON_W,opt,(LPARAM)text}
+#define PropData_EditButton_W(id,name,info) {id,name,info,PROPTYPE_EDITBUTTON_W,PROPOPT_NIL, (LPARAM)NULL}
+#define PropData_EditButton_Check_W(id,name,info) {id,name,info,PROPTYPE_EDITBUTTON_W,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_EditButton_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_EDITBUTTON_W,opt,(LPARAM)NULL}
+#define PropData_Size_W(id,name,info,tab) {id,name,info,PROPTYPE_SIZE_W,PROPOPT_PARAMREQUIRED,(LPARAM)tab}
+#define PropData_Size_Check_W(id,name,info,tab) {id,name,info,PROPTYPE_SIZE_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)tab}
+#define PropData_Size_Opt_W(id,name,info,opt,tab) {id,name,info,PROPTYPE_SIZE_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)tab}
+#define PropData_Color_W(id,name,info) {id,name,info,PROPTYPE_COLOR_W,PROPOPT_NIL,(LPARAM)NULL}
+#define PropData_Color_Check_W(id,name,info) {id,name,info,PROPTYPE_COLOR_W,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_Color_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_COLOR_W,opt,(LPARAM)NULL}
+#define PropData_ComboBox_W(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOX_W,PROPOPT_PARAMREQUIRED,(LPARAM)list}
+#define PropData_ComboBox_Check_W(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOX_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
+#define PropData_ComboBox_Opt_W(id,name,info,opt,list) {id,name,info,PROPTYPE_COMBOBOX_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
+#define PropData_CheckBox_W(id,name,info) {id,name,info,PROPTYPE_LEFTCHECKBOX_W,PROPOPT_CHECKBOX,(LPARAM)NULL}
+#define PropData_CheckBox_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_LEFTCHECKBOX_W,(PROPOPT_CHECKBOX|opt),(LPARAM)NULL}
+#define PropData_DirCtrl_W(id,name,info,param) {id,name,info,PROPTYPE_DIRCTRL_W,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_DirCtrl_Check_W(id,name,info,param) {id,name,info,PROPTYPE_DIRCTRL_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_DirCtrl_Opt_W(id,name,info,opt,param) {id,name,info,PROPTYPE_DIRCTRL_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_Filename_W(id,name,info,param) {id,name,info,PROPTYPE_FILENAME_W,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_Filename_Check_W(id,name,info,param) {id,name,info,PROPTYPE_FILENAME_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_Filename_Opt_W(id,name,info,opt,param) {id,name,info,PROPTYPE_FILENAME_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_PictureFilename_W(id,name,info,param) {id,name,info,PROPTYPE_PICTUREFILENAME_W,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_PictureFilename_Check_W(id,name,info,param) {id,name,info,PROPTYPE_PICTUREFILENAME_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_PictureFilename_Opt_W(id,name,info,opt,param) {id,name,info,PROPTYPE_PICTUREFILENAME_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_Font_W(id,name,info,param) {id,name,info,PROPTYPE_FONT_W,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_Font_Check_W(id,name,info,param) {id,name,info,PROPTYPE_FONT_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_Font_Opt_W(id,name,info,opt,param) {id,name,info,PROPTYPE_FONT_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_Custom_W(id,name,info,param) {id,name,info,PROPTYPE_CUSTOM_W,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_Custom_Check_W(id,name,info,param) {id,name,info,PROPTYPE_CUSTOM_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_Custom_Opt_W(id,name,info,opt,param) {id,name,info,PROPTYPE_CUSTOM_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_ComboBoxBtn_W(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOXBTN_W,PROPOPT_PARAMREQUIRED,(LPARAM)list}
+#define PropData_ComboBoxBtn_Check_W(id,name,info,list) {id,name,info,PROPTYPE_COMBOBOXBTN_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
+#define PropData_ComboBoxBtn_Opt_W(id,name,info,opt,list) {id,name,info,PROPTYPE_COMBOBOXBTN_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
+#define PropData_ImageList_W(id,name,info) {id,name,info,PROPTYPE_IMAGELIST_W,0,NULL}
+#define PropData_ImageList_Check_W(id,name,info) {id,name,info,PROPTYPE_IMAGELIST_W,PROPOPT_CHECKBOX,NULL}
+#define PropData_ImageList_Opt_W(id,name,info,opt) {id,name,info,PROPTYPE_IMAGELIST_W,opt,NULL}
+#define PropData_IconComboBox_W(id,name,info,list) {id,name,info,PROPTYPE_ICONCOMBOBOX_W,PROPOPT_PARAMREQUIRED,(LPARAM)list}
+#define PropData_IconComboBox_Check_W(id,name,info,list) {id,name,info,PROPTYPE_ICONCOMBOBOX_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)list}
+#define PropData_IconComboBox_Opt_W(id,name,info,opt,list) {id,name,info,PROPTYPE_ICONCOMBOBOX_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)list}
+#define PropData_URLButton_W(id,name,info,url) {id,name,info,PROPTYPE_URLBUTTON_W,PROPOPT_PARAMREQUIRED, (LPARAM)url}
+#define PropData_URLButton_Check_W(id,name,info,url) {id,name,info,PROPTYPE_URLBUTTON_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)url}
+#define PropData_URLButton_Opt_W(id,name,info,opt,url) {id,name,info,PROPTYPE_URLBUTTON_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)url}
+#define PropData_DirectoryName_W(id,name,info,param) {id,name,info,PROPTYPE_DIRECTORYNAME_W,PROPOPT_PARAMREQUIRED,(LPARAM)param}
+#define PropData_DirectoryName_Check_W(id,name,info,param) {id,name,info,PROPTYPE_DIRECTORYNAME_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)param}
+#define PropData_DirectoryName_Opt_W(id,name,info,opt,param) {id,name,info,PROPTYPE_DIRECTORYNAME_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)param}
+#define PropData_SpinEditFloat_W(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT_W,PROPOPT_PARAMREQUIRED,(LPARAM)minmax}
+#define PropData_SpinEditFloat_Check_W(id,name,info,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT_W,(PROPOPT_PARAMREQUIRED|PROPOPT_CHECKBOX),(LPARAM)minmax}
+#define PropData_SpinEditFloat_Opt_W(id,name,info,opt,minmax) {id,name,info,PROPTYPE_SPINEDITFLOAT_W,(PROPOPT_PARAMREQUIRED|opt),(LPARAM)minmax}
+
+#ifdef _UNICODE
+
+#define PropData_Folder PropData_Folder_W
+#define PropData_Folder_End PropData_Folder_End_W
+#define PropData_Group PropData_Group_W
+#define PropData_StaticString PropData_StaticString_W
+#define PropData_StaticString_Opt PropData_StaticString_Opt_W
+#define PropData_StaticString_List PropData_StaticString_List_W
+#define PropData_EditString PropData_EditString_W
+#define PropData_EditString_Check PropData_EditString_Check_W
+#define PropData_EditString_Opt PropData_EditString_Opt_W
+#define PropData_EditNumber PropData_EditNumber_W
+#define PropData_EditNumber_Check PropData_EditNumber_Check_W
+#define PropData_EditNumber_Opt PropData_EditNumber_Opt_W
+#define PropData_EditFloat PropData_EditFloat_W
+#define PropData_EditFloat_Check PropData_EditFloat_Check_W
+#define PropData_EditFloat_Opt PropData_EditFloat_Opt_W
+#define PropData_EditMultiLine PropData_EditMultiLine_W
+#define PropData_EditMultiLine_Check PropData_EditMultiLine_Check_W
+#define PropData_EditMultiLine_Opt PropData_EditMultiLine_Opt_W
+#define PropData_SliderEdit PropData_SliderEdit_W
+#define PropData_SliderEdit_Check PropData_SliderEdit_Check_W
+#define PropData_SliderEdit_Opt PropData_SliderEdit_Opt_W
+#define PropData_SpinEdit PropData_SpinEdit_W
+#define PropData_SpinEdit_Check PropData_SpinEdit_Check_W
+#define PropData_SpinEdit_Opt PropData_SpinEdit_Opt_W
+#define PropData_Button PropData_Button_W
+#define PropData_Button_Check PropData_Button_Check_W
+#define PropData_Button_Opt PropData_Button_Opt_W
+#define PropData_EditButton PropData_EditButton_W
+#define PropData_EditButton_Check PropData_EditButton_Check_W
+#define PropData_EditButton_Opt PropData_EditButton_Opt_W
+#define PropData_Size PropData_Size_W
+#define PropData_Size_Check PropData_Size_Check_W
+#define PropData_Size_Opt PropData_Size_Opt_W
+#define PropData_Color PropData_Color_W
+#define PropData_Color_Check PropData_Color_Check_W
+#define PropData_Color_Opt PropData_Color_Opt_W
+#define PropData_ComboBox PropData_ComboBox_W
+#define PropData_ComboBox_Check PropData_ComboBox_Check_W
+#define PropData_ComboBox_Opt PropData_ComboBox_Opt_W
+#define PropData_CheckBox PropData_CheckBox_W
+#define PropData_CheckBox_Opt PropData_CheckBox_Opt_W
+#define PropData_DirCtrl PropData_DirCtrl_W
+#define PropData_DirCtrl_Check PropData_DirCtrl_Check_W
+#define PropData_DirCtrl_Opt PropData_DirCtrl_Opt_W
+#define PropData_Filename PropData_Filename_W
+#define PropData_Filename_Check PropData_Filename_Check_W
+#define PropData_Filename_Opt PropData_Filename_Opt_W
+#define PropData_PictureFilename PropData_PictureFilename_W
+#define PropData_PictureFilename_Check PropData_PictureFilename_Check_W
+#define PropData_PictureFilename_Opt PropData_PictureFilename_Opt_W
+#define PropData_Font PropData_Font_W
+#define PropData_Font_Check PropData_Font_Check_W
+#define PropData_Font_Opt PropData_Font_Opt_W
+#define PropData_Custom PropData_Custom_W
+#define PropData_Custom_Check PropData_Custom_Check_W
+#define PropData_Custom_Opt PropData_Custom_Opt_W
+#define PropData_ComboBoxBtn PropData_ComboBoxBtn_W
+#define PropData_ComboBoxBtn_Check PropData_ComboBoxBtn_Check_W
+#define PropData_ComboBoxBtn_Opt PropData_ComboBoxBtn_Opt_W
+#define PropData_ImageList PropData_ImageList_W
+#define PropData_ImageList_Check PropData_ImageList_Check_W
+#define PropData_ImageList_Opt PropData_ImageList_Opt_W
+#define PropData_IconComboBox PropData_IconComboBox_W
+#define PropData_IconComboBox_Check PropData_IconComboBox_Check_W
+#define PropData_IconComboBox_Opt PropData_IconComboBox_Opt_W
+#define PropData_URLButton PropData_URLButton_W
+#define PropData_URLButton_Check PropData_URLButton_Check_W
+#define PropData_URLButton_Opt PropData_URLButton_Opt_W
+#define PropData_DirectoryName PropData_DirectoryName_W
+#define PropData_DirectoryName_Check PropData_DirectoryName_Check_W
+#define PropData_DirectoryName_Opt PropData_DirectoryName_Opt_W
+#define PropData_SpinEditFloat PropData_SpinEditFloat_W
+#define PropData_SpinEditFloat_Check PropData_SpinEditFloat_Check_W
+#define PropData_SpinEditFloat_Opt PropData_SpinEditFloat_Opt_W
+
+#else
+
+#define PropData_Folder PropData_Folder_A
+#define PropData_Folder_End PropData_Folder_End_A
+#define PropData_Group PropData_Group_A
+#define PropData_StaticString PropData_StaticString_A
+#define PropData_StaticString_Opt PropData_StaticString_Opt_A
+#define PropData_StaticString_List PropData_StaticString_List_A
+#define PropData_EditString PropData_EditString_A
+#define PropData_EditString_Check PropData_EditString_Check_A
+#define PropData_EditString_Opt PropData_EditString_Opt_A
+#define PropData_EditNumber PropData_EditNumber_A
+#define PropData_EditNumber_Check PropData_EditNumber_Check_A
+#define PropData_EditNumber_Opt PropData_EditNumber_Opt_A
+#define PropData_EditFloat PropData_EditFloat_A
+#define PropData_EditFloat_Check PropData_EditFloat_Check_A
+#define PropData_EditFloat_Opt PropData_EditFloat_Opt_A
+#define PropData_EditMultiLine PropData_EditMultiLine_A
+#define PropData_EditMultiLine_Check PropData_EditMultiLine_Check_A
+#define PropData_EditMultiLine_Opt PropData_EditMultiLine_Opt_A
+#define PropData_SliderEdit PropData_SliderEdit_A
+#define PropData_SliderEdit_Check PropData_SliderEdit_Check_A
+#define PropData_SliderEdit_Opt PropData_SliderEdit_Opt_A
+#define PropData_SpinEdit PropData_SpinEdit_A
+#define PropData_SpinEdit_Check PropData_SpinEdit_Check_A
+#define PropData_SpinEdit_Opt PropData_SpinEdit_Opt_A
+#define PropData_Button PropData_Button_A
+#define PropData_Button_Check PropData_Button_Check_A
+#define PropData_Button_Opt PropData_Button_Opt_A
+#define PropData_EditButton PropData_EditButton_A
+#define PropData_EditButton_Check PropData_EditButton_Check_A
+#define PropData_EditButton_Opt PropData_EditButton_Opt_A
+#define PropData_Size PropData_Size_A
+#define PropData_Size_Check PropData_Size_Check_A
+#define PropData_Size_Opt PropData_Size_Opt_A
+#define PropData_Color PropData_Color_A
+#define PropData_Color_Check PropData_Color_Check_A
+#define PropData_Color_Opt PropData_Color_Opt_A
+#define PropData_ComboBox PropData_ComboBox_A
+#define PropData_ComboBox_Check PropData_ComboBox_Check_A
+#define PropData_ComboBox_Opt PropData_ComboBox_Opt_A
+#define PropData_CheckBox PropData_CheckBox_A
+#define PropData_CheckBox_Opt PropData_CheckBox_Opt_A
+#define PropData_DirCtrl PropData_DirCtrl_A
+#define PropData_DirCtrl_Check PropData_DirCtrl_Check_A
+#define PropData_DirCtrl_Opt PropData_DirCtrl_Opt_A
+#define PropData_Filename PropData_Filename_A
+#define PropData_Filename_Check PropData_Filename_Check_A
+#define PropData_Filename_Opt PropData_Filename_Opt_A
+#define PropData_PictureFilename PropData_PictureFilename_A
+#define PropData_PictureFilename_Check PropData_PictureFilename_Check_A
+#define PropData_PictureFilename_Opt PropData_PictureFilename_Opt_A
+#define PropData_Font PropData_Font_A
+#define PropData_Font_Check PropData_Font_Check_A
+#define PropData_Font_Opt PropData_Font_Opt_A
+#define PropData_Custom PropData_Custom_A
+#define PropData_Custom_Check PropData_Custom_Check_A
+#define PropData_Custom_Opt PropData_Custom_Opt_A
+#define PropData_ComboBoxBtn PropData_ComboBoxBtn_A
+#define PropData_ComboBoxBtn_Check PropData_ComboBoxBtn_Check_A
+#define PropData_ComboBoxBtn_Opt PropData_ComboBoxBtn_Opt_A
+#define PropData_ImageList PropData_ImageList_A
+#define PropData_ImageList_Check PropData_ImageList_Check_A
+#define PropData_ImageList_Opt PropData_ImageList_Opt_A
+#define PropData_IconComboBox PropData_IconComboBox_A
+#define PropData_IconComboBox_Check PropData_IconComboBox_Check_A
+#define PropData_IconComboBox_Opt PropData_IconComboBox_Opt_A
+#define PropData_URLButton PropData_URLButton_A
+#define PropData_URLButton_Check PropData_URLButton_Check_A
+#define PropData_URLButton_Opt PropData_URLButton_Opt_A
+#define PropData_DirectoryName PropData_DirectoryName_A
+#define PropData_DirectoryName_Check PropData_DirectoryName_Check_A
+#define PropData_DirectoryName_Opt PropData_DirectoryName_Opt_A
+#define PropData_SpinEditFloat PropData_SpinEditFloat_A
+#define PropData_SpinEditFloat_Check PropData_SpinEditFloat_Check_A
+#define PropData_SpinEditFloat_Opt PropData_SpinEditFloat_Opt_A
+
+#endif // _UNICODE
 
 /////////////////////////////////
 // Property definition parameters
@@ -639,13 +960,14 @@ enum
 	DCS_SLIDER		= 4,		// Slider to change the number of directions
 	DCS_EMPTY		= 8,		// ??? should affect the appearance of direction spots...
 	DCS_SETALL_BTNS	= 16,		// "Select All" and "Reset" buttons
+	DCS_DEGREES		= 32,		// Display degrees instead of direction numbers
 };
 
 // Initialization structure for direction property
 typedef struct {
-	BOOL	bMultiSel;	// TRUE for multi-selection
-	int		numDirs;	// Number of directions: 4,8,16,32
-	DWORD	style;		// Style DCS_NOBORDER, DCS_FLAT, DCS_3D, [DCS_SLIDER,] DCS_EMPTY, DCS_SETALL_BTNS
+	BOOL	bMultiSel;			// TRUE for multi-selection
+	int		numDirs;			// Number of directions: 4,8,16,32
+	DWORD	style;				// Style DCS_NOBORDER, DCS_FLAT, DCS_3D, [DCS_SLIDER,] DCS_EMPTY, DCS_SETALL_BTNS, DCS_DEGREES
 } DirCtrlCreateParam;
 
 // Direction Property Value 
@@ -660,7 +982,34 @@ typedef struct {
 typedef struct {
 	LPCSTR	extFilter;	// Filter string for GetOpenFilename dialog (for example "All Files (*.*)|*.*|")
 	DWORD	options;	// Options for GetOpenFilename dialog (OFN_FILEMUSTEXIST, OFN_PATHMUSTEXIST, OFN_HIDEREADONLY, etc.)
-} FilenameCreateParam;	
+} FilenameCreateParamA;
+
+typedef struct {
+	LPCWSTR	extFilter;	// Filter string for GetOpenFilename dialog (for example "All Files (*.*)|*.*|")
+	DWORD	options;	// Options for GetOpenFilename dialog (OFN_FILEMUSTEXIST, OFN_PATHMUSTEXIST, OFN_HIDEREADONLY, etc.)
+} FilenameCreateParamW;
+
+#ifdef _UNICODE
+#define FilenameCreateParam FilenameCreateParamW
+#else
+#define FilenameCreateParam FilenameCreateParamA
+#endif
+
+// Initialization structure for directory selector property
+//typedef struct {
+//	LPCSTR	forcedExt;	// Always add this extension to new folders
+//	DWORD	options;	// Not used yet
+//} DirectoryCreateParamA;
+//typedef struct {
+//	LPCWSTR	forcedExt;	// Always add this extension to new folders
+//	DWORD	options;	// Not used yet
+//} DirectoryCreateParamW;
+//
+//#ifdef _UNICODE
+//#define DirectoryCreateParam DirectoryCreateParamW
+//#else
+//#define DirectoryCreateParam DirectoryCreateParamA
+//#endif
 
 ////////////////////////////////////////////////
 //
@@ -687,10 +1036,16 @@ enum {
 	PROPID_TAB_ANDROID,
 	PROPID_TAB_XNA,
 	PROPID_TAB_MAC,
-	PROPID_TAB_CUSTOM1 = 18,
+	PROPID_TAB_HTML5,
+	PROPID_TAB_VITA,
+	PROPID_TAB_FLASH,
+	PROPID_TAB_WINDOWS,
+	PROPID_TAB_CUSTOM1 = 20,
 	PROPID_TAB_CUSTOM2,
-	PROPTAB_MAX				// 20
+	PROPTAB_MAX				// 22
 };
+
+#define PROPID_TAB_WUA	PROPID_TAB_BLURAY
 
 ///////////////
 // Property IDs
@@ -703,7 +1058,7 @@ enum {
 
 // Objects
 enum {
-	PROPID_ITEM_FIRST = 20,
+	PROPID_ITEM_FIRST = 30,
 	PROPID_ITEM_NAME,
 	PROPID_ITEM_ICON,
 	PROPID_ITEM_HELP,
@@ -796,6 +1151,9 @@ enum {
 	PROPID_DYNITEM_CREATE,
 	PROPID_DYNITEM_CREATEATSTART,
 	PROPID_DYNITEM_BACKCOLOROPACITY,
+	PROPID_DYNITEM_COMPATIBILITY,
+	PROPID_DYNITEM_DONTRESETANIMCOUNTER,
+	PROPID_DYNITEM_ALTFLAGS_GROUP,
 
 	PROPID_TEXT_FIRST=380,
 	PROPID_TEXT_FONT,
@@ -1009,14 +1367,14 @@ enum {
 	PROPID_APP_IPHONEENABLEIAD,
 	PROPID_APP_IPHONEIADBOTTOM,
 	PROPID_APP_OPTIONAL_MODULES,
-	PROPID_APP_ANDROIDVERSION,
+	PROPID_APP_ANDROIDVERSION_MIN,
 	PROPID_APP_IPHONEBUNDLEVERSION,
 	PROPID_APP_IPHONETARGETDEVICE,
 	PROPID_APP_IPHONEARCHITECTURE,
 	PROPID_APP_IPHONEAPPICON_IPAD,
 	PROPID_APP_IPHONELAUNCHIMAGE_IPAD,
-	PROPID_APP_XNAPROJECTPATH,
-	PROPID_APP_XNAPROJECTNAME,
+	PROPID_APP_PROJECTPATH,
+	PROPID_APP_PROJECTNAME,
 	PROPID_APP_XNASTATUSLINE,
 	PROPID_APP_XNAFONT_GROUP,
 	PROPID_APP_XNAFONT_FIRSTCHAR,
@@ -1033,17 +1391,154 @@ enum {
 	PROPID_APP_BUILDWARNINGS,
 	PROPID_APP_XNAADS,
 	PROPID_APP_XNAPUBCENTERID,
+	PROPID_APP_XNAABOUT,
+	PROPID_APP_XNAAPPTITLE,
+	PROPID_APP_XNADESCRIPTION,
+	PROPID_APP_XNACOMPANY,
+	PROPID_APP_XNAPRODUCT,
+	PROPID_APP_XNACOPYRIGHT,
+	PROPID_APP_XNATRADEMARK,
+	PROPID_APP_XNAASSEMBLYVERSION,
+	PROPID_APP_XNAFILEVERSION,
+	PROPID_APP_XNAGAMETHUMBNAIL,
+	PROPID_APP_XNABACKGROUNDIMAGE,
+	PROPID_APP_ANDROIDKEYPASSWORD,
+	PROPID_APP_ANDROIDVERSIONING_GROUP,
+	PROPID_APP_ANDROIDVERSIONCODE,
+	PROPID_APP_ANDROIDVERSIONSTRING,
+	PROPID_APP_XNALANGUAGE,
+	PROPID_APP_ANDROIDKEYSTOREPASSWORD,
+	PROPID_APP_ANDROIDADMOB_GROUP,
+	PROPID_APP_ANDROIDENABLEAD,
+	PROPID_APP_ANDROIDADBOTTOM,
+	PROPID_APP_ANDROIDADMOBID,
+	PROPID_APP_ANDROIDTESTDEVICEID,
+	PROPID_APP_ANDROIDREQUIREGPU,
+	PROPID_APP_ANDROIDANTIALIAS,
+	PROPID_APP_ANDROIDLARGESOUNDDURATION,
+	PROPID_APP_HTML5USEMOSAIC,
+	PROPID_APP_HTML5KEEPRESOURCES,
+	PROPID_APP_VITAINPUT,
+	PROPID_APP_VITAACCELS,
+	PROPID_APP_VITATOUCHSCREEN,
+	PROPID_APP_VITAGAMEPAD,
+	PROPID_APP_VITAMEMORY,
+	PROPID_APP_VITARESHEAP,
+	PROPID_APP_VITAMNGHEAP,
+	PROPID_APP_XNAUSEMOSAIC,
+	PROPID_APP_ANDROIDGLMODE,
+	PROPID_APP_HTML5WEBGL,
+	PROPID_APP_ALLOWSCREENBORDERS,
+	PROPID_APP_IPHONEDISPLAY,
+	PROPID_APP_IPHONELAUNCHIMAGE_LANDSCAPE_IPAD,
+	PROPID_APP_HTML5_PRELOADER_GROUP,
+	PROPID_APP_HTML5_PRELOADER,
+	PROPID_APP_HTML5_PRELOADER_FILENAME,
+	PROPID_APP_HTML5_PRELOADER_PGB_X,
+	PROPID_APP_HTML5_PRELOADER_PGB_Y,
+	PROPID_APP_HTML5_PRELOADER_PGB_RADIUS,
+	PROPID_APP_HTML5_PRELOADER_PGB_THICKNESS,
+	PROPID_APP_HTML5_PRELOADER_PGB_COLOR,
+	PROPID_APP_HTML5_PRELOADER_BACK_COLOR,
+	PROPID_APP_HTML5_PRELOADERTYPE,
+	PROPID_APP_HTML5_PRELOADER_FRAMENUM,
+	PROPID_APP_IPHONELAUNCHIMAGE_IPHONE5,
+	PROPID_APP_ANDROIDDISPLAY,
+	PROPID_APP_ANDROIDSYSTEMFONT,
+	PROPID_APP_ANDROIDMENU,
+	PROPID_APP_ANDROIDVERSION_TARGET,
+	PROPID_APP_HTML5RUNEVENIFNOTFOCUS,
+	PROPID_APP_HTML5_GENERATEHTMLFILE,
+	PROPID_APP_HTML5_ALLOWOFFLINE,
+	PROPID_APP_HTML5_MEDIAFOLDER,
+	PROPID_APP_HTML5_SRCFOLDER,
+	PROPID_APP_ANDROIDKEYBOVERAPPWINDOW,
+	PROPID_APP_ANDROIDOUYA_GROUP,
+	PROPID_APP_ANDROIDOUYA_CATEGORY,
+	PROPID_APP_ANDROIDTESTING_GROUP,
+	PROPID_APP_ANDROIDRELEASE_GROUP,
+	PROPID_APP_ANDROIDDISPOPT,
+	PROPID_APP_HTML5_PRELOADER_ERASEBKD,
+	PROPID_APP_ANDROID_REQHW,
+	PROPID_APP_ANDROID_REQHW_GL2,
+	PROPID_APP_ANDROID_REQHW_CAMERA,
+	PROPID_APP_ANDROID_REQHW_GPS,
+	PROPID_APP_ANDROID_REQHW_BT,
+	PROPID_APP_ANDROIDOUYA_OUYAAPP,
+	PROPID_APP_ANDROIDOUYA_ICON,
+	PROPID_APP_ANDROIDBUILDAPI,
+	PROPID_APP_MACBUNDLEID,
+	PROPID_APP_HIDEDEPRECATEDBUILDTYPES,
+	PROPID_APP_CHARENCODINGOPT,
+	PROPID_APP_CHARENCODING_INPUT,
+	PROPID_APP_CHARENCODING_OUTPUT,
+	PROPID_APP_HTML5_BUILDANDRUN_GROUP,
+	PROPID_APP_HTML5_REMOTELAUNCH,
+	PROPID_APP_HTML5LOADALLDATAATSTART,
+	PROPID_APP_HTML5_PRELOADER_QUIT,
+	PROPID_APP_HTML5_LOADSOUNDSONTOUCH,
+	PROPID_APP_HTML5_TOUCHME,
+	PROPID_APP_ENCRYPTION,
+	PROPID_APP_DISABLEOPTIMIZATIONS,
+	PROPID_APP_FLASH_GENERATEHTML,
+	PROPID_APP_HTML5_GLOBALFILE,
+	PROPID_APP_ANDROIDGETNEWESTBUILDAPI,
+	PROPID_APP_IPHONELAUNCHIMAGE_PORTRAIT_IPHONE6,
+	PROPID_APP_IPHONELAUNCHIMAGE_LANDSCAPE_IPHONE6,
+	PROPID_APP_STRETCHTOFIT,
+	PROPID_APP_COMPATIBILITY,
+	PROPID_APP_DESTROYIFNOACTIVATE,
+	PROPID_APP_HTML5WUA_GUID,
+	PROPID_APP_HTML5WUA_VERSION,
+	PROPID_APP_HTML5WUA_MINTARGET,
+	PROPID_APP_HTML5WUA_MAXTESTEDTARGET,
+	PROPID_APP_HTML5WUA_APPDISPLAYNAME,
+	PROPID_APP_HTML5WUA_APPDESCRIPTION,
+	PROPID_APP_HTML5WUA_APPPUBLISHER,
+	PROPID_APP_HTML5WUA_CERTFILE,
+	PROPID_APP_HTML5WUA_VISUALASSETS,
+	PROPID_APP_HTML5WUA_CAPS,
+	PROPID_APP_HTML5WUA_RESOURCES,
+	PROPID_APP_HTML5WUA_SQUARELOGO,
+	PROPID_APP_HTML5WUA_WIDELOGO,
+	PROPID_APP_HTML5WUA_STORELOGO,
+	PROPID_APP_HTML5WUA_SPLASHSCREEN,
+	PROPID_APP_HTML5WUA_SCREENROTATION,
+	PROPID_APP_HTML5WUA_LANDSCAPE,
+	PROPID_APP_HTML5WUA_PORTRAIT,
+	PROPID_APP_HTML5WUA_LANDSCAPE_FLIPPED,
+	PROPID_APP_HTML5WUA_PORTRAIT_FLIPPED,
+	PROPID_APP_HTML5WUA_DISPLAYOPTIONS,
+	PROPID_APP_HTML5WUADISPLAY,
+	PROPID_APP_MACBUNDLEVERSION,
+	PROPID_APP_MACICON,
+	PROPID_APP_DISABLEIME,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSEGROUP,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE_SPEED,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE_ANALOG,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE_BOUNDS,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE_IMAGES,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE_VISIBLE,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE_XBOX,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE_ANALOGSP,
+	PROPID_APP_HTML5WUA_VIRTUALMOUSE_SUPPRINPUT,
+	PROPID_APP_HTML5WUA_SPLASHSCREENCOLOR,
+	PROPID_APP_POSTBUILDCMD,
+	PROPID_APP_REDUCECPUUSAGE,
+	PROPID_APP_MACAUTOFILEREDIRECT,
+	PROPID_APP_MACAPPCATEGORY,
+
 	PROPID_APP_LAST,
 
 	PROPID_APP_ANDROID_PERM_FIRST = 90001,
-	PROPID_APP_ANDROID_PERM_LAST = 90105,
+	PROPID_APP_ANDROID_PERM_LAST = 90193,		// 192 IDs max (change MAX_ANDROIDPERMBYTE if more)
 
 	PROPID_APP_GLOBALVALUE_FIRST = 100000,
 	PROPID_APP_GLOBALVALUE_LAST =  199998,
 
 	PROPID_APP_GLOBALSTRING_FIRST = 200000,
 	PROPID_APP_GLOBALSTRING_LAST =  299998,
-
 };
 
 // Frame
@@ -1089,6 +1584,35 @@ enum {
 	PROPID_FRAME_DISABLEIDLETIMER,
 	PROPID_FRAME_IPHONEIAD_GROUP,
 	PROPID_FRAME_IPHONEIAD,
+	PROPID_FRAME_ANDROID_JOYSTICK_GROUP,
+	PROPID_FRAME_ANDROID_JOYSTICK_TYPE,
+	PROPID_FRAME_ANDROID_JOYSTICK_FIRE1,
+	PROPID_FRAME_ANDROID_JOYSTICK_FIRE2,
+	PROPID_FRAME_ANDROID_JOYSTICK_LEFTHAND,
+	PROPID_FRAME_ANDROIDAD_GROUP,
+	PROPID_FRAME_ANDROIDAD,
+	PROPID_FRAME_ANDROIDADBOTTOM,
+	PROPID_FRAME_ANDROIDADOVERFRAME,
+	PROPID_FRAME_VITA_JOYSTICK_TYPE,
+	PROPID_FRAME_HTML5_DISPLAYPRELOADER,
+	PROPID_FRAME_HTML5_JOYSTICK_GROUP,
+	PROPID_FRAME_HTML5_JOYSTICK_TYPE,
+	PROPID_FRAME_HTML5_JOYSTICK_FIRE1,
+	PROPID_FRAME_HTML5_JOYSTICK_FIRE2,
+	PROPID_FRAME_HTML5_JOYSTICK_LEFTHAND,
+	PROPID_FRAME_HTML5_TRANSPBKD,
+	PROPID_FRAME_WUA_DISPLAYPRELOADER,
+	PROPID_FRAME_WUA_JOYSTICK_GROUP,
+	PROPID_FRAME_WUA_JOYSTICK_TYPE,
+	PROPID_FRAME_WUA_JOYSTICK_FIRE1,
+	PROPID_FRAME_WUA_JOYSTICK_FIRE2,
+	PROPID_FRAME_WUA_JOYSTICK_LEFTHAND,
+	PROPID_FRAME_WUA_TRANSPBKD,
+	PROPID_FRAME_DONTBUILD,
+	PROPID_FRAME_HTML5WUA_VIRTUALMOUSE,
+	PROPID_FRAME_HTML5WUA_VIRTUALMOUSE_VISIBLE,
+	PROPID_FRAME_DONTERASED3D,
+
 	PROPID_FRAME_LAST,
 };
 
