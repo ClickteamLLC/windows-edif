@@ -614,9 +614,20 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
     int ParameterCount;
 
     void * Function = ::SDK->ExpressionFunctions[ID];
+    int ExpressionType = ::SDK->ExpressionTypes[ID];
 
     if(!Function)
-        return rdPtr->pExtension->Expression(ID, rdPtr, param);
+	{
+        long result = rdPtr->pExtension->Expression(ID, rdPtr, param);
+
+		// Make default expression returns empty string insteald of NULL if it has to return a string
+		if ( ExpressionType == 2 && result == 0 )
+        {
+            rdPtr->rHo.hoFlags |= HOF_STRING;
+            result = (long)_T("");
+        }
+		return result;
+	}
 
     {   LPEVENTINFOS2 Infos = GetEventInformations((LPEVENTINFOS2) &::SDK->ExpressionInfos[0], ID);
 
@@ -657,7 +668,6 @@ long __stdcall Edif::Expression(LPRDATA rdPtr, long param)
     void * Extension = rdPtr->pExtension;
 
     int Result;
-    int ExpressionType = ::SDK->ExpressionTypes[ID];
     
     __asm
     {
