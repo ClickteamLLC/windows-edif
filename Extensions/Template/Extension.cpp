@@ -154,6 +154,33 @@ long Extension::Condition(int ID, LPRDATA rdPtr, long param1, long param2)
 
 long Extension::Expression(int ID, LPRDATA rdPtr, long param)
 {
+	// Default: read parameters otherwise the Windows runtime can crash in expressions
+    LPEVENTINFOS2 Infos = GetEventInformations((LPEVENTINFOS2) &::SDK->ExpressionInfos[0], ID);
+    for(int i = 0; i < Infos->infos.nParams; ++ i)
+    {
+        switch(EVINFO2_PARAM(Infos, i))
+        {
+        case EXPPARAM_STRING:
+            if(!i)
+            {
+                CNC_GetFirstExpressionParameter(rdPtr, param, TYPE_STRING);
+                break;
+            }
+            CNC_GetNextExpressionParameter(rdPtr, param, TYPE_STRING);
+            break;  
+
+        case EXPPARAM_LONG:
+
+            int Type = ((::SDK->ExpressionFloatFlags[ID] & (1 << i)) != 0) ? TYPE_FLOAT : TYPE_LONG;
+            if(!i)
+            {
+                CNC_GetFirstExpressionParameter(rdPtr, param, Type);
+                break;
+            }
+            CNC_GetNextExpressionParameter(rdPtr, param, Type);
+            break;
+        }
+    }
 
     return 0;
 }
