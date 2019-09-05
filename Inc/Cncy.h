@@ -1267,7 +1267,11 @@ typedef	struct	mv {
 	HHOOK				mvHMsgHook;
 	int					mvModalLoop;
 	int					mvModalSubAppCount;
-	LPVOID				mvFree[5];
+	UINT				mvLanguageID;
+	LPCWSTR				mvModuleTextsPathname;
+	BOOL				mvVSync;
+	UINT				mvReturnCode;
+	LPVOID				mvFree;
 
 	// Functions
 	////////////

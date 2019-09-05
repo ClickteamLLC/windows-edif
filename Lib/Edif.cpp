@@ -161,10 +161,62 @@ int Edif::Init(mv _far * mV)
 	}
 
 	// Get JSON file
-    char * JSON;
-    size_t JSON_Size;
+    char * JSON = NULL;
+    size_t JSON_Size = 0;
+	int result = Edif::DependencyNotFound;
 
-    int result = Edif::GetDependency (JSON, JSON_Size, _T("json"), IDR_EDIF_JSON);
+#ifdef _UNICODE
+	// MMF 2.5?
+	if ( mV->mvModuleTextsPathname != NULL && *mV->mvModuleTextsPathname != 0 )
+	{
+		TCHAR temp [MAX_PATH];
+		GetModuleFileName (hInstLib, temp, sizeof(temp)/sizeof(TCHAR));
+		TCHAR * Filename = temp + _tcslen(temp) - 1;
+		while(*Filename != '.')
+			-- Filename;
+		_tcscpy(Filename+1, _T("json"));
+		while(*Filename != '\\' && *Filename != '/')
+			-- Filename;
+		++ Filename;
+
+		TCHAR jsonPath [MAX_PATH];
+		_tcscpy(jsonPath, mV->mvModuleTextsPathname);
+		TCHAR * ps = jsonPath + _tcslen(jsonPath) - 1;
+		if ( *ps != '\\' && *ps != '/' )
+		{
+			ps++;
+			*ps++ = '\\';
+		}
+		_tcscpy(ps, Filename);
+
+		if ( GetFileAttributes(jsonPath) != 0xFFFFFFFF )
+		{
+			FILE * File = NULL;
+			int error = _tfopen_s(&File, jsonPath, _T("rb"));
+			if ( File )
+			{
+				fseek (File, 0, SEEK_END);
+				JSON_Size = ftell (File);
+				fseek (File, 0, SEEK_SET);
+
+				JSON = (char *) malloc (JSON_Size + 1);
+				JSON [JSON_Size] = 0;
+
+				fread (JSON, 1, JSON_Size, File);
+        
+				fclose (File);
+
+				result = Edif::DependencyWasFile;
+			}
+		}
+	}
+
+	// File not found in MMF 2.5 text folder? use the old way
+	if ( JSON == NULL )
+	    result = Edif::GetDependency (JSON, JSON_Size, _T("json"), IDR_EDIF_JSON);
+#else
+    result = Edif::GetDependency (JSON, JSON_Size, _T("json"), IDR_EDIF_JSON);
+#endif
     
     if (result == Edif::DependencyNotFound)
     {

@@ -207,6 +207,10 @@ json_value * json_parse_ex (json_settings * settings, const json_char * json, ch
    state.uint_max -= 8; /* limit of how much can be added before next check */
    state.ulong_max -= 8;
 
+   // Skip UTF8 BOM
+   if ( json[0] == (json_char)0xEF && json[1] == (json_char)0xBB && json[2] == (json_char)0xBF )
+      json += 3;
+
    for (state.first_pass = 1; state.first_pass >= 0; -- state.first_pass)
    {
       json_uchar uchar;
