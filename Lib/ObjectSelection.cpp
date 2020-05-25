@@ -178,21 +178,22 @@ bool Riggs::ObjectSelection::FilterQualifierObjects(Extension* extension, short 
 	LPOIL pObjectInfo = GetOIL(oiList);
 	if(pObjectInfo == NULL)
 		return false;
-	short Oi = pObjectInfo->oilOi;
 
-    LPQOI CurrentQualToOiStart = (LPQOI)((char*)QualToOiList + Oi);
-    LPQOI CurrentQualToOi = CurrentQualToOiStart;
+	bool hasSelected = false;
+	this->QualToOiList = rhPtr->rhQualToOiList;
+	LPQOI CurrentQualToOiStart = (LPQOI)((char*)QualToOiList + oiList);
+	LPQOI CurrentQualToOi = CurrentQualToOiStart;
 
-    bool hasSelected = false;
-	int i=0;
+	if (CurrentQualToOi == NULL)
+		return false;
 
-	LPSHORT ptr=&CurrentQualToOi->qoiOi;
-	/*while( ptr != -1 )
-    {
-        short CurrentOi = GetOIL(CurrentQualToOi->qoiOiList);
-        hasSelected |= FilterNonQualifierObjects(extension, CurrentOi->oilOi, negate, filterFunction);
-        CurrentQualToOi = (LPQOI)((char*)CurrentQualToOi + 4);
-    }*/
+	while (CurrentQualToOi->qoiOiList >= 0)
+	{
+		hasSelected |= FilterNonQualifierObjects(extension, CurrentQualToOi->qoiOiList, negate, filterFunction);
+		CurrentQualToOi = (LPQOI)((char*)CurrentQualToOi + 4);
+		if (CurrentQualToOi == NULL)
+			break;
+	}
     return hasSelected;
 }
 
@@ -220,10 +221,7 @@ bool Riggs::ObjectSelection::FilterNonQualifierObjects(Extension* extension, sho
     while(current >= 0)
     {
         LPHO pObject = ObjectList[current].oblOffset;
-        bool useObject = filterFunction(extension, (LPRO)pObject);
-
-        if(negate)
-            useObject = !useObject;
+        bool useObject = filterFunction(extension, (LPRO)pObject) ^ negate;
 
         hasSelected |= useObject;
 

@@ -18,6 +18,7 @@ Extension::Extension(LPRDATA _rdPtr, LPEDATA edPtr, fpcob cobPtr)
     LinkAction(1, SecondActionExample);
 
     LinkCondition(0, AreTwoNumbersEqual);
+    LinkCondition(1, ObjectsXEquals);
 
     LinkExpression(0, Add);
     LinkExpression(1, HelloWorld);

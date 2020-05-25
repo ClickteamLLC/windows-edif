@@ -479,6 +479,7 @@ Edif::SDK::~SDK()
 
 int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Function, int ID, LPRDATA rdPtr, long param1, long param2)
 {
+	LPEVP pParam = rdPtr->rHo.hoCurrentParam;
     int * Parameters;
     int ParameterCount;
 	bool Cast = true;
@@ -526,6 +527,8 @@ int ActionOrCondition(vector<short> &FloatFlags, LPEVENTINFOS2 Info, void * Func
     void * Extension = rdPtr->pExtension;
 
     int Result;
+
+	rdPtr->rHo.hoCurrentParam = pParam;
 
     __asm
     {
