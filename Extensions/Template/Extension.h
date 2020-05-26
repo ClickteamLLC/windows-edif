@@ -29,7 +29,7 @@ public:
     */
 
     // int MyVariable;
-
+	int XPositionCompare = 0;
 
 
 
@@ -49,6 +49,7 @@ public:
     /// Conditions
 
         bool AreTwoNumbersEqual(int FirstNumber, int SecondNumber);
+		bool ObjectsXEquals(RunObject* Obj, int XPosition);
 
     /// Expressions
         

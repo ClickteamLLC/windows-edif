@@ -26,6 +26,10 @@
         [
             0,
             "Are two numbers equal?"
+        ],  
+        [
+            1,
+            "Is an object's X Position equal to?"
         ]
     ],
     "ExpressionMenu": [
@@ -59,10 +63,24 @@
                 [
                     "Integer",
                     "First number"
-                ],
+                ],  
                 [
                     "Integer",
                     "Second number"
+                ]
+            ],
+            "Triggered": false
+        },
+        {
+            "Title": "%o : %0's X Position equals %1?",
+            "Parameters": [
+                [
+                    "Object",
+                    "The object to select"
+                ],  
+                [
+                    "Integer",
+                    "The X Position to compare to"
                 ]
             ],
             "Triggered": false
